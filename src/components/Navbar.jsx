@@ -2,7 +2,7 @@ import  { useState } from 'react';
 import logo from '../assets/logo.png'
 
 //iconos
-import { GrLanguage } from "react-icons/gr";
+
 import { FaXmark } from "react-icons/fa6";
 import { FaBars } from "react-icons/fa";
 import { Link as ScrollLink } from 'react-scroll'; // Renombrado para evitar conflictos
@@ -17,7 +17,7 @@ const Navbar = () => {
     {link: "Servicios", path: "servicios", type: "scroll"},
     {link: "Información", path: "informacion", type: "scroll"},
     {link: "Precios", path: "precios", type: "scroll"},
-    {link: "Pacientes", path: "/pacientes", type: "route"},
+
   ]
 
   return (
@@ -26,7 +26,7 @@ const Navbar = () => {
       <div className='text-lg container mx-auto flex justify-between items-center font-medium'>
         <div className='flex space-x-14 items-center'>
           <a href="/" className='text-2xl font-semibold flex items-center space-x-3 text-primary'>
-            <img src={logo} alt=""  className='w-10 inline-block items-center'/><span>XYZ</span>
+            <img src={logo} alt=""  className='w-10 inline-block items-center'/><span>UCB</span>
           </a>
 
 
@@ -43,8 +43,7 @@ const Navbar = () => {
         </div>
 
         <div className='space-x-12 hidden md:flex items-center'>
-          <a href="/" className='hidden lg:flex items-center hover:text-secondary'><GrLanguage 
-          className='mr-2'/><span>Lenguaje</span></a>
+          
           <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded 
           hover: text-white hover:bg-indigo-600">Iniciar sesion</button>
         

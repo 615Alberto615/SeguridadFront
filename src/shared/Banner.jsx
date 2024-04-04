@@ -1,6 +1,7 @@
 import {motion} from 'framer-motion'; 
 import {fadeIn } from '../variants';
 
+
 const Banner = ({ banner, heading, subheading, bt1, bt2 }) => {
     return (
         <div>
@@ -25,8 +26,12 @@ const Banner = ({ banner, heading, subheading, bt1, bt2 }) => {
                         <h2 className='md:text-7xl text-4xl font-bold text-white mb-6 leading-relaxed'>{heading}</h2>
                         <p className='text-[#EBEBEB] text-2xl mb-8'>{subheading}</p>
                         <div className='space-x-5 space-y-4'> {/* Corregido de 'xpace-y-4' a 'space-y-4' */}
-                            <button className='btnPrimary'>{bt1}</button>
-                            <button className='btnPrimary'>{bt2}</button>
+                        {
+                            (bt1 && bt1 !== "") && <button className='btnPrimary'>{bt1}</button>
+                        }
+                        {
+                            (bt2 && bt2 !== "") && <button className='btnPrimary'>{bt2}</button>
+                        }
                         </div>
                     </motion.div>
                 </div>
