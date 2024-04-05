@@ -10,43 +10,31 @@ const Fotter = () => {
                 <div className="md:w-1/2 space-y-8">
                     <a href="/" className="text-2xl font-semibold flex items-center space-x-3 text-primary">
                         <img src={logo} alt="" className="w-10 inline-block items-center"/>
-                        <span className="text-white">XYZ</span>
+                        <span className="text-white">UCB</span>
                     </a>
-                    <p className="md:w-1/2">Reciba las últimas actualizaciones en tratamientos ORL y consejos para su salud auditiva y respiratoria directamente en su correo.</p>
-                    <div>
-                        <input type="email" name="email" id="email" placeholder="Your email" className="bg-[#9a7af159] py-2 px-4 rounded-md
-                        focus:outline-none"/>
-                        <input type="submit" value="Suscribirse" className="px-4 py-2 bg-secondary rounded-md -ml-2 cursor-pointer hover:bg-white
-                        hover:text-primary duration-300 transition-all"/>
-                    </div>
+                    <p className="md:w-1/2">Comprometidos con tu bienestar integral. En la UCB, apoyamos activamente la salud mental y emocional de nuestra comunidad universitaria.</p>
+                    
                 </div>
                 {/* nav fot */}
                 <div className="md:w-1/2 flex flex-col md:flex-row flex-wrap justify-between gap-8 items-start">
                     <div className="space-y-4 mt-5">
-                        <h4 className="text-xl">Plataform</h4>
+                    </div>
+                    <div className="space-y-4 mt-5">
+                    <h4 className="text-xl">Aplicación</h4>
                         <ul className="space-y-3">
-                            <a href="/" className="block hover:text-gray-300">Overview</a>
-                            <a href="/" className="block hover:text-gray-300">Features</a>
-                            <a href="/" className="block hover:text-gray-300">About</a>
-                            <a href="/" className="block hover:text-gray-300">Pricing</a>
+                            <a href="/" className="block hover:text-gray-300">Home</a>
+                            <a href="/" className="block hover:text-gray-300">Servicios</a>
+                            <a href="/" className="block hover:text-gray-300">Informacion</a>
                         </ul>
                     </div>
                     <div className="space-y-4 mt-5">
-                        <h4 className="text-xl">Help</h4>
-                        <ul className="space-y-3">
-                            <a href="/" className="block hover:text-gray-300">How does it works?</a>
-                            <a href="/" className="block hover:text-gray-300">Where to ask question?</a>
-                            <a href="/" className="block hover:text-gray-300">How to play?</a>
-                            <a href="/" className="block hover:text-gray-300">What is needed for this?</a>
-                        </ul>
-                    </div>
-                    <div className="space-y-4 mt-5">
-                        <h4 className="text-xl">Contact</h4>
+                        <h4 className="text-xl">Contacto</h4>
                         <ul className="space-y-3 ">
                             <p className=" hover:text-gray-300">(012) 1234-567-890</p>
-                            <p className=" hover:text-gray-300">123 xyz xyz</p>
-                            <p className=" hover:text-gray-300">qwuerybaihefv, qiwu - hrebcl</p>
-                            <p className=" hover:text-gray-300">q095467</p>
+                            <p className=" hover:text-gray-300"></p>
+                            <a href="https://lpz.ucb.edu.bo/contacto/" target="_blank" rel="noopener noreferrer">
+                                <p className=" hover:text-gray-300">Pagina de Contacto</p>
+                            </a>
                         </ul>
                     </div>
                 </div>
@@ -54,12 +42,20 @@ const Fotter = () => {
             <hr/>
 
             <div className='flex flex-col sm:flex-row gap-8 sm:items-center justify-between my-8'>
-                <p className="text-center py-4">© 2021 XYZ. All rights reserved.</p>
+                <p className="text-center py-4">© 2024 UCB. All rights reserved.</p>
                 <div className='flex items-center space-x-5'>
-                    <img src={fb} alt="" className='w-8 cursor-pointer hover:-translate-y-4 transition-all duration-300'/>
-                    <img src={ig} alt="" className='w-8 cursor-pointer hover:-translate-y-4 transition-all duration-300'/>
-                    <img src={tw} alt="" className='w-8 cursor-pointer hover:-translate-y-4 transition-all duration-300'/>
-                    <img src={lk} alt="" className='w-8 cursor-pointer hover:-translate-y-4 transition-all duration-300'/>
+                <a href="https://www.facebook.com/UCB.BOLIVIA/" target="_blank" rel="noopener noreferrer">
+                    <img src={fb} alt="Facebook" className='w-8 cursor-pointer hover:-translate-y-4 transition-all duration-300'/>
+                </a>
+                <a href="https://www.instagram.com/ucb.lapaz/" target="_blank" rel="noopener noreferrer">
+                    <img src={ig} alt="Insta" className='w-8 cursor-pointer hover:-translate-y-4 transition-all duration-300'/>
+                </a>
+                <a href="https://twitter.com/UCBLaPaz" target="_blank" rel="noopener noreferrer">
+                    <img src={tw} alt="X" className='w-8 cursor-pointer hover:-translate-y-4 transition-all duration-300'/>
+                </a>
+                <a href="https://bo.linkedin.com/company/ucb-lapaz" target="_blank" rel="noopener noreferrer">
+                    <img src={lk} alt="link" className='w-8 cursor-pointer hover:-translate-y-4 transition-all duration-300'/>
+                </a>
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@ const Home = () => {
             <Banner banner={logo} heading="Apoyo Psicológico UCB" 
             subheading="Con nuestra plataforma, facilitamos el acceso a atención psicoterapéutica y 
             apoyo psicológico para estudiantes y personal de la UCB, garantizando privacidad y atención profesional."
-            bt1={'Reserva tu Cita'}/>
+            bt1={'Agenda tu Cita'}/>
         
         </div>
     );

@@ -16,7 +16,7 @@ const Navbar = () => {
     {link: "Home", path: "home", type: "scroll"},
     {link: "Servicios", path: "servicios", type: "scroll"},
     {link: "Información", path: "informacion", type: "scroll"},
-    {link: "Precios", path: "precios", type: "scroll"},
+ 
 
   ]
 

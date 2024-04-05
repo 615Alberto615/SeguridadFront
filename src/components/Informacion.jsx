@@ -69,7 +69,7 @@
         const cardFrontStyle = `${cardStyle} bg-[rgba(255,255,255,0.04)] flex-col p-8`;
         const cardBackStyle = `${cardStyle}  text-base text-tartiary`;
         // Ajustar tamaño de imagen del tercer card con una clase específica
-        const imageSizeClass = image === ov3 ? 'w-2/5' : 'w-1/2';
+        const imageSizeClass = image === ov3 ? 'w-2/5' : 'w-40';
     
         return (
             <div className={cardContainerStyle} onClick={flipCard}>
