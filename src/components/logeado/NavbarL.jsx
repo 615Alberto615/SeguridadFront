@@ -10,9 +10,9 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   }
   const navItems = [
-    {link: "Home", path: "/home"},
-    {link: "Servicios", path: "/servicios"},
-    {link: "Información", path: "/informacion"},
+    {link: "Consultas", path: "/consultas"},
+    {link: "Horarios", path: "/horarios"},
+    {link: "Información", path: "/infolog"},
   ];
 
   return (
