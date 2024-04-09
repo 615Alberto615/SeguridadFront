@@ -1,5 +1,6 @@
 import  { useState } from 'react';
 import logo from '../assets/logo.png'
+import user from "../assets/user1.png";
 
 //iconos
 
@@ -14,14 +15,38 @@ const Navbar = () => {
   const togglerMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   }
-  const navItems = [
-    {link: "Home", path: "home", type: "scroll"},
+  // const navItems = [
+  //   {link: "Home", path: "home", type: "scroll"},
+  //   {link: "Servicios", path: "servicios", type: "scroll"},
+  //   {link: "Información", path: "informacion", type: "scroll"},
+  // ]
+
+  //CAMBIO PABLO: CAMBIAR TIPO DE USUARIO PARA EL NAVBAR
+
+  const [userType, setUserType] = useState('paciente');
+  const togglerUserType = () => {
+    setUserType(userType === 'paciente' ? 'terapeuta' : 'paciente');
+  }
+
+  const navItems = userType === 'terapeuta' ? [
+    {link: "Home", path: "/homedocente", type: "route"},
+    {link: "Horarios", path: "horariodocente", type: "scroll"},
+    {link: "Citas", path: "citas", type: "scroll"},
+    {link: "Pacientes", path: "pacientes", type: "scroll"},
+    {link: "Ayuda", path: "ayuda", type: "scroll"},
+  ] : [
+    {link: "Home", path: "/", type: "route"},
     {link: "Servicios", path: "servicios", type: "scroll"},
     {link: "Información", path: "informacion", type: "scroll"},
- 
+  ];
 
+  const profileItems = [
+    {link: "Perfil", path: "perfil"},
+    {link: "Colegas", path: "colegas"},
+    {link: "Datos", path: "datos"},
+    {link: "Historial clínico", path: "historial"},
+    {link: "Cerrar sesión", path: "logout"},
   ]
-
   return (
     <>
     <nav className='bg-white md:px-14 p-4 max-w-screen-2xl border-b mx-auto text-primary fixed top-0 right-0 left-0'>
@@ -44,15 +69,18 @@ const Navbar = () => {
         </ul>
         </div>
 
-        <div className='space-x-12 hidden md:flex items-center'>
-        <button
-            onClick={() => navigate('/login')} // Usa navigate para cambiar la ruta
-            className="bg-secondary py-2 px-4 transition-all duration-300 rounded 
-            hover: text-white hover:bg-indigo-600"
-          >
-          Iniciar sesion</button>
+        {/*<div className='space-x-12 hidden md:flex items-center'>*/}
+        {/*<button*/}
+        {/*    onClick={() => navigate('/login')} // Usa navigate para cambiar la ruta*/}
+        {/*    className="bg-secondary py-2 px-4 transition-all duration-300 rounded */}
+        {/*    hover: text-white hover:bg-indigo-600"*/}
+        {/*  >*/}
+        {/*  Iniciar sesion</button>*/}
         
-        </div>
+        {/*</div>*/}
+
+        {/*BOTON PARA CAMBIAR DE TIPO DE USUARIO*/}
+
 
         <div className='md:hidden'>
               <button onClick={togglerMenu} className='text-white  focus:outline-none
@@ -63,6 +91,17 @@ const Navbar = () => {
                       className='w-6 h-6 text-primary'/>)
                   }
               </button>
+        </div>
+        <div className='space-x-12 hidden md:flex items-center'>
+          <button onClick={togglerUserType} className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600">{userType === 'paciente' ? 'Cambiar a Terapeuta' : 'Cambiar a Paciente'}</button>
+          <div className='relative flex items-center'>
+            <img src={user} alt="Docente" className="w-20 h-20 rounded-full mx-auto mb-4" />
+            <select className='ml-2 bg-white border rounded shadow-lg py-2 z-20'>
+              {profileItems.map(({link, path}) => (
+                  <option key={path} value={path}>{link}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
       </div>

@@ -7,20 +7,24 @@ import About from './components/About'
 import NavbarL from './components/logeado/NavbarL'
 import Newsletter from './components/Newsletter'
 import Fotter from './components/Fotter'
-import { Routes, Route, useLocation } from 'react-router-dom';// Importa Routes y Route
+import { Routes, Route, useLocation } from 'react-router-dom';
 import LogIn from './components/LogIn';
 import Horarios from './components/logeado/Horarios';
+import HomeDocente from "./components/HomeDocente.jsx";
+import HorarioDocente from "./components/HorarioDocente.jsx";
 function App() {
   const isLoggedIn = true;
   let location = useLocation(); // Esta es la ubicación actual en tu app.
 
   return (
     <>
-      {(isLoggedIn || location.pathname !== '/login') && (isLoggedIn ? <NavbarL /> : <Navbar />)}
+      {/*{(isLoggedIn || location.pathname !== '/login') && (isLoggedIn ? <NavbarL /> : <Navbar />)}*/}
+        <Navbar/>
       <Routes>
         <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/><Fotter/></>} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/horarios" element={<Horarios />} />
+        <Route path="/homedocente" element={<><HomeDocente/><HorarioDocente/><Fotter/></>} />
         {/* Agrega aquí el resto de tus rutas */}
       </Routes>
     </>
