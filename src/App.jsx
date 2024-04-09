@@ -13,6 +13,7 @@ import Horarios from './components/logeado/Horarios';
 import HomeDocente from "./components/HomeDocente.jsx";
 import HorarioDocente from "./components/HorarioDocente.jsx";
 import CitaDocente from "./components/CitaDocente.jsx";
+import Docentes from "./components/Docentes.jsx";
 function App() {
   const isLoggedIn = true;
   let location = useLocation(); // Esta es la ubicación actual en tu app.
@@ -25,7 +26,7 @@ function App() {
         <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/><Fotter/></>} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/horarios" element={<Horarios />} />
-        <Route path="/homedocente" element={<><HomeDocente/><HorarioDocente/><CitaDocente/><Fotter/></>} />
+        <Route path="/homedocente" element={<><HomeDocente/><HorarioDocente/><CitaDocente/><Docentes/><Fotter/></>} />
         {/* Agrega aquí el resto de tus rutas */}
       </Routes>
     </>
