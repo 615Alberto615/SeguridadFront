@@ -45,7 +45,7 @@ const CitaDocente = () => {
             id='horarios'
             style={{ marginTop: '150px' }}
         >
-            <div className="text-center">
+            <div className="text-center" id={'citas'}>
                 <h2 className="md:text-5xl text-3xl font-extrabold text-primary mb-2">Tus citas</h2>
                 <p className="text-tartiary md:w-1/3 mx-auto px-4">Aquí puedes ver tus citas.</p>
             </div>

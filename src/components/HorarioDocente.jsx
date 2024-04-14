@@ -39,7 +39,7 @@ const HorarioDocente = () => {
             id='horarios'
             style={{ marginTop: '150px' }}
         >
-            <div className="text-center">
+            <div className="text-center" id='horariodocente'>
                 <h2 className="md:text-5xl text-3xl font-extrabold text-primary mb-2">Edita tus horarios</h2>
                 <p className="text-tartiary md:w-1/3 mx-auto px-4">Aquí puedes editar tus horarios de atención.</p>
             </div>
