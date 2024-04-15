@@ -6,72 +6,103 @@ import therapist2 from '../../assets/profile.png';
 import therapist3 from '../../assets/profile.png';
 
 const Información = () => {
-    // Data for therapists could be fetched from an API or defined here as a list
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 3;
     const therapists = [
-        {
-            image: therapist1,
-            name: "Dr. Jane Doe",
-            info: "Especialista en terapia cognitivo-conductual.",
-            schedule: "12:45-15:00",
-            days: "Lunes a Miércoles"
-        },
-        {
-            image: therapist2,
-            name: "Dr. John Smith",
-            info: "Experto en psicología clínica y de la salud.",
-            schedule: "10:00-12:00",
-            days: "Martes y Jueves"
-        },
-        {
-            image: therapist3,
-            name: "Dr. Alex Johnson",
-            info: "Terapeuta enfocado en terapia de pareja.",
-            schedule: "16:00-18:00",
-            days: "Viernes a Sábado"
-        },
+        { image: therapist1, name: "Dr. Jane Doe", info: "Especialista en terapia cognitivo-conductual.", schedule: "12:45-15:00", days: "Lunes a Miércoles" },
+        { image: therapist2, name: "Dr. John Smith", info: "Experto en psicología clínica y de la salud.", schedule: "10:00-12:00", days: "Martes y Jueves" },
+        { image: therapist3, name: "Dr. Alex Johnson", info: "Terapeuta enfocado en terapia de pareja.", schedule: "16:00-18:00", days: "Viernes a Sábado" },
+        { image: therapist1, name: "Dr. Pedro Doe", info: "Especialista en terapia cognitivo-conductual.", schedule: "12:45-15:00", days: "Lunes a Miércoles" },
+        { image: therapist2, name: "Dr. Juan Smith", info: "Experto en psicología clínica y de la salud.", schedule: "10:00-12:00", days: "Martes y Jueves" },
+        { image: therapist3, name: "Dr. Lucas Johnson", info: "Terapeuta enfocado en terapia de pareja.", schedule: "16:00-18:00", days: "Viernes a Sábado" },
         // ... other therapists
     ];
+    
+    const lastIndex = currentPage * itemsPerPage;
+    const firstIndex = lastIndex - itemsPerPage;
+    const currentItems = therapists.slice(firstIndex, lastIndex);
+
+   
+
+  
+    const totalPages = Math.ceil(therapists.length / itemsPerPage);
+
+  // Actualiza tu función nextPage para que no avance más allá de la última página
+    const nextPage = () => {
+        setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+    };
+
+  // Creamos un array de los números de página para renderizarlos
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
     return (
-        <div className="my-24 md:px-14 px-4 max-w-screen-2xl mx-auto" id='servicios'>
-            <div className="flex flex-col lg:flex-row justify-between items-center gap-10">
-                {/* Information Section */}
+        <div className="my-0 md:px-14 px-4 max-w-screen-2xl mx-auto" id='servicios'>
+            <div className="flex flex-col lg:flex-row justify-center items-center gap-10">
                 <motion.div 
-                    variants={fadeIn('right', 0.2)}
-                    initial='hidden'
-                    whileInView={'show'}
-                    viewport={{ once: false, amount: 0.7 }}
-                    className="lg:w-1/4"
+                variants={fadeIn('up', 0.3)}
+                initial='hidden'
+                whileInView={'show'}
+                viewport={{ once: false, amount: 0.7 }}
+                className="container mx-auto mt-32"
                 >
-                    <h3 className="text-3xl text-primary font-bold lg:w-1/2 mb-3">Atención Psicológica</h3>
-                    <p className="text-base text-tartiary">Ofrecemos un servicio de atención psicológica con horarios flexibles y profesionales especializados.</p>
-                </motion.div>
-                
-                {/* Cards Section */}
-                <motion.div 
-                    variants={fadeIn('up', 0.3)}
-                    initial='hidden'
-                    whileInView={'show'}
-                    viewport={{ once: false, amount: 0.7 }}
-                    className="w-full lg:w-3/4"
-                >
-                    <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-start md:gap-12 gap-8'>    
-                        {therapists.map((therapist, index) => (
-                            <FlipCard 
-                                key={index}
-                                image={therapist.image} 
-                                name={therapist.name}
-                                info={therapist.info}
-                                schedule={therapist.schedule}
-                                days={therapist.days}
-                            />
-                        ))}
+                <div className="text-center">
+                    <h2 className="md:text-5xl text-3xl font-extrabold text-primary mb-2">Terapeutas Disponibles</h2>
+                    <p className="text-tartiary md:w-1/3 mx-auto px-4">Lista de todos los terapeutas y sus horarios:</p>    
+                </div>
+
+                <div className="bg-white shadow-xl rounded-lg p-6">
+                    <motion.div 
+                                variants={fadeIn('up', 0.3)}
+                                initial='hidden'
+                                whileInView={'show'}
+                                viewport={{ once: false, amount: 0.7 }}
+                                className="w-full lg:w-3/4 mx-auto"
+                            >
+                                <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center md:gap-12 gap-8 justify-items-center'>    
+                                    {currentItems.map((therapist, index) => (
+                                        <FlipCard 
+                                            key={index}
+                                            image={therapist.image} 
+                                            name={therapist.name}
+                                            info={therapist.info}
+                                            schedule={therapist.schedule}
+                                            days={therapist.days}
+                                        />
+                                    ))}
+                                </div>
+                            </motion.div>
+                    <div className="flex justify-center mt-8">
+                    <div className="flex justify-center mt-8 items-center">
+      {/* Renderizamos los números de página */}
+      <div className="flex space-x-2">
+        {pageNumbers.map((number) => (
+          <button
+            key={number}
+            onClick={() => setCurrentPage(number)}
+            className={`px-4 py-2 rounded-full ${currentPage === number ? 'bg-secondary text-white' : 'bg-gray-200'}`}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
+
+      {/* Renderizamos el botón de siguiente si no estamos en la última página */}
+      {currentPage < totalPages && (
+        <button
+          onClick={nextPage}
+          className="btn2"
+        >
+          Siguiente
+        </button>
+      )}
+    </div>
                     </div>
+                </div>
                 </motion.div>
             </div>
         </div>
     );
-}
+};
 
 const FlipCard = ({ image, name, info, schedule, days }) => {
     const [isFlipped, setIsFlipped] = useState(false);
@@ -83,11 +114,10 @@ const FlipCard = ({ image, name, info, schedule, days }) => {
     const cardContainerStyle = "relative w-full h-96 flex justify-center items-center cursor-pointer";
     const cardStyle = "absolute w-full h-full rounded-[35px] shadow-3xl flex justify-center items-center p-6";
     const cardFrontStyle = `${cardStyle} bg-[rgba(255,255,255,0.04)] flex-col p-8`;
-    const cardBackStyle = `${cardStyle} bg-white text-base text-tartiary`;
+    const cardBackStyle = `${cardStyle} bg-white text-base text-tartiary flex flex-col justify-center items-center`;
 
     return (
         <div className={cardContainerStyle} onClick={flipCard}>
-            {/* Front of the card */}
             <motion.div
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
@@ -99,7 +129,6 @@ const FlipCard = ({ image, name, info, schedule, days }) => {
                 <p className="text-center mt-2">{info}</p>
             </motion.div>
 
-            {/* Back of the card */}
             <motion.div
                 animate={{ rotateY: isFlipped ? 0 : -180 }}
                 transition={{ type: "spring", stiffness: 260, damping: 20 }}
@@ -109,6 +138,7 @@ const FlipCard = ({ image, name, info, schedule, days }) => {
                 <p className="text-center font-bold mb-2">Horarios Disponibles</p>
                 <p className="text-center">{schedule}</p>
                 <p className="text-center">{days}</p>
+                <button className="mt-4 px-4 py-2 text-white bg-primary rounded hover:bg-primary-dark" href="/formConsulta">Solicita un reserva</button>
             </motion.div>
         </div>
     );

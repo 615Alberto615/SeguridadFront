@@ -1,5 +1,5 @@
 // import user from '../assets/user2.png';
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../variants';
 

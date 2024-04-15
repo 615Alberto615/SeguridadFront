@@ -1,5 +1,25 @@
 import { useState } from 'react';
 import { Bar, Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 const datosBase = [
     { id: 1, carrera: "Ingeniería", edad: 22, semestre: 6 },
@@ -63,16 +83,14 @@ const Datos = () => {
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Gráfico de barras */}
                     <div>
                         <h2 className="text-lg font-semibold mb-4">Edad promedio por carrera</h2>
                         <Bar data={dataBar} />
                     </div>
-                    {/* Gráfico de torta */}
-                    {/*<div>*/}
-                    {/*    <h2 className="text-lg font-semibold mb-4">Distribución por semestre</h2>*/}
-                    {/*    <Pie data={dataPie} />*/}
-                    {/*</div>*/}
+                    <div>
+                        <h2 className="text-lg font-semibold mb-4">Distribución por semestre</h2>
+                        <Pie data={dataPie} />
+                    </div>
                 </div>
             </div>
         </div>

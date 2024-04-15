@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const PerfilDocente = () => {
-    const [docente, setDocente] = useState({
+    const [docente, ] = useState({
         nombre: "Juan",
         apellidoPaterno: "Pérez",
         apellidoMaterno: "García",
