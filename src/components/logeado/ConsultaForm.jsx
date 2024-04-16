@@ -85,9 +85,9 @@ const ConsultaForm = () => {
       initial='hidden'
       whileInView={'show'}
       viewport={{ once: false, amount: 0.7 }}
-      className="container mx-auto mt-32"
+      className="container mx-auto mt-24"
     >
-      <div className="bg-white shadow-xl rounded-lg p-6 max-w-md mx-auto my-12">
+      <div className="bg-white shadow-xl rounded-lg p-6 max-w-md mx-auto ">
         <h2 className="text-center text-3xl font-extrabold mb-4 text-primary">Registro solicitud de reserva</h2>
         {showSuccessMessage && (
           <div className="text-center p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">

@@ -15,3 +15,12 @@ nav{
     @apply py-4 px-8 bg-secondary font-semibold text-white rounded
     hover:bg-primary transition-all duration-300
 }
+
+.btn2{
+    @apply ml-4 px-4 py-2 bg-secondary font-semibold text-white rounded
+    hover:bg-primary transition-all duration-300
+  }
+  .btn3{
+    @apply ml-4 px-4 py-2 bg-primary font-semibold text-white rounded
+    hover:bg-secondary transition-all duration-300 justify-center
+  }

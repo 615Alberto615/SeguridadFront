@@ -13,7 +13,7 @@ const Navbar = () => {
     {link: "Consultas", path: "/consultas"},
     {link: "Horarios", path: "/horarios"},
     {link: "Información", path: "/infolog"},
-    {link: "formConsulta", path: "/formConsulta"},
+    
   ];
 
   return (

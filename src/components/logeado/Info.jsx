@@ -10,8 +10,13 @@ import {fadeIn } from '../../variants';
 
 const Informacion = () => {
     return (
-        <div className="md:px-16 p-4 max-w-screen-2xl mx-auto mt-24" id='home'>
-            <div className="gradientBg rounded-xl rounded-br-[80px] md:p-9 px-4 py-9">
+        <div className="md:px-16 p-4 max-w-screen-2xl mx-auto mt-28" id='home'>
+            <motion.div 
+             variants={fadeIn('up',0.2)}
+             initial='hidden'
+             whileInView={'show'}
+             
+            className="gradientBg rounded-xl rounded-br-[80px] md:p-9 px-4 py-9">
                 <div className='flex flex-col md:flex-row-reverse justify-between items-center '>
                     <motion.div
                     variants={fadeIn('down',0.2)}
@@ -56,7 +61,7 @@ const Informacion = () => {
                         
                     </motion.div>
                 </div>
-            </div>
+            </motion.div>
 
             
         </div>

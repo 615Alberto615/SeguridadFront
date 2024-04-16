@@ -24,6 +24,10 @@ import HistorialClinicoDocente from "./components/HistorialClinicoDocente.jsx";
 import Datos from './components/Datos.jsx'
 import NavbarDoc from './components/docentes/navbarDoc.jsx'
 import Info from './components/logeado/Info.jsx'
+import SeleccionarHor from './components/logeado/SeleccionarHor.jsx'
+import ConsultasEst from './components/logeado/ConsultasEst.jsx'
+import CitasEst from './components/logeado/CitasEst.jsx'
+import Historial from './components/logeado/historial.jsx'
 function App() {
   const [isLoggedIn, ] = useState(true); // Simula el estado de login
   const [userId, ] = useState(1); // Simula el ID del usuario logeado
@@ -51,6 +55,9 @@ function App() {
         <Route path="/formConsulta" element={<ConsultaForm />} />
         <Route path="/homedocente" element={<><HomeDocente/><HorarioDocente/><CitaDocente/><Docentes/><Help/><Paciente/><PerfilDocente/><HistorialClinicoDocente/><Datos/><Fotter/></>} />
         <Route path="/infolog" element={<Info />} />
+        <Route path="/seleccionarhor" element={<SeleccionarHor />} />
+        <Route path="/consultas" element={<><CitasEst/><ConsultasEst /> </>} />
+        <Route path="/historial" element={<Historial/>} />
         {/* Agrega aquí el resto de tus rutas */}
       </Routes>
     </>
