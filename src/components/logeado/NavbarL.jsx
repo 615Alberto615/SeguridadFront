@@ -2,9 +2,11 @@ import { useState } from 'react';
 import logo from '../../assets/logo.png';
 
 //iconos
-import { FaTimes, FaBars } from "react-icons/fa";
+import { FaTimes, FaBars, FaUserCircle } from 'react-icons/fa';
 
 const Navbar = () => {
+  
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const togglerMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -15,6 +17,13 @@ const Navbar = () => {
     {link: "Información", path: "/infolog"},
     
   ];
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
+  const handleLogout = () => {
+    console.log('Logout logic here'); // Implementa la lógica de cierre de sesión aquí
+    setIsProfileMenuOpen(false); // Cierra el menú de perfil
+  };
 
   return (
     <>
@@ -33,6 +42,17 @@ const Navbar = () => {
                 ))
               }
             </ul>
+          </div>
+          <div className='hidden md:block relative'>
+            <button onClick={toggleProfileMenu} className='focus:outline-none'>
+              <FaUserCircle className='w-8 h-8 text-primary' />
+            </button>
+            {isProfileMenuOpen && (
+              <div className='absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20'>
+                <a href="/historial" className='block px-4 py-2 text-sm text-primary hover:bg-gray-100'>Historial</a>
+                <button onClick={handleLogout} className='block px-4 py-2 text-sm text-primary hover:bg-gray-100 w-full text-left'>Cerrar sesión</button>
+              </div>
+            )}
           </div>
           
           {/* Menu hamburguesa para dispositivos móviles */}
