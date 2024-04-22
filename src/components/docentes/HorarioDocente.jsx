@@ -1,7 +1,7 @@
 // import user from '../assets/user2.png';
 import  { useState } from 'react';
 import { motion } from 'framer-motion';
-import { fadeIn } from '../variants';
+import { fadeIn } from '../../variants.js';
 
 const HorarioDocente = () => {
     const [isYearly, setIsYearly] = useState(false);

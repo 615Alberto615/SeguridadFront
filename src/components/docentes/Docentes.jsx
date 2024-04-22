@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { fadeIn } from '../variants';
-import ov1 from '../assets/user1.png';
-import ov2 from '../assets/user2.png';
-import ov3 from '../assets/user3.png';
+import { fadeIn } from '../../variants.js';
+import ov1 from '../../assets/user1.png';
+import ov2 from '../../assets/user2.png';
+import ov3 from '../../assets/user3.png';
 
 // Lista de docentes
 const docentesList = [

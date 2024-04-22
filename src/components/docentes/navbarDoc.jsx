@@ -15,36 +15,21 @@ const Navbar = () => {
   const togglerMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   }
-  // const navItems = [
-  //   {link: "Home", path: "home", type: "scroll"},
-  //   {link: "Servicios", path: "servicios", type: "scroll"},
-  //   {link: "Información", path: "informacion", type: "scroll"},
-  // ]
 
-  //CAMBIO PABLO: CAMBIAR TIPO DE USUARIO PARA EL NAVBAR
 
-  const [userType, setUserType] = useState('paciente');
-  const togglerUserType = () => {
-    setUserType(userType === 'paciente' ? 'terapeuta' : 'paciente');
-  }
-
-  const navItems = userType === 'terapeuta' ? [
+  const navItems = [
     {link: "Home", path: "/homedocente", type: "route"},
-    {link: "Horarios", path: "horariodocente", type: "scroll"},
-    {link: "Citas", path: "citas", type: "scroll"},
-    {link: "Pacientes", path: "pacientes", type: "scroll"},
-    {link: "Ayuda", path: "ayuda", type: "scroll"},
-  ] : [
-    {link: "Home", path: "/", type: "route"},
-    {link: "Servicios", path: "servicios", type: "scroll"},
-    {link: "Información", path: "informacion", type: "scroll"},
+    {link: "Horarios", path: "/horariodocente", type: "route"},
+    {link: "Citas", path: "/citadocente", type: "route"},
+    {link: "Pacientes", path: "/paciente", type: "route"},
+    {link: "Ayuda", path: "/help", type: "route"},
   ];
 
   const profileItems = [
-    {link: "Perfil", path: "perfil"},
-    {link: "Colegas", path: "colegas"},
-    {link: "Datos", path: "datos"},
-    {link: "Historial clínico", path: "historial"},
+    {link: "Perfil", path: "/perfildocente",type: "route"},
+    {link: "Colegas", path: "/docentes" ,type: "route"},
+    {link: "Datos", path: "/datos", type: "route"},
+    {link: "Historial clínico", path: "/historialdocente", type: "route"},
     {link: "Cerrar sesión", path: "logout"},
   ]
   return (
@@ -69,19 +54,6 @@ const Navbar = () => {
         </ul>
         </div>
 
-        {/*<div className='space-x-12 hidden md:flex items-center'>*/}
-        {/*<button*/}
-        {/*    onClick={() => navigate('/login')} // Usa navigate para cambiar la ruta*/}
-        {/*    className="bg-secondary py-2 px-4 transition-all duration-300 rounded */}
-        {/*    hover: text-white hover:bg-indigo-600"*/}
-        {/*  >*/}
-        {/*  Iniciar sesion</button>*/}
-        
-        {/*</div>*/}
-
-        {/*BOTON PARA CAMBIAR DE TIPO DE USUARIO*/}
-
-
         <div className='md:hidden'>
               <button onClick={togglerMenu} className='text-white  focus:outline-none
                 focus:text-gray-300'>
@@ -93,8 +65,7 @@ const Navbar = () => {
               </button>
         </div>
         <div className='space-x-12 hidden md:flex items-center'>
-          <button onClick={togglerUserType} className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600">{userType === 'paciente' ? 'Cambiar a Terapeuta' : 'Cambiar a Paciente'}</button>
-          <div className='relative flex items-center'>
+         <div className='relative flex items-center'>
             <img src={user} alt="Docente" className="w-20 h-20 rounded-full mx-auto mb-4" />
             <select className='ml-2 bg-white border rounded shadow-lg py-2 z-20'>
               {profileItems.map(({link, path}) => (

@@ -13,24 +13,28 @@ import Horarios from './components/logeado/Horarios';
 import ConsultaForm from './components/logeado/ConsultaForm';
 import  { useState } from 'react';
 
-import HomeDocente from "./components/HomeDocente.jsx";
-import HorarioDocente from "./components/HorarioDocente.jsx";
-import CitaDocente from "./components/CitaDocente.jsx";
-import Docentes from "./components/Docentes.jsx";
+import HomeDocente from "./components/docentes/HomeDocente.jsx";
+import HorarioDocente from "./components/docentes/HorarioDocente.jsx";
+import CitaDocente from "./components/docentes/CitaDocente.jsx";
+import Docentes from "./components/docentes/Docentes.jsx";
 import Help from "./components/Help.jsx";
-import Paciente from "./components/Paciente.jsx";
-import PerfilDocente from "./components/PerfilDocente.jsx";
-import HistorialClinicoDocente from "./components/HistorialClinicoDocente.jsx";
-import Datos from './components/Datos.jsx'
+import Paciente from "./components/docentes/Paciente.jsx";
+import PerfilDocente from "./components/docentes/PerfilDocente.jsx";
+import HistorialClinicoDocente from "./components/docentes/HistorialClinicoDocente.jsx";
+import Datos from './components/docentes/Datos.jsx'
 import NavbarDoc from './components/docentes/navbarDoc.jsx'
 import Info from './components/logeado/Info.jsx'
 import SeleccionarHor from './components/logeado/SeleccionarHor.jsx'
 import ConsultasEst from './components/logeado/ConsultasEst.jsx'
 import CitasEst from './components/logeado/CitasEst.jsx'
 import Historial from './components/logeado/historial.jsx'
+import SidebarAdm from "./components/admin/sidebarAdm.jsx";
+import Usuarios from "./components/admin/Usuarios.jsx";
+import Graficos from "./components/admin/Graficos.jsx";
+import PerfilAdmin from "./components/admin/PerfilAdmin.jsx";
 function App() {
   const [isLoggedIn, ] = useState(true); // Simula el estado de login
-  const [userId, ] = useState(1); // Simula el ID del usuario logeado
+  const [userId, ] = useState(3); // Simula el ID del usuario logeado
   
 
 
@@ -42,24 +46,39 @@ function App() {
       return <NavbarL />;
     } else if (isLoggedIn && userId === 2) {
       return <NavbarDoc />;
+    } else if (isLoggedIn && userId === 3) {
+      return <SidebarAdm />;
     }
+
   };
 
   return (
     <>
       {renderNavbar()}
       <Routes>
-        <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/><Fotter/></>} />
+        <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/></>} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/horarios" element={<Horarios />} />
         <Route path="/formConsulta" element={<ConsultaForm />} />
-        <Route path="/homedocente" element={<><HomeDocente/><HorarioDocente/><CitaDocente/><Docentes/><Help/><Paciente/><PerfilDocente/><HistorialClinicoDocente/><Datos/><Fotter/></>} />
+        <Route path="/homedocente" element={<><HomeDocente/><CitaDocente/><Docentes/><Help/></>} />
+        <Route path="/horariodocente" element={<HorarioDocente />} />
+        <Route path="/citadocente" element={<CitaDocente />} />
+        <Route path="/docentes" element={<Docentes />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/paciente" element={<Paciente />} />
+        <Route path="/perfildocente" element={<PerfilDocente />} />
+        <Route path="/historialdocente" element={<HistorialClinicoDocente />} />
+        <Route path="/datos" element={<Datos />} />
         <Route path="/infolog" element={<Info />} />
         <Route path="/seleccionarhor" element={<SeleccionarHor />} />
         <Route path="/consultas" element={<><CitasEst/><ConsultasEst /> </>} />
         <Route path="/historial" element={<Historial/>} />
+        <Route path="/usuarios" element={<Usuarios />} />
+        <Route path="/graficos" element={<Graficos />} />
+        <Route path="/perfilAdmin" element={<PerfilAdmin />} />
         {/* Agrega aquí el resto de tus rutas */}
       </Routes>
+      <Fotter/>
     </>
   );
 }

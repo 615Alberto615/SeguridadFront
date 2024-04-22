@@ -1,6 +1,6 @@
 import  { useState } from 'react';
 import { motion } from 'framer-motion';
-import { fadeIn } from '../variants';
+import { fadeIn } from '../../variants.js';
 
 const CitaDocente = () => {
     const [selectedCita, setSelectedCita] = useState(null);
