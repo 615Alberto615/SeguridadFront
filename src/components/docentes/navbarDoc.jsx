@@ -12,8 +12,13 @@ import { Link as RouterLink } from 'react-router-dom';
 const Navbar = () => {
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const togglerMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  }
+
+  const togglerProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
   }
 
 
@@ -65,13 +70,21 @@ const Navbar = () => {
               </button>
         </div>
         <div className='space-x-12 hidden md:flex items-center'>
-         <div className='relative flex items-center'>
-            <img src={user} alt="Docente" className="w-20 h-20 rounded-full mx-auto mb-4" />
-            <select className='ml-2 bg-white border rounded shadow-lg py-2 z-20'>
-              {profileItems.map(({link, path}) => (
-                  <option key={path} value={path}>{link}</option>
-              ))}
-            </select>
+          <div className='space-x-12 hidden md:flex items-center relative'>
+            <button onClick={togglerProfileMenu} className='focus:outline-none profile-button'>
+              <img src={user} alt="Docente" className="w-20 h-20 rounded-full" />
+            </button>
+            {isProfileMenuOpen && (
+                <div className='absolute top-24 right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20'>
+                  <ul className='list-none'>
+                    {profileItems.map(({link, path}) => (
+                        <li key={link}>
+                          <RouterLink to={path} className='block hover:bg-gray-200 px-4 py-2'>{link}</RouterLink>
+                        </li>
+                    ))}
+                  </ul>
+                </div>
+            )}
           </div>
         </div>
 
