@@ -32,11 +32,11 @@ import SidebarAdm from "./components/admin/sidebarAdm.jsx";
 import Usuarios from "./components/admin/Usuarios.jsx";
 import Graficos from "./components/admin/Graficos.jsx";
 import PerfilAdmin from "./components/admin/PerfilAdmin.jsx";
+
+
 function App() {
   const [isLoggedIn, ] = useState(true); // Simula el estado de login
-  const [userId, ] = useState(3); // Simula el ID del usuario logeado
-  
-
+  const [userId, ] = useState(1); // Simula el ID del usuario logeado
 
   // Lógica para seleccionar la Navbar
   const renderNavbar = () => {
@@ -49,14 +49,16 @@ function App() {
     } else if (isLoggedIn && userId === 3) {
       return <SidebarAdm />;
     }
-
   };
 
-  return (
-    <>
-      {renderNavbar()}
-      <Routes>
-        <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/></>} />
+  // Envuelve las rutas en un contenedor que se ajusta según el usuario
+  const renderRoutes = () => {
+    const mainClass = userId === 3 ? "ml-7" : "ml-0"; // Ajusta el margen según el usuario
+    return (
+      <div className={mainClass}>
+        <Routes>
+          <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/></>} />
+          <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/></>} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/horarios" element={<Horarios />} />
         <Route path="/formConsulta" element={<ConsultaForm />} />
@@ -76,12 +78,19 @@ function App() {
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/graficos" element={<Graficos />} />
         <Route path="/perfilAdmin" element={<PerfilAdmin />} />
-        {/* Agrega aquí el resto de tus rutas */}
-      </Routes>
-      <Fotter/>
+        <Route path="/logout" element={<><Navbar /><Home/><Informacion/><About/><Newsletter/></>} />
+        </Routes>
+        <Fotter />
+      </div>
+    );
+  };
+
+  return (
+    <>
+      {renderNavbar()}
+      {renderRoutes()}
     </>
   );
 }
 
 export default App;
-
