@@ -1,7 +1,7 @@
 import  { useState } from 'react';
 import logo from '../../assets/logo.png'
 import user from "../../assets/user1.png";
-
+import useAuthStore from '../../store/useAuthStore';
 //iconos
 
 import { FaXmark } from "react-icons/fa6";
@@ -10,6 +10,7 @@ import { Link as ScrollLink } from 'react-scroll'; // Renombrado para evitar con
 import { Link as RouterLink } from 'react-router-dom'; 
  
 const Navbar = () => {
+  const { logout } = useAuthStore();
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -20,6 +21,10 @@ const Navbar = () => {
   const togglerProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   }
+  const handleLogout = () => {
+    logout();
+    window.location.href = `/`; // O redireccionar a la página que consideres adecuada
+  };
 
 
   const navItems = [
@@ -35,7 +40,7 @@ const Navbar = () => {
     {link: "Colegas", path: "/docentes" ,type: "route"},
     {link: "Datos", path: "/datos", type: "route"},
     {link: "Historial clínico", path: "/historialdocente", type: "route"},
-    {link: "Cerrar sesión", path: "logout"},
+    {link: "Cerrar sesión", action: handleLogout},
   ]
   return (
     <>
@@ -77,11 +82,15 @@ const Navbar = () => {
             {isProfileMenuOpen && (
                 <div className='absolute top-24 right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20'>
                   <ul className='list-none'>
-                    {profileItems.map(({link, path}) => (
-                        <li key={link}>
-                          <RouterLink to={path} className='block hover:bg-gray-200 px-4 py-2'>{link}</RouterLink>
-                        </li>
-                    ))}
+                  {profileItems.map(({link, path, action}) => (
+                <li key={link} onClick={action || togglerProfileMenu} className='block hover:bg-gray-200 px-4 py-2'>
+                  {action ? (
+                    <button onClick={action} className='w-full text-left'>{link}</button>
+                  ) : (
+                    <RouterLink to={path} className='block w-full text-left'>{link}</RouterLink>
+                  )}
+                </li>
+              ))}
                   </ul>
                 </div>
             )}
