@@ -6,7 +6,7 @@ const useAuthStore = create((set) => ({
   user: null,
   token: null,
   userId: null,
-  rol:null,
+  userRol: null,
   isLoggedIn: false,
   error: null,
 
@@ -15,15 +15,16 @@ const useAuthStore = create((set) => ({
       const response = await loginUser(userData);
       if (response.code === 200) {
         set({
-          token: response.token,
-          userId: response.id,
-          rol: response.rol,
+          token: response.data.token,
+          userId: response.data.id,
+          userRol: response.data.rol,
           isLoggedIn: true,
           error: null
         });
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('userId', response.id);
-        localStorage.setItem('rol', response.rol);
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.id);
+        localStorage.setItem('userRol', response.data.rol);
+        localStorage.setItem('isLoggedIn', true);
       } else {
         set({ error: response.message });
       }
@@ -32,21 +33,26 @@ const useAuthStore = create((set) => ({
     }
   },
 
+  logout: () => {
+    set({ user: null, token: null, userId: null, userRol: null, isLoggedIn: false, error: null });
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRol');
+    localStorage.removeItem('isLoggedIn');
+  },
+
   register: async (userData) => {
     try {
       const response = await registerUser(userData);
-      set({ user: response, error: null });
+      set({ user: response.data, error: null });
+      return response;  // Asegúrate de devolver la respuesta aquí
     } catch (error) {
       set({ user: null, error: error.message || 'No se pudo registrar al usuario' });
+      return { error: error.message || 'No se pudo registrar al usuario' };  // Devuelve un error adecuadamente
     }
   },
 
-  logout: () => {
-    set({ user: null, token: null, userId: null, isLoggedIn: false, error: null });
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    // Redireccionar al login o a la página principal
-  }
+ 
 }));
 
 export default useAuthStore;

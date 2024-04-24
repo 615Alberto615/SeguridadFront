@@ -35,40 +35,60 @@
   import Register from "./components/Register.jsx";
 
   import {  useEffect } from 'react'; 
-  import useAuthStore from './store/useAuthStore'; 
+
 
   function App() {
-    const { isLoggedIn, userId, login,  } = useAuthStore();
-    const [token, ] = useState(localStorage.getItem('token') || null);
-    const [userIdState, ] = useState(localStorage.getItem('userId') || null);// Simula el ID del usuario logeado
-    const [rol, ] = useState(localStorage.getItem('rol') || null);
-    useEffect(() => {
-      // Esto actualiza el estado local cuando la app carga y hay un token almacenado
-      if (token && userIdState) {
-        login({ token, userId: userIdState, rol:rol});
-      }
-    }, [login, token, userIdState,rol]);
-    // Lógica para seleccionar la Navbar
     
+    const [token, setToken] = useState(localStorage.getItem('token'));
+    const [userIdState, setUserIdState] = useState(localStorage.getItem('userId'));
+    const [rol, setRol] = useState(localStorage.getItem('userRol'));
+    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
+
+    useEffect(() => {
+        console.log("Rol actual:", rol);
+        console.log("Token actual:", token);
+        console.log("User ID actual:", userIdState);
+        console.log("Is Logged In:", isLoggedIn);
+    }, [rol, token, userIdState, isLoggedIn]);
+
+    // Actualiza el estado si los valores en localStorage cambian, por ejemplo, en diferentes pestañas
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setToken(localStorage.getItem('token'));
+            setUserIdState(localStorage.getItem('userId'));
+            setRol(localStorage.getItem('userRol'));
+            setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
+
     const renderNavbar = () => {
-      const path = location.pathname; // Obtener la ruta actual
-      if (path === '/login' || path === '/register') {
-        return null; // No mostrar Navbar en login y register
-      } else if (!isLoggedIn) {
-        return <Navbar />;
-      } else if (isLoggedIn && rol === 1) {
-        return <NavbarL />;
-      } else if (isLoggedIn && rol === 2) {
-        return <NavbarDoc />;
-      } else if (isLoggedIn && rol === 3) {
-        return <SidebarAdm />;
-      }
+        const path = location.pathname;
+        if (path === '/login' || path === '/register') {
+            return null;
+        } else if (!isLoggedIn) {
+            return <Navbar />;
+        } else {
+            switch (rol) {
+                case '2':
+                    return <NavbarL />;
+                case '3':
+                    return <NavbarDoc />;
+                case '1':
+                    return <SidebarAdm />;
+                default:
+                    return <Navbar />;
+            }
+        }
     };
 
-    // Envuelve las rutas en un contenedor que se ajusta según el usuario
     const renderRoutes = () => {
-      const mainClass = userId === 3 ? "ml-7" : "ml-0"; // Ajusta el margen según el usuario
-      return (
+        const mainClass = rol === '1' ? "ml-7" : "ml-0";
+        return (
         <div className={mainClass}>
           <Routes>
             <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/><Fotter /></>} />        

@@ -5,7 +5,7 @@ import { fadeIn } from '../variants';
 import { Link } from 'react-router-dom';
 
 import useAuthStore from '../store/useAuthStore';
-import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -61,13 +61,13 @@ const Login = () => {
       setError("Por favor, selecciona un semestre.");
       return;
     }
-  
+   
     const userData = {
       userDto: {
         userName: username,
         password, // Encripta o haz hash de esto antes de enviarlo
         status: true,
-        rolId: 1
+        rolId: 2
       },
       peopleDto: {
         name: firstName,
@@ -87,13 +87,15 @@ const Login = () => {
   
     try {
       const result = await register(userData);
-      if (result) {
-        navigate('/login');
+      console.log("Resultado del registro:", result);
+      if (result && result.code === 200) {
+          window.location.href = `/login`;
       } else {
-        throw new Error('Registration was not successful');
+          throw new Error(result.error || 'Registration was not successful');
       }
     } catch (error) {
       setError("Hubo un problema con el registro. Inténtalo de nuevo.");
+      console.error("Error en registro:", error);
     }
   };
   
@@ -102,7 +104,7 @@ const Login = () => {
   };
 
   const register = useAuthStore((state) => state.register);
-  const navigate = useNavigate();
+  
 
 
   return (

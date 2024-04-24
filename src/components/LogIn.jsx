@@ -10,13 +10,13 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [localError, setLocalError] = useState(''); // Local state for handling custom errors
+  const [localError, setLocalError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setLocalError(''); // Reset local error state
+    setLocalError('');
     if (!username.trim() || !password) {
-      setLocalError('Por favor, completa todos los campos para iniciar sesión.'); // Set local error if fields are empty
+      setLocalError('Por favor, completa todos los campos para iniciar sesión.');
       return;
     }
 
@@ -25,17 +25,27 @@ const Login = () => {
       if (result && result.code === 200) {
         localStorage.setItem('token', result.data.token);
         localStorage.setItem('userId', result.data.id);
-        navigate('/'); // Navigate after successful login
+        localStorage.setItem('userRol', result.data.rol);
+        localStorage.setItem('isLoggedIn', true);
+        console.log(result);
+
+        // Forzar la recarga de la página completa para reiniciar la aplicación
+        window.location.href = '/';
       }
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
+      if (err.response && err.response.data) {
+        setLocalError(err.response.data.message || "Error desconocido");
+      } else {
+        setLocalError("Error de conexión o configuración");
+      }
     }
   };
 
   if (isLoggedIn && !error) {
-    navigate('/'); // Redirect if already logged in
+    console.log('User is logged in, redirecting to home page');
+    window.location.href = '/';
   }
-
   return (
     <div className="min-h-screen flex">
       <div className="flex flex-1 bg-gradient-to-r from-secondary to-pink text-white p-12 justify-center items-center">
