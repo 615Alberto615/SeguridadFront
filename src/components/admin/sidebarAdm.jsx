@@ -22,7 +22,11 @@ const SidebarAdm = () => {
         { link: "Usuarios", path: "/usuarios", icon: <FaUsers /> },
         { link: "Graficos", path: "/graficos", icon: <FaGauge /> },
         { link: "Perfil", path: "/perfilAdmin", icon: <FaPerson /> },
+<<<<<<< HEAD
+        { link: "Cerrar sesión", path: "logout", icon: <FaSignOutAlt /> },
+=======
         { link: "Cerrar sesión", path: "/logout", icon: <FaSignOutAlt/> },
+>>>>>>> 54e65ba7f5e6727549d28d2313fea693908e9723
     ];
 
     return (
