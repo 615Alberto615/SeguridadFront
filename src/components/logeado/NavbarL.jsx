@@ -3,9 +3,9 @@ import logo from '../../assets/logo.png';
 
 //iconos
 import { FaTimes, FaBars, FaUserCircle } from 'react-icons/fa';
-
+import useAuthStore from '../../store/useAuthStore';
 const Navbar = () => {
-  
+  const { logout } = useAuthStore();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const togglerMenu = () => {
@@ -21,8 +21,8 @@ const Navbar = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
   const handleLogout = () => {
-    console.log('Logout logic here'); // Implementa la lógica de cierre de sesión aquí
-    setIsProfileMenuOpen(false); // Cierra el menú de perfil
+    logout();
+    window.location.href = `/`; // O redireccionar a la página que consideres adecuada
   };
 
   return (
