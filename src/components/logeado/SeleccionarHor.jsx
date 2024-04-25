@@ -2,24 +2,15 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
 import { useNavigate } from 'react-router-dom';
+import useTreatmentStore from '../../store/useTreatmentStore'; // Asegúrate de que esta ruta sea correcta
 
-const HorarioModal = ({ isOpen, onClose }) => {
+const HorarioModal = ({ isOpen, onClose,therapist }) => {
     const [selectedDateTime, setSelectedDateTime] = useState('');
     const [message, setMessage] = useState(null);
     const [messageType, setMessageType] = useState('');
-    const navigate = useNavigate();  // Instancia para usar navigate
-
-    // Función para obtener la fecha y hora actual en formato adecuado para min en input datetime-local
-    const getFormattedDateTime = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;  // getMonth() es base 0
-        const day = now.getDate();
-        const hour = now.getHours();
-        const minute = now.getMinutes();
-        // Formato: YYYY-MM-DDThh:mm
-        return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-    };
+    const navigate = useNavigate();
+    const { addTreatment } = useTreatmentStore();
+    const token = localStorage.getItem('token'); // Asumimos que el token se guarda en localStorage
 
     const handleConfirm = async () => {
         if (!selectedDateTime) {
@@ -34,23 +25,35 @@ const HorarioModal = ({ isOpen, onClose }) => {
             return; 
         }
 
+        const treatmentData = {
+            treatmentId: null,
+            name: "Treatment 1", // Asumimos que el nombre del tratamiento es estático
+            startDate: selectedDateTime,
+            status: true,
+            userPatientId: localStorage.getItem('userId'), // Asumiendo que también almacenamos userId en localStorage
+            userPsychiatristId: therapist.peopleId, // Este valor debe ser configurado según la lógica de tu aplicación
+        };
+
         try {
-            // Simula la llamada a la API
-            setMessage('Solicitud realizada con éxito.');
-            setMessageType('success');
-            
-            // Cerrar la modal y luego redirigir
-            setTimeout(() => {
-                onClose();  // Cierra la modal
-                navigate('/formConsulta');  // Redirige a la ruta de confirmación
-            }, 2000);  // Espera 2 segundos para cerrar la modal y redirigir
+            const result = await addTreatment(treatmentData, token);
+            if (result.code === 200) {
+                setMessage('Solicitud realizada con éxito.');
+                setMessageType('success');
+                setTimeout(() => {
+                    onClose();
+                    navigate('/formConsulta');
+                }, 2000);
+            } else {
+                setMessage(`Error al solicitar: ${result.message}`);
+                setMessageType('error');
+            }
         } catch (error) {
             setMessage(`Error al solicitar: ${error.message}`);
             setMessageType('error');
         }
     };
 
-    if (!isOpen) return null; // No renderiza nada si no está abierta
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -68,12 +71,12 @@ const HorarioModal = ({ isOpen, onClose }) => {
                         className="form-input rounded border px-4 py-2 w-full"
                         value={selectedDateTime}
                         onChange={(e) => setSelectedDateTime(e.target.value)}
-                        min={getFormattedDateTime()}  // Establece el valor mínimo para el input
+                        min={new Date().toISOString().slice(0, 16)} // Ajustado para usar formato ISO directamente
                     />
                     <button
                         className="w-full mt-4 bg-primary text-white py-2 rounded"
                         onClick={handleConfirm}
-                        disabled={!selectedDateTime}  // Deshabilita el botón si no se ha seleccionado una fecha y hora
+                        disabled={!selectedDateTime}
                     >
                         Confirmar Horario
                     </button>
