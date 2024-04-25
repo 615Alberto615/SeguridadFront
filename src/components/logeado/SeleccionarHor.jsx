@@ -32,6 +32,7 @@ const HorarioModal = ({ isOpen, onClose,therapist }) => {
             status: true,
             userPatientId: localStorage.getItem('userId'), // Asumiendo que también almacenamos userId en localStorage
             userPsychiatristId: therapist.peopleId, // Este valor debe ser configurado según la lógica de tu aplicación
+            
         };
 
         try {
@@ -39,6 +40,8 @@ const HorarioModal = ({ isOpen, onClose,therapist }) => {
             if (result.code === 200) {
                 setMessage('Solicitud realizada con éxito.');
                 setMessageType('success');
+                localStorage.setItem('appointmentRequest', selectedDateTime),
+                localStorage.setItem('availabilityId',therapist.peopleId ),
                 setTimeout(() => {
                     onClose();
                     navigate('/formConsulta');
