@@ -1,11 +1,38 @@
 // import user from '../assets/user2.png';
-import  { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants.js';
+import useAvailabilityStore from "../../store/useAvailabilityStore.js";
+import {updateAvailability} from "../../service/availabilityService.js";
+
 
 const HorarioDocente = () => {
     const [isYearly, setIsYearly] = useState(false);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+    const { availabilities, fetchAvailabilitiesByUserId, createAvailability } = useAvailabilityStore();
+    const toggleAvailability = async (availability) => {
+        const updatedAvailability = {
+            ...availability,
+            isActive: !availability.isActive
+        };
+
+        try {
+            await updateAvailability(availability.availabilityId, updatedAvailability);
+            fetchAvailabilitiesByUserId(localStorage.getItem('userId'));
+        } catch (error) {
+            console.error("Error toggling availability:", error);
+        }
+    };
+
+
+
+
+
+    useEffect(() => {
+        // Aquí obtienes los horarios del docente por su ID al montar el componente
+        const userId = localStorage.getItem('userId');
+        fetchAvailabilitiesByUserId(userId);
+    }, [fetchAvailabilitiesByUserId]);
 
     const tableStyle = {
         width: '80%',
@@ -27,7 +54,9 @@ const HorarioDocente = () => {
         backgroundColor: '#04182c',
         color: 'white' //
     };
-    const timeSlots = Array.from({ length: 12 }, (_, i) => `${i + 9}:00 - ${i + 10}:00`);
+    const timeSlots = Array.from({ length: 11 }, (_, i) => `${String(i + 9).padStart(2, '0')}:00 - ${String(i + 10).padStart(2, '0')}:00`);
+
+
 
     return (
         <motion.div
@@ -55,20 +84,27 @@ const HorarioDocente = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {/* DATOS ESTATICOS */}
-                {['Lunes', 'Martes', 'Miércoles'].map((dia, index) => (
+                {availabilities.map((availability, index) => (
                     <tr key={index}>
-                        <td style={cellStyle}>{dia}</td>
-                        <td style={cellStyle}>7:00</td>
-                        <td style={cellStyle}>8:00</td>
-                        <td style={cellStyle}>true</td>
+                        <td style={cellStyle}>{new Date(availability.weekday).toLocaleDateString()}</td>
+                        <td style={cellStyle}>{availability.startTime}</td>
+                        <td style={cellStyle}>{availability.endTime}</td>
+                        <td style={cellStyle}>
+                            {availability.isActive ? 'Activo' : 'Inactivo'}
+                        </td>
                         <td style={cellStyle}>
                             <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2">Editar</button>
-                            <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600">Eliminar</button>
+                            <button
+                                className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600"
+                                onClick={() => toggleAvailability(availability)}
+                            >
+                                {availability.isActive ? 'Desactivar' : 'Activar'}
+                            </button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
+
             </table>
             <div className="flex justify-center mt-6">
                 <button
@@ -97,28 +133,81 @@ const HorarioDocente = () => {
                             {timeSlots.map((timeSlot, index) => (
                                 <tr key={index}>
                                     <td style={cellStyle}>{timeSlot}</td>
-                                    {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map((day, i) => (
-                                        <td
-                                            key={i}
-                                            style={{
-                                                ...cellStyle,
-                                                cursor: 'pointer',
-                                                backgroundColor: selectedTimeSlot === `${day}-${timeSlot}` ? '#add8e6' : 'transparent'
-                                            }}
-                                            onClick={() => setSelectedTimeSlot(`${day}-${timeSlot}`)}
-                                        />
-                                    ))}
+                                    {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map((day, i) => {
+                                        const isOccupied = availabilities.some(availability => availability.day === day && availability.startTime === timeSlot.split(' - ')[0]);
+                                        return (
+                                            <td
+                                                key={i}
+                                                style={{
+                                                    ...cellStyle,
+                                                    cursor: 'pointer',
+                                                    backgroundColor: selectedTimeSlot === `${day}-${timeSlot}` ? '#add8e6' : (isOccupied ? '#FFC0CB' : 'transparent')
+                                                }}
+                                                onClick={() => setSelectedTimeSlot(`${day}-${timeSlot}`)}
+                                            />
+                                        );
+                                    })}
                                 </tr>
                             ))}
                             </tbody>
                         </table>
                         <div className="flex justify-center mt-6">
-                            <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2" onClick={() => { /* Aquí va tu función para confirmar el horario */ }}>Confirmar</button>
+                            <button
+                                className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"
+                                onClick={() => {
+                                    const [day, time] = selectedTimeSlot.split('-');
+
+                                    let startTime = '';
+                                    let endTime = '';
+
+                                    // Verificar si el tiempo contiene un formato válido
+                                    if (time.includes(' - ')) {
+                                        [startTime, endTime] = time.split(' - ');
+                                    } else {
+                                        // Si solo se selecciona una hora, establecer startTime y endTime
+                                        startTime = time.trim();
+
+                                        // Calcular endTime como una hora después de startTime
+                                        const [startHour, startMinute] = startTime.split(':').map(Number);
+                                        let endHour = startHour + 1; // Aumentar una hora
+
+                                        // Asegurar que no supere las 24 horas
+                                        if (endHour >= 24) {
+                                            endHour -= 24;
+                                        }
+
+                                        endTime = `${String(endHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}:00`;
+                                    }
+
+                                    // Obtener el día de la semana y formatearlo como "dd/mm/yyyy"
+                                    const currentDate = new Date();
+                                    const dayOfMonth = String(currentDate.getDate()).padStart(2, '0');
+                                    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexados
+                                    const year = currentDate.getFullYear();
+
+                                    const weekday = `${year}-${month}-${dayOfMonth}`;
+
+                                    const userId = localStorage.getItem('userId');
+
+                                    createAvailability({
+                                        userId,
+                                        weekday: weekday,  // Usamos weekday en lugar de day
+                                        startTime: `${startTime}:00`,
+                                        endTime: endTime,
+                                        isActive: true
+                                    });
+                                    setIsYearly(false);
+                                    setIsYearly(false);
+                                }}
+                            >
+                                Confirmar
+                            </button>
                             <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600" onClick={() => setIsYearly(false)}>Cancelar</button>
                         </div>
                     </div>
                 </div>
             )}
+
 
 
         </motion.div>

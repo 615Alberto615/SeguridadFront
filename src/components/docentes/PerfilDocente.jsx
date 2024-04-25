@@ -1,68 +1,89 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { fetchUserById, fetchPeopleById } from '../../service/userService';
+
 
 const PerfilDocente = () => {
-    const [docente, ] = useState({
-        nombre: "Juan",
-        apellidoPaterno: "Pérez",
-        apellidoMaterno: "García",
-        direccion: "Calle 123, Ciudad",
-        telefono: "123456789",
-        usuario: "juan.perez",
-        genero: "Masculino",
-        ocupacion: "Docente",
-        edad: 35,
-        password: "********"
-    });
+    const [currentUser, setCurrentUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showCard, setShowCard] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const userId = 1; // Obtener el userId de donde corresponda
+
+        const fetchUserData = async () => {
+            try {
+                const userData = await fetchPeopleById(userId, token);
+                if (userData.code === 200) {
+                    setCurrentUser(userData.data);
+                } else {
+                    setError(new Error(userData.message));
+                }
+                setIsLoading(false);
+            } catch (err) {
+                setError(err);
+                setIsLoading(false);
+            }
+        };
+
+        fetchUserData();
+        setTimeout(() => {
+            setShowCard(true);
+        }, 100);
+    }, []);
+
+    if (!showCard) {
+        return null; // Renderizar nada mientras se muestra la animación
+    }
+
+    if (isLoading) {
+        return <div>Cargando...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
+    if (!currentUser) {
+        return <div>No se encontró el usuario</div>;
+    }
 
     return (
-        <div className="container mx-auto mt-20">
-            <div className="bg-white shadow-lg rounded-xl p-8">
-                <div className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-12">
-                    {/* Imagen de ejemplo de usuario */}
-                    <div className="w-36 h-36 bg-gray-200 rounded-full flex items-center justify-center text-6xl text-gray-500">
-                        JD {/* Iniciales del docente */}
+        <div className="container mx-auto mt-40 px-4 sm:px-8 md:px-16">
+            <div className="border-2 border-purple-400 bg-purple-200 shadow-lg rounded-xl p-8 transform transition-transform duration-500 hover:scale-105">
+                <div className="flex flex-col items-center justify-center space-y-8">
+                    {/* Imagen de ejemplo de usuario con iniciales */}
+                    <div className="w-36 h-36 bg-purple-300 rounded-full flex items-center justify-center text-6xl text-purple-600 mb-4">
+                        {currentUser.name && currentUser.firstLastname ?
+                            `${currentUser.name.charAt(0)}${currentUser.firstLastname.charAt(0)}` : 'JD'}
                     </div>
-                    <div className="flex flex-col space-y-6">
-                        <h2 className="text-4xl font-semibold mb-4">
-                            {docente.nombre} {docente.apellidoPaterno} {docente.apellidoMaterno}
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="flex items-center">
-                                <strong className="w-32 inline-block text-lg">Dirección:</strong>
-                                <span className="text-lg">{docente.direccion}</span>
+                    <div className="grid grid-cols-2 gap-4 w-full">
+                        {[
+                            { key: 'name', label: 'Nombre' },
+                            { key: 'firstLastname', label: 'Primer Apellido' },
+                            { key: 'secondLastname', label: 'Segundo Apellido' },
+                            { key: 'email', label: 'Email' },
+                            { key: 'address', label: 'Dirección' },
+                            { key: 'age', label: 'Edad' },
+                            { key: 'cellphone', label: 'Celular' },
+                            { key: 'ci', label: 'CI' },
+                            { key: 'gender', label: 'Género' },
+                        ].map(({ key, label }) => (
+                            <div className="flex flex-col items-center space-y-2" key={key}>
+                                <strong className="text-lg font-semibold">{label}:</strong>
+                                <span className="text-lg break-words">{currentUser[key]}</span>
                             </div>
-                            <div className="flex items-center">
-                                <strong className="w-32 inline-block text-lg">Teléfono:</strong>
-                                <span className="text-lg">{docente.telefono}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <strong className="w-32 inline-block text-lg">Usuario:</strong>
-                                <span className="text-lg">{docente.usuario}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <strong className="w-32 inline-block text-lg">Contraseña:</strong>
-                                <div className="border rounded-md p-2">
-                                    <span className="text-gray-500">{docente.password}</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center">
-                                <strong className="w-32 inline-block text-lg">Género:</strong>
-                                <span className="text-lg">{docente.genero}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <strong className="w-32 inline-block text-lg">Ocupación:</strong>
-                                <span className="text-lg">{docente.ocupacion}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <strong className="w-32 inline-block text-lg">Edad:</strong>
-                                <span className="text-lg">{docente.edad}</span>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>
         </div>
     );
+
+
+
+
 };
 
 export default PerfilDocente;
