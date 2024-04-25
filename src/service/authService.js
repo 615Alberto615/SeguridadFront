@@ -13,10 +13,16 @@ export const registerUser = async (userData) => {
 export const loginUser = async (userData) => {
   try {
     const response = await axios.post(`${API_URL}/login`, userData);
-    return response.data;
+    const { data } = response.data;
+    if (data && data.token) {
+      localStorage.setItem('token', data.token);  
+      console.log("Token stored in localStorage:", data.token);  // Debugging: Mostrar el token almacenado
+      return response.data;
+    } else {
+      throw new Error('Token not provided or invalid response');
+    }
   } catch (error) {
-    // Aquí puedes decidir lanzar el error o devolverlo directamente
     console.error("Error during login:", error.response ? error.response.data : "No response data");
-    throw error.response.data; // Asegúrate de que este manejo de error es adecuado para tu front-end
+    throw error.response.data;
   }
 };
