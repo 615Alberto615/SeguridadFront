@@ -15,12 +15,27 @@ export const createAvailability = async (availabilityData, token) => {
     }
 };
 
-export const updateAvailability = async (availabilityId, availabilityData) => {
+export const updateAvailability = async (availabilityId, updatedAvailability, token) => {
     try {
-        const response = await axios.put(`${API_URL}/update/${availabilityId}/status`, availabilityData.isActive, {
+        const response = await axios.put(`${API_URL}/update/${availabilityId}`, updatedAvailability, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json'
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json' // Asegurar el tipo de contenido
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error.message;
+    }
+};
+
+export const updateAvailabilityStatus = async (availabilityId, newStatus, token) => {
+    try {
+        const response = await axios.put(`${API_URL}/updateStatus/${availabilityId}?newStatus=${newStatus}`, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json' // Asegurar el tipo de contenido
+
             },
         });
         return response.data;
