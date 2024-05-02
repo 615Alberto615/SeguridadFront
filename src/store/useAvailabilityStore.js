@@ -12,7 +12,17 @@ const useAvailabilityStore = create((set) => ({
     availabilities: [],
     selectedAvailability: null,
     error: null,
+    
 
+    fetchAllAvailabilities: async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await getAllAvailabilities(token);
+            set((state) => ({ ...state, availabilities: response.data, error: null }));
+        } catch (error) {
+            set((state) => ({ ...state, error: error.message || 'Error fetching availabilities' }));
+        }
+    },
     createAvailability: async (availabilityData) => {
         try {
             const token = localStorage.getItem('token');
@@ -35,15 +45,6 @@ const useAvailabilityStore = create((set) => ({
         }
     },
 
-    fetchAllAvailabilities: async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await getAllAvailabilities(token);
-            set((state) => ({ ...state, availabilities: response.data, error: null }));
-        } catch (error) {
-            set((state) => ({ ...state, error: error.message || 'Error fetching availabilities' }));
-        }
-    },
 
     fetchAvailabilitiesByUserId: async (userId) => {
         try {

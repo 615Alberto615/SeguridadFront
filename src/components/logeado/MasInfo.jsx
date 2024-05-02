@@ -1,9 +1,12 @@
 
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
-
+import therapist1 from '../../assets/profile3.png';
 const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
   if (!isOpen || !therapist) return null;
+
+    const { user } = therapist;
+    const { people } = user || {};
 
   // Datos fijos para el horario del terapeuta
   const weeklySchedule = {
@@ -26,13 +29,13 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
         <button className="absolute top-4 right-4 text-2xl font-bold" onClick={onClose}>&times;</button>
         <div className="flex flex-col items-center">
           <h3 className="text-xl font-bold mb-2">Información del Terapeuta</h3>
-          <img src={therapist.image} alt={therapist.name} className="w-24 h-24 mb-4" />
+          <img src={people?.photo || therapist1} alt={therapist.name} className="w-24 h-24 mb-4" />
           <div className="text-center">
-            <p>Nombre: {therapist.name}</p>
-            <p>Información: {therapist.info}</p>
-            <p>Horario Disponible: {therapist.schedule}</p>
-            <p>Días disponibles: {therapist.days}</p>
-          </div>
+                        <p>Nombre: {people?.name} {people?.firstLastname} {people?.secondLastname}</p>
+                        <p>Email: {people?.email}</p>
+                        <p>Horario Disponible: {therapist.startTime} - {therapist.endTime}</p>
+                        <p>Días disponibles: {therapist.weekday}</p>
+                    </div>
           {/* Tabla de horario */}
           <div className="w-full overflow-x-auto mt-6">
             <table className="min-w-full divide-y divide-gray-200">

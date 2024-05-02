@@ -1,12 +1,12 @@
-
-import therapist1 from '../../assets/profile3.png';
-import  { useEffect } from 'react';
-import { useState } from 'react';
-import { motion } from 'framer-motion'; 
-import { fadeIn } from '../../variants';
-import usePeopleStore from '../../store/userStore';  
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import useAvailabilityStore from '../../store/useAvailabilityStore';
 import HorarioModal from '../../components/logeado/SeleccionarHor';
 import TherapistDetailModal from '../../components/logeado/MasInfo';
+
+import therapist1 from '../../assets/profile3.png';
+
+import { fadeIn } from '../../variants';
 const Información = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [modalOpen, setModalOpen] = useState(false);
@@ -14,23 +14,21 @@ const Información = () => {
     const [selectedTherapist, setSelectedTherapist] = useState(null);
     const itemsPerPage = 3;
 
-    const { people, fetchPeople, totalPages } = usePeopleStore();
+    const { availabilities, fetchAllAvailabilities } = useAvailabilityStore();
+
     const token = localStorage.getItem('token');
-    const roleId = localStorage.getItem('userRol');
 
     useEffect(() => {
-        fetchPeople(3, token);
-    }, [fetchPeople, roleId, token]);
+        fetchAllAvailabilities();
+    }, [fetchAllAvailabilities, token]);
 
     const lastIndex = currentPage * itemsPerPage;
     const firstIndex = lastIndex - itemsPerPage;
-    const currentItems = people.slice(firstIndex, lastIndex);
+    const currentItems = availabilities.slice(firstIndex, lastIndex);
 
     const nextPage = () => {
-        setCurrentPage(prev => prev < totalPages ? prev + 1 : prev);
+        setCurrentPage(prev => prev < availabilities.length / itemsPerPage ? prev + 1 : prev);
     };
-
-    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
     const openDetailModal = (therapist) => {
         setSelectedTherapist(therapist);
@@ -65,28 +63,29 @@ const Información = () => {
                                 <TherapistCard
                                     key={index}
                                     therapist={therapist}
-                                    onOpenModal={() => openScheduleModal(therapist)} // Cambiado para pasar el terapeuta seleccionado al abrir el modal
+                                    onOpenModal={() => openScheduleModal(therapist)} 
                                     onOpenDetailModal={() => openDetailModal(therapist)}
                                 />
                             ))}
                         </motion.div>
+
                         <motion.div
                             variants={fadeIn('right', 0.2)}
                             initial='hidden'
                             whileInView='show'
                             className="flex justify-center mt-8">
                             <div className="flex space-x-2">
-                                {pageNumbers.map(number => (
+                                {Array.from({ length: Math.ceil(availabilities.length / itemsPerPage) }, (_, i) => (
                                     <button
-                                        key={number}
-                                        onClick={() => setCurrentPage(number)}
-                                        className={`px-4 py-2 rounded-full ${currentPage === number ? 'bg-secondary text-white' : 'bg-gray-200'}`}
+                                        key={i + 1}
+                                        onClick={() => setCurrentPage(i + 1)}
+                                        className={`px-4 py-2 rounded-full ${currentPage === (i + 1) ? 'bg-secondary text-white' : 'bg-gray-200'}`}
                                     >
-                                        {number}
+                                        {i + 1}
                                     </button>
                                 ))}
                             </div>
-                            {currentPage < totalPages && (
+                            {currentPage < availabilities.length / itemsPerPage && (
                                 <button onClick={nextPage} className="btn4 px-2">Siguiente</button>
                             )}
                         </motion.div>
@@ -100,18 +99,24 @@ const Información = () => {
 };
 
 const TherapistCard = ({ therapist, onOpenModal, onOpenDetailModal }) => {
+    const { user } = therapist; // Accedemos al objeto "user" dentro de "therapist"
+    const { people } = user || {}; // Accedemos al objeto "people" dentro de "user"
+
     return (
-        <div className="relative w-full h-96 flex flex-col justify-center items-center p-6 bg-white rounded-[35px] shadow-3xl">
-            <img src={therapist.photo || therapist1} alt={therapist.name} className="w-2/6 mb-4" />  
-            <h5 className="text-xl md:text-2xl lg:text-2xl text-primary font-semibold mt-4 text-center">{therapist.name} {therapist.firstLastname} {therapist.secondLastname} </h5>
-            <p className="text-center mt-2">{therapist.email}</p>
+        <div className="relative w-full h-1px flex flex-col justify-center items-center p-6 bg-white rounded-[35px] shadow-3xl">
+            <img src={people?.photo || therapist1} alt={people?.name} className="w-2/6 mb-4" />
+            <h5 className="text-xl md:text-2xl lg:text-2xl text-primary font-semibold mt-4 text-center">
+                {people?.name} {people?.firstLastname} {people?.secondLastname}
+            </h5>
+            <p className="text-center mt-2">{people?.email}</p>
             <p className="text-center font-bold mb-2">Horarios Disponibles</p>
-            <p className="text-center">{therapist.schedule}</p>
-            <p className="text-center">{therapist.days}</p>
+            <p className="text-center">{therapist.startTime} - {therapist.endTime}</p>
+            <p className="text-center">{therapist.weekday}</p>
+
             <button onClick={onOpenModal} className="mt-4 px-4 py-2 text-white bg-secondary rounded hover:bg-primary-dark transition-colors duration-300">
                 Solicita una reserva
             </button>
-            <button onClick={onOpenDetailModal} className="mt-2 px-4 py-2 text-primary bg-gray-200 rounded hover:bg-secondary-dark transition-colors duration-300">
+            <button onClick={onOpenDetailModal} className="mt-2 mb-2 px-4 py-2 text-primary bg-gray-200 rounded hover:bg-secondary-dark transition-colors duration-300">
                 Más información
             </button>
         </div>

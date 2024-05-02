@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
 import TherapistDetailModal from '../../components/logeado/InfoConsulta';
-import useTreatmentStore from '../../store/useTreatmentStore'; // Asegúrate de que esta ruta sea la correcta
+import useTreatmentStore from '../../store/useTreatmentStore'; 
 import therapist1 from '../../assets/profile3.png';
 const ConsultasEst = () => {
     const [currentPage, setCurrentPage] = useState(1);

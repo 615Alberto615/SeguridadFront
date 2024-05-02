@@ -2,11 +2,11 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:8004/api/v1/availability';
 
-export const createAvailability = async (availabilityData, token) => {
+export const getAllAvailabilities = async (token) => {
     try {
-        const response = await axios.post(`${API_URL}/create`, availabilityData, {
+        const response = await axios.get(`${API_URL}/all`, {
             headers: {
-                'Authorization': token,
+                'Authorization': `Bearer ${token}`,  // Asegúrate de incluir 'Bearer ' antes del token
             },
         });
         return response.data;
@@ -14,7 +14,19 @@ export const createAvailability = async (availabilityData, token) => {
         throw error.response ? error.response.data : error.message;
     }
 };
-
+export const createAvailability = async (availabilityData, token) => {
+    try {
+        const response = await axios.post(`${API_URL}/create`, availabilityData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error.message;
+    }
+};
 export const updateAvailability = async (availabilityId, availabilityData) => {
     try {
         const response = await axios.put(`${API_URL}/update/${availabilityId}/status`, availabilityData.isActive, {
@@ -30,18 +42,6 @@ export const updateAvailability = async (availabilityId, availabilityData) => {
 };
 
 
-export const getAllAvailabilities = async (token) => {
-    try {
-        const response = await axios.get(`${API_URL}/all`, {
-            headers: {
-                'Authorization': token,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        throw error.response ? error.response.data : error.message;
-    }
-};
 
 export const getAvailabilitiesByUserId = async (userId, token) => {
     try {
