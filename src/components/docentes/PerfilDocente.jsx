@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchUserById, fetchPeopleById } from '../../service/userService';
+import { fetchPeopleById } from '../../service/userService';
 
 
 const PerfilDocente = () => {
@@ -10,7 +10,7 @@ const PerfilDocente = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        const userId = 1; // Obtener el userId de donde corresponda
+        const userId = localStorage.getItem("userId");
 
         const fetchUserData = async () => {
             try {

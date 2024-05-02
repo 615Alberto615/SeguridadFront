@@ -3,33 +3,40 @@ import {useEffect, useState} from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants.js';
 import useAvailabilityStore from "../../store/useAvailabilityStore.js";
-import {updateAvailability} from "../../service/availabilityService.js";
+import {updateAvailabilityStatus} from "../../service/availabilityService.js";
 
 
 const HorarioDocente = () => {
     const [isYearly, setIsYearly] = useState(false);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
     const { availabilities, fetchAvailabilitiesByUserId, createAvailability } = useAvailabilityStore();
-    const toggleAvailability = async (availability) => {
-        const updatedAvailability = {
-            ...availability,
-            isActive: !availability.isActive
-        };
 
+
+    const toggleAvailability = async (availabilityId, token) => {
+        const userId = localStorage.getItem('userId');
         try {
-            await updateAvailability(availability.availabilityId, updatedAvailability);
-            fetchAvailabilitiesByUserId(localStorage.getItem('userId'));
+            // Encuentra la disponibilidad correspondiente al ID
+            const availabilityToUpdate = availabilities.find(availability => availability.availabilityId === availabilityId);
+            if (!availabilityToUpdate) {
+                console.error("Availability not found.");
+                return;
+            }
+
+            // Calcula el nuevo estado invertido
+            const newStatus = !availabilityToUpdate.status;
+
+            await updateAvailabilityStatus(availabilityId, newStatus, localStorage.getItem('token'));
+            fetchAvailabilitiesByUserId(userId);
         } catch (error) {
-            console.error("Error toggling availability:", error);
+            console.error("Error updating availability status:", error);
+            // Manejar el error según sea necesario
         }
     };
 
 
 
 
-
     useEffect(() => {
-        // Aquí obtienes los horarios del docente por su ID al montar el componente
         const userId = localStorage.getItem('userId');
         fetchAvailabilitiesByUserId(userId);
     }, [fetchAvailabilitiesByUserId]);
@@ -89,20 +96,21 @@ const HorarioDocente = () => {
                         <td style={cellStyle}>{new Date(availability.weekday).toLocaleDateString()}</td>
                         <td style={cellStyle}>{availability.startTime}</td>
                         <td style={cellStyle}>{availability.endTime}</td>
-                        <td style={cellStyle}>
-                            {availability.isActive ? 'Activo' : 'Inactivo'}
-                        </td>
+                        <td style={cellStyle}>{availability.status ? 'Activo' : 'Inactivo'}</td>
                         <td style={cellStyle}>
                             <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2">Editar</button>
                             <button
                                 className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600"
-                                onClick={() => toggleAvailability(availability)}
+                                onClick={() => toggleAvailability(availability.availabilityId, localStorage.getItem('token'))}
+
+
                             >
-                                {availability.isActive ? 'Desactivar' : 'Activar'}
+                                {availability.status ? 'Desactivar' : 'Activar'}
                             </button>
                         </td>
                     </tr>
                 ))}
+
                 </tbody>
 
             </table>
@@ -164,12 +172,11 @@ const HorarioDocente = () => {
                                     if (time.includes(' - ')) {
                                         [startTime, endTime] = time.split(' - ');
                                     } else {
-                                        // Si solo se selecciona una hora, establecer startTime y endTime
+
                                         startTime = time.trim();
 
-                                        // Calcular endTime como una hora después de startTime
                                         const [startHour, startMinute] = startTime.split(':').map(Number);
-                                        let endHour = startHour + 1; // Aumentar una hora
+                                        let endHour = startHour + 1;
 
                                         // Asegurar que no supere las 24 horas
                                         if (endHour >= 24) {
@@ -197,7 +204,7 @@ const HorarioDocente = () => {
                                         isActive: true
                                     });
                                     setIsYearly(false);
-                                    setIsYearly(false);
+
                                 }}
                             >
                                 Confirmar

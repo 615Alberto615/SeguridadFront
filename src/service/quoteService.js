@@ -13,3 +13,15 @@ export const createQuote = async (quoteData, token) => {
         throw error;
     }
 };
+
+export const fetchQuotesByTherapist = async (therapistId, token) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/by-therapist/${therapistId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching quotes:", error);
+    throw error;
+  }
+}

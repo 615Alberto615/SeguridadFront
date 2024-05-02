@@ -5,7 +5,7 @@ import {
     getAllAvailabilities,
     getAvailabilitiesByUserId,
     getAvailabilityById,
-    deleteAvailability,
+    deleteAvailability, updateAvailabilityStatus,
 } from '../service/availabilityService';
 
 const useAvailabilityStore = create((set) => ({
@@ -34,16 +34,29 @@ const useAvailabilityStore = create((set) => ({
         }
     },
 
-    updateAvailability: async (availabilityId, availabilityData) => {
+    updateAvailability: async (updatedAvailability) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await updateAvailability(availabilityId, availabilityData, token);
+            const response = await updateAvailability(updatedAvailability.id, updatedAvailability, token);
             set((state) => ({ ...state, selectedAvailability: response.data, error: null }));
             return response;
         } catch (error) {
             set((state) => ({ ...state, error: error.message || 'Error updating availability' }));
         }
     },
+
+    updateAvailabilityStatus: async (availabilityId, newStatus) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await updateAvailabilityStatus(availabilityId, newStatus, token);
+            set((state) => ({ ...state, selectedAvailability: response.data, error: null }));
+            return response;
+        } catch (error) {
+            set((state) => ({ ...state, error: error.message || 'Error updating availability status' }));
+        }
+    },
+
+
 
 
     fetchAvailabilitiesByUserId: async (userId) => {

@@ -41,3 +41,17 @@ export const fetchPeopleById = async (userId, token) => {
     }
 };
 
+export const fetchPatientsByRole = async (roleId, token, page = 0, size = 10) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/peopleByRole/${roleId}`, {
+            headers: { Authorization: token },
+            params: { page, size }
+        });
+        return response.data.data; // Accede a la propiedad data del ResponseDTO
+    } catch (error) {
+        console.error('Error fetching patients by role: ', error);
+        throw error;
+    }
+};
+
+
