@@ -1,5 +1,11 @@
-import { decode as jwtDecode } from 'jwt-decode';
+// Change this line
 
+let jwtDecode;
+
+(async () => {
+  jwtDecode = (await import('jwt-decode')).default;
+})();
+// The rest of your code remains the same
 export const getUserIdFromToken = () => {
   const token = localStorage.getItem('token');
   if (!token) return null;
