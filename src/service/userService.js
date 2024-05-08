@@ -54,4 +54,32 @@ export const fetchPatientsByRole = async (roleId, token, page = 0, size = 10) =>
     }
 };
 
+// Mostrar todos los usuarios para el admin
+export const fetchAllUsers = async (token) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/all`, {
+            headers: { Authorization: token },
+        });
+        console.log("Fetch all users response:", response.data);
+        return response.data.data;
+    } catch (error) {
+        console.error('Error fetching all users: ', error);
+        throw error;
+    }
+};
+
+//Actualizar el usuario por el admin
+export const updateUser = async (userData, token) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/updateUser`, userData, {
+            headers: { Authorization: token },
+        });
+        console.log("Update user response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user by admin: ', error);
+        throw error;
+    }
+};
+
 

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import {fetchPeopleByRole, fetchUserById} from '../service/userService';
+import {fetchPeopleByRole, fetchUserById, fetchAllUsers, updateUser  } from '../service/userService';
 
 const usePeopleStore = create((set, get) => ({
     people: [],
@@ -32,8 +32,28 @@ const usePeopleStore = create((set, get) => ({
         console.log("User data:", user);
         set({ currentUser: user.data });
     },
-    setPage: (page) => set({ page })
+    fetchAllUsers: async (token) => {
+        try {
+            const users = await fetchAllUsers(token);
+            set({ people: users });
+        } catch (error) {
+            console.error('Error fetching all users: ', error);
+        }
+    },
+    //Modificar el usuario por el Admin
+    updateUser: async (userData, token) => {
+        try {
+            await updateUser(userData, token);
+            console.log('Usuario actualizado exitosamente');
+            // Realizar cualquier otra acción necesaria después de la actualización
+        } catch (error) {
+            console.error('Error al actualizar usuario: ', error);
+            // Manejar el error de manera adecuada en tu aplicación
+        }
+    },
+    setPage: (page) => set({ page }),
+    
 }));
 
-export default usePeopleStore;
+export { usePeopleStore };
 
