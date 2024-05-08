@@ -1,18 +1,58 @@
 // service/docenteService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8004/api/v1/user/peopleByRole/1';
+// Base URLs
+const API_DOCENTES_BASE_URL = 'http://localhost:8004/api/v1/user/peopleByRole';
+const API_QUOTES_BASE_URL = 'http://localhost:8004/api/v1/quote/by-therapist';
 
-export const fetchAllDocentes = async (token) => {
+export const fetchAllDocentes = async () => {
   try {
-    const response = await axios.get(API_URL, {
+    // Retrieve role ID and token from localStorage
+    const roleId = localStorage.getItem('roleId');
+    const token = localStorage.getItem('token');
+
+    if (!roleId || !token) {
+      throw new Error('Role ID or token is missing from localStorage.');
+    }
+
+    const response = await axios.get(`${API_DOCENTES_BASE_URL}/${roleId}`, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
-    return response.data.data;  // Asegúrate de que esto corresponde al formato de tu respuesta
+    return response.data.data;
   } catch (error) {
-    console.error("Error fetching docentes:", error.response ? error.response.data : "No response data", error);
+    console.error(
+      'Error fetching docentes:',
+      error.response ? error.response.data : 'No response data',
+      error
+    );
+    throw error;
+  }
+};
+
+export const fetchAppointmentsByTherapist = async () => {
+  try {
+    // Retrieve user ID and token from localStorage
+    const therapistId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+
+    if (!therapistId || !token) {
+      throw new Error('Therapist ID or token is missing from localStorage.');
+    }
+
+    const response = await axios.get(`${API_QUOTES_BASE_URL}/${therapistId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error(
+      'Error fetching appointments:',
+      error.response ? error.response.data : 'No response data',
+      error
+    );
     throw error;
   }
 };
