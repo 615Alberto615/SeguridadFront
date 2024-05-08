@@ -56,7 +56,7 @@ const Login = () => {
           onClick={() => navigate('/register')}
           style={{ cursor: 'pointer' }}
         >
-          <img src={ucb} alt="UCB Logo" className='h-40' />
+          <img src={ucb} alt="UCB Logo" className='h-30' />
         </motion.div>
       </div>
       <motion.div 
