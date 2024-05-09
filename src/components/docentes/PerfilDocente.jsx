@@ -1,12 +1,18 @@
 import { useState, useEffect } from 'react';
 import { fetchPeopleById } from '../../service/userService';
 
-
 const PerfilDocente = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showCard, setShowCard] = useState(false);
+
+    // Mapeo de género
+    const genderMap = {
+        1: 'Masculino',
+        2: 'Femenino',
+        3: 'Otro género'
+    };
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -68,11 +74,11 @@ const PerfilDocente = () => {
                             { key: 'age', label: 'Edad' },
                             { key: 'cellphone', label: 'Celular' },
                             { key: 'ci', label: 'CI' },
-                            { key: 'gender', label: 'Género' },
-                        ].map(({ key, label }) => (
+                            // { key: 'genderId', label: 'Género', transform: (value) => genderMap[value] }, // Mapea el género
+                        ].map(({ key, label, transform }) => (
                             <div className="flex flex-col items-center space-y-2" key={key}>
                                 <strong className="text-lg font-semibold">{label}:</strong>
-                                <span className="text-lg break-words">{currentUser[key]}</span>
+                                <span className="text-lg break-words">{transform ? transform(currentUser[key]) : currentUser[key]}</span>
                             </div>
                         ))}
                     </div>
@@ -80,10 +86,6 @@ const PerfilDocente = () => {
             </div>
         </div>
     );
-
-
-
-
 };
 
 export default PerfilDocente;
