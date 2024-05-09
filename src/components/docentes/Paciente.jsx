@@ -13,7 +13,10 @@ const Pacientes = () => {
     const paginarPacientes = () => {
         const inicio = (paginaActual - 1) * 10;
         const fin = inicio + 10;
-        return patients.slice(inicio, fin);
+        return patients.filter(paciente => {
+            const nombreCompleto = `${paciente.name} ${paciente.firstLastname} ${paciente.secondLastname}`;
+            return nombreCompleto.toLowerCase().includes(filtro.toLowerCase());
+        }).slice(inicio, fin);
     };
 
     const cambiarPagina = (pagina) => {
@@ -46,16 +49,16 @@ const Pacientes = () => {
     }, []);
 
     if (isLoading) {
-        return <div>Cargando...</div>;
+        return <div className="text-center text-primary">Cargando...</div>;
     }
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div className="text-center text-primary">Error: {error.message}</div>;
     }
 
     return (
         <div className="flex items-center justify-center h-screen">
-            <div className="bg-white shadow-xl rounded-lg p-6 w-full sm:w-auto md:w-3/4 lg:w-1/2 xl:w-1/3 space-y-8">
+            <div className="bg-white shadow-xl rounded-lg p-6 w-70 sm:w-auto md:w-3/4 lg:w-3/4 xl:w-3/4 space-y-8">
                 {/* Filtro */}
                 <div className="mb-4">
                     <input
@@ -72,7 +75,7 @@ const Pacientes = () => {
                 {/* Tabla de pacientes */}
                 <table className="min-w-full bg-white border rounded-md">
                     {/* Cabecera de la tabla */}
-                    <thead className="bg-gray-200">
+                    <thead className="bg-primary text-white">
                     <tr>
                         <th className="border px-4 py-2">Nombre</th>
                         <th className="border px-4 py-2">Apellido Paterno</th>
@@ -83,7 +86,7 @@ const Pacientes = () => {
                     {/* Cuerpo de la tabla */}
                     <tbody>
                     {paginarPacientes().map((paciente) => (
-                        <tr key={paciente.peopleId} className="cursor-pointer hover:bg-gray-100" onClick={() => mostrarInfoPaciente(paciente)}>
+                        <tr key={paciente.peopleId} className="cursor-pointer hover:bg-gray-100 transition duration-300" onClick={() => mostrarInfoPaciente(paciente)}>
                             <td className="border px-4 py-2">{paciente.name}</td>
                             <td className="border px-4 py-2">{paciente.firstLastname}</td>
                             <td className="border px-4 py-2">{paciente.secondLastname}</td>
@@ -95,14 +98,14 @@ const Pacientes = () => {
                 {/* Paginación */}
                 <div className="flex justify-between">
                     <button
-                        className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition duration-300 ease-in-out"
+                        className="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out"
                         onClick={() => cambiarPagina(paginaActual - 1)}
                         disabled={paginaActual === 1}
                     >
                         Anterior
                     </button>
                     <button
-                        className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition duration-300 ease-in-out"
+                        className="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out"
                         onClick={() => cambiarPagina(paginaActual + 1)}
                         disabled={paginaActual === numeroPaginas}
                     >
@@ -110,7 +113,7 @@ const Pacientes = () => {
                     </button>
                 </div>
                 {/* Información de la página */}
-                <div>
+                <div className="text-center text-primary">
                     <span>Página {paginaActual} de {numeroPaginas}</span>
                 </div>
             </div>
@@ -145,10 +148,8 @@ const Pacientes = () => {
                     </div>
                 </div>
             )}
-
         </div>
     );
-
 };
 
 export default Pacientes;

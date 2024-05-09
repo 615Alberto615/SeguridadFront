@@ -117,7 +117,7 @@ const Login = () => {
           
           onClick={() => goToRegister()}  // Navegación al hacer clic
         >
-          <img src={ucb} alt="" className='flex-auto justify-center h-40' style={{ cursor: 'pointer' }}/>
+          <img src={ucb} alt="" className='flex-auto justify-center h-30' style={{ cursor: 'pointer' }}/>
         </motion.div>
       </div>
       <motion.div 

@@ -1,16 +1,10 @@
-// Change this line
+import * as jwt_decode from 'jwt-decode';
 
-let jwtDecode;
-
-(async () => {
-  jwtDecode = (await import('jwt-decode')).default;
-})();
-// The rest of your code remains the same
 export const getUserIdFromToken = () => {
   const token = localStorage.getItem('token');
   if (!token) return null;
   try {
-    const decoded = jwtDecode(token); 
+    const decoded = jwt_decode(token); 
     return decoded.userId;
   } catch (error) {
     console.error("Failed to decode token:", error);
