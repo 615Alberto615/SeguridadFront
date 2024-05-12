@@ -1,7 +1,7 @@
 // En store/useAuthStore.js
 import { create } from 'zustand';
 import { loginUser, registerUser } from '../service/authService';
-
+import axios from 'axios';
 const useAuthStore = create((set) => ({
   user: null,
   token: null,
@@ -49,6 +49,24 @@ const useAuthStore = create((set) => ({
     } catch (error) {
       set({ user: null, error: error.message || 'No se pudo registrar al usuario' });
       return { error: error.message || 'No se pudo registrar al usuario' };  // Devuelve un error adecuadamente
+    }
+  },
+  fetchUserDetails: async () => {
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    try {
+      const response = await axios.get(`http://localhost:8004/api/v1/user/find/${userId}`, {
+        headers: {
+          'Authorization': token
+        }
+      });
+      if (response.data && response.data.code === 200) {
+        set({ user: response.data.data.people });
+      } else {
+        console.error('Failed to fetch user details', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching user details', error);
     }
   },
 
