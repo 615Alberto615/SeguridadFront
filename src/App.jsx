@@ -25,7 +25,7 @@
   import NavbarDoc from './components/docentes/navbarDoc.jsx'
   import Info from './components/logeado/Info.jsx'
   import SeleccionarHor from './components/logeado/SeleccionarHor.jsx'
-  import ConsultasEst from './components/logeado/ConsultasEst.jsx'
+  //import ConsultasEst from './components/logeado/ConsultasEst.jsx'
   import CitasEst from './components/logeado/CitasEst.jsx'
   import Historial from './components/logeado/historial.jsx'
   import SidebarAdm from "./components/admin/sidebarAdm.jsx";
@@ -33,6 +33,8 @@
   import Graficos from "./components/admin/Graficos.jsx";
   import PerfilAdmin from "./components/admin/PerfilAdmin.jsx";
   import Register from "./components/Register.jsx";
+  
+  import Consultas2 from './components/logeado/Consultas2.jsx'
 
   import {  useEffect } from 'react'; 
 
@@ -106,7 +108,7 @@
             <Route path="/datos" element={<Datos />} />
             <Route path="/infolog" element={<Info />} />
             <Route path="/seleccionarhor" element={<SeleccionarHor />} />
-            <Route path="/consultas" element={<><CitasEst/><ConsultasEst /> </>} />
+            <Route path="/consultas" element={<><CitasEst/><Consultas2 /> </>} />
             <Route path="/historial" element={<Historial/>} />
             <Route path="/usuarios" element={<Usuarios />} />
             <Route path="/graficos" element={<Graficos />} />

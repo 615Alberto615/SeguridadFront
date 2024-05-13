@@ -1,45 +1,54 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
-import useTreatmentStore from '../../store/useTreatmentStore';
+import useQuoteStore from '../../store/useQuoteStore1';
 
 const CitasEst = () => {
     const [selectedCita, setSelectedCita] = useState(null);
-    const { treatments, fetchTreatments } = useTreatmentStore();
+    const { quotes, fetchQuoteById } = useQuoteStore();
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-        fetchTreatments(userId, token);
-    }, [fetchTreatments, userId, token]);
-
-    const tableStyle = {
-        width: '80%',
-        borderCollapse: 'collapse',
-        marginTop: '50px',
-        margin: 'auto',
-        backgroundColor: '#f8f9fa',
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
-    };
-
-    const cellStyle = {
-        border: '1px solid #dee2e6',
-        padding: '15px',
-        textAlign: 'center'
-    };
-
-    // Transform treatments into a format suitable for the weekly calendar
-    const scheduleByDayAndHour = treatments.reduce((acc, treatment) => {
-        const dayOfWeek = new Date(treatment.startDate).toLocaleString('en-us', { weekday: 'long' });
-        const startTime = new Date(treatment.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        if (!acc[startTime]) {
-            acc[startTime] = {};
+        if (userId && token) {
+            fetchQuoteById(userId, token);
         }
-        acc[startTime][dayOfWeek] = treatment;
-        return acc;
-    }, {});
+    }, [fetchQuoteById, userId, token]);
 
-    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    // Spanish days of the week including weekends
+    const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+    // Use a standardized map for days to avoid localization issues
+    const dayMap = {
+        'lunes': 'Lunes',
+        'martes': 'Martes',
+        'miércoles': 'Miércoles',
+        'jueves': 'Jueves',
+        'viernes': 'Viernes',
+        'sábado': 'Sábado',
+        'domingo': 'Domingo'
+    };
+
+    const scheduleByDayAndHour = {};
+    quotes.forEach(quote => {
+        const weekday = dayMap[quote.availability.weekday.toLowerCase()];
+        const startTime = quote.availability.startTime;
+
+        if (!scheduleByDayAndHour[startTime]) {
+            scheduleByDayAndHour[startTime] = {};
+            daysOfWeek.forEach(day => {
+                scheduleByDayAndHour[startTime][day] = [];
+            });
+        }
+
+        if (weekday && scheduleByDayAndHour[startTime][weekday]) {
+            scheduleByDayAndHour[startTime][weekday].push(quote);
+        } else {
+            console.error(`Mismatch in day names: ${weekday}`);
+        }
+    });
+
+    console.log("Schedule by day and hour:", scheduleByDayAndHour);
 
     return (
         <div className="my-0 md:px-14 px-4 max-w-screen-2xl mx-auto">
@@ -48,30 +57,29 @@ const CitasEst = () => {
                 initial='hidden'
                 whileInView='show'
                 className="md:px-14 p-4 max-w-s mx-auto py-10"
-                id='horarios'
                 style={{ marginTop: '80px' }}
             >
-                <div className="text-center" id={'citas'}>
+                <div className="text-center">
                     <h2 className="md:text-5xl text-3xl font-extrabold text-primary mb-2">Mis Consultas Programadas</h2>
-                    <p className="text-tartiary md:w-1/3 mx-auto px-4">Consultas terapéuticas activas/próximas. Las consultas ya concluidas se ven en el historial de consultas en información del usuario.</p>
+                    <p className="text-tartiary md:w-1/3 mx-auto px-4">Consultas terapéuticas activas/próximas.</p>
                 </div>
 
-                <table style={tableStyle}>
+                <table className="w-full mx-auto border-collapse bg-white shadow-lg mt-5">
                     <thead>
                         <tr>
-                            <th style={cellStyle}>Hora</th>
+                            <th className="border px-4 py-2">Hora</th>
                             {daysOfWeek.map(day => (
-                                <th key={day} style={cellStyle}>{day}</th>
+                                <th key={day} className="border px-4 py-2">{day}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.keys(scheduleByDayAndHour).map((hour, index) => (
-                            <tr key={index}>
-                                <td style={cellStyle}>{hour}</td>
+                        {Object.entries(scheduleByDayAndHour).map(([time, days]) => (
+                            <tr key={time}>
+                                <td className="border px-4 py-2">{time}</td>
                                 {daysOfWeek.map(day => (
-                                    <td key={day} style={cellStyle} onClick={() => setSelectedCita(scheduleByDayAndHour[hour][day])}>
-                                        {scheduleByDayAndHour[hour][day] ? 'CITA' : ''}
+                                    <td key={day} className="border px-4 py-2 cursor-pointer" onClick={() => setSelectedCita(days[day][0])}>
+                                        {days[day].length > 0 ? 'CITA' : ''}
                                     </td>
                                 ))}
                             </tr>
@@ -80,15 +88,11 @@ const CitasEst = () => {
                 </table>
 
                 {selectedCita && (
-                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white rounded p-6 w-1/2 h-1/2 overflow-auto">
-                            <h2 className="text-center text-2xl font-bold mb-4">Información de la cita</h2>
-                            <div className="flex flex-col items-center justify-center bg-gray-100 p-4 rounded shadow-lg">
-                                <p className="text-lg">{selectedCita.description}</p>  {/* Ajusta para mostrar detalles de la cita */}
-                            </div>
-                            <div className="flex justify-center mt-6">
-                                <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600" onClick={() => setSelectedCita(null)}>Cerrar</button>
-                            </div>
+                    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center">
+                        <div className="bg-white p-6 rounded shadow-lg">
+                            <h2>Datos de la Cita</h2>
+                            <p>{selectedCita.reason}</p>
+                            <button onClick={() => setSelectedCita(null)}>Cerrar</button>
                         </div>
                     </div>
                 )}

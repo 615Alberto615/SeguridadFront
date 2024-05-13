@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { fetchQuotesByTherapist, createQuote } from '../service/quoteService';
 import { getUserIdFromToken } from '../components/utils/jwtUtils';  // Asegúrate de que la ruta de importación es correcta
 
-const useQuoteStore = create((set, get) => ({
+const useQuoteStore = create((set, ) => ({
   quotes: [],
   isLoading: false,
   error: null,

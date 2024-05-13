@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ucb from '../assets/ucb.png';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../variants';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link,  } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
 
 const Login = () => {
@@ -11,7 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState('');
-  const navigate = useNavigate();
+
 
   const handleLogin = async () => {
     setLocalError('');
@@ -53,7 +53,7 @@ const Login = () => {
           variants={fadeIn('down', 0.6)}
           initial='hidden'
           whileInView='show'
-          onClick={() => navigate('/register')}
+          onClick={() => window.location.href = `/`}
           style={{ cursor: 'pointer' }}
         >
           <img src={ucb} alt="UCB Logo" className='h-30' />

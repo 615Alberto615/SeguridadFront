@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:8004/api/v1/availability';
 
 export const getAllAvailabilities = async (token) => {
     try {
-        const response = await axios.get(`${API_URL}/all`, {
+        const response = await axios.get(`${API_URL}/grouped-by-user`, {
             headers: {
                 'Authorization': `Bearer ${token}`,  // Asegúrate de incluir 'Bearer ' antes del token
             },
