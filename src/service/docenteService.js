@@ -5,10 +5,9 @@ import axios from 'axios';
 const API_DOCENTES_BASE_URL = 'http://localhost:8004/api/v1/user/peopleByRole';
 const API_QUOTES_BASE_URL = 'http://localhost:8004/api/v1/quote/by-therapist';
 
-export const fetchAllDocentes = async () => {
+// Modifica la función para tomar roleId como parámetro
+export const fetchAllDocentes = async (roleId) => {
   try {
-    // Retrieve role ID and token from localStorage
-    const roleId = localStorage.getItem('roleId');
     const token = localStorage.getItem('token');
 
     if (!roleId || !token) {
@@ -30,6 +29,7 @@ export const fetchAllDocentes = async () => {
     throw error;
   }
 };
+
 
 export const fetchAppointmentsByTherapist = async () => {
   try {
