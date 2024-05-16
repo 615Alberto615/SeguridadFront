@@ -11,22 +11,37 @@ const Docentes = () => {
         totalPages,
         setCurrentPage,
         fetchAllDocentes,
+        error,
     } = useDocenteStore();
 
     useEffect(() => {
         fetchAllDocentes();
     }, [fetchAllDocentes]);
 
+    if (error){
+        return <div className='error'>{error}</div>
+    }
+
     const handlePageClick = (page) => {
         setCurrentPage(page);
     };
 
     function calculateAge(birthdate) {
+        if (!birthdate) {
+            return 'Desconocida';
+        }
         const birthday = new Date(birthdate);
-        const ageDifMs = Date.now() - birthday.getTime();
-        const ageDate = new Date(ageDifMs);
-        return Math.abs(ageDate.getUTCFullYear() - new Date().getUTCFullYear());
+        const today = new Date();
+        let age = today.getFullYear() - birthday.getFullYear();
+        const m = today.getMonth() - birthday.getMonth();
+    
+        if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+            age--;
+        }
+        return age;
     }
+    
+    
 
     return (
         <div className="my-24 md:px-14 px-4 max-w-screen-2xl mx-auto" id='docentes'>
@@ -49,16 +64,16 @@ const Docentes = () => {
                     viewport={{ once: false, amount: 0.7 }}
                     className="w-full lg:w-3/4">
                     <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-start md:gap-12 gap-8'>
-                        {displayedDocentes.map((docente) => (
-                            <FlipCard
-                                key={docente.id}
-                                image={ov3} // Utiliza tu imagen predeterminada
-                                frontTitle={`${docente.name} ${docente.firstLastname} ${docente.secondLastname || ''}`}
-                                backText={`Especialidad: ${docente.occupationId || 'No especificado'}, 
-                                          Edad: ${calculateAge(docente.birthdate)}, 
-                                          Correo Electrónico: ${docente.email || 'No disponible'}`}
-                            />
-                        ))}
+                    {displayedDocentes.map((docente) => (
+                        <FlipCard
+                            key={docente.peopleId || docente.userId}  // Asegúrate de tener una clave única
+                            image={ov3}
+                            frontTitle={`${docente.name} ${docente.firstLastname} ${docente.secondLastname || ''}`}
+                            backText={`Especialidad: ${docente.occupationId || 'No especificado'}, 
+                                    Edad: ${docente.age ? calculateAge(docente.age) : 'Desconocida'}, 
+                                    Correo Electrónico: ${docente.email || 'No disponible'}`}
+                        />
+                    ))}
                     </div>
                     <div className="mt-8 flex justify-center">
                         {totalPages > 1 && Array.from({ length: totalPages }, (_, i) => (
@@ -107,5 +122,6 @@ const FlipCard = ({ image, frontTitle, backText }) => {
         </div>
     );
 };
+
 
 export default Docentes;

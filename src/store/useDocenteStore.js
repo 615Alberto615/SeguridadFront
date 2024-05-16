@@ -1,4 +1,3 @@
-// store/useDocenteStore.js
 import { create } from 'zustand';
 import { fetchAllDocentes } from '../service/docenteService'; // Importa correctamente fetchAllDocentes
 
@@ -21,7 +20,8 @@ const useDocenteStore = create((set) => ({
     }
 
     try {
-      const allDocentes = await fetchAllDocentes(token); // Usa el método correcto aquí
+      // Pasa el roleID como argumento a la función
+      const allDocentes = await fetchAllDocentes(3);  // Aquí pasamos el roleID 3 directamente
       set({
         allDocentes,
         displayedDocentes: allDocentes.slice(0, ITEMS_PER_PAGE),
@@ -44,5 +44,7 @@ const useDocenteStore = create((set) => ({
     });
   }
 }));
+
+
 
 export default useDocenteStore;
