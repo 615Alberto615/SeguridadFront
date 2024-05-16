@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
 import TherapistDetailModal from '../../components/logeado/InfoConsulta';
-import useTreatmentStore from '../../store/useTreatmentStore'; 
+import useQuoteStore from '../../store/useQuoteStore1';
 import therapist1 from '../../assets/profile3.png';
 const ConsultasEst = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -12,18 +12,27 @@ const ConsultasEst = () => {
     const [currentAppointment, setCurrentAppointment] = useState(null);
     const itemsPerPage = 3;
 
-    const { treatments, fetchTreatments } = useTreatmentStore();
+    const { quotes, fetchQuoteById } = useQuoteStore();
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
     useEffect(() => {
-        fetchTreatments(userId, token);
-    }, [fetchTreatments, userId, token]);
+        if (userId && token) {
+            fetchQuoteById(userId, token);
+        }
+    }, [fetchQuoteById, userId, token]);
+    
+    useEffect(() => {
+        if (selectedTreatment) {
+            console.log("Opening modal with:", selectedTreatment);
+            setDetailModalOpen(true);
+        }
+    }, [selectedTreatment]);
 
     const lastIndex = currentPage * itemsPerPage;
     const firstIndex = lastIndex - itemsPerPage;
-    const currentAppointments = treatments.slice(firstIndex, lastIndex);
-    const totalPages = Math.ceil(treatments.length / itemsPerPage);
+    const currentAppointments = quotes.slice(firstIndex, lastIndex);
+    const totalPages = Math.ceil(quotes.length / itemsPerPage);
 
     const nextPage = () => {
         setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
@@ -32,8 +41,14 @@ const ConsultasEst = () => {
     const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
     const openDetailModal = (appointment) => {
-        setSelectedTreatment(appointment);
-        setDetailModalOpen(true);
+        console.log("Attempting to open modal with appointment:", appointment);
+        if (appointment && appointment.availability) {
+            setSelectedTreatment(appointment);
+            console.log("Selected Treatment set:", appointment);
+            setDetailModalOpen(true);
+        } else {
+            console.error("Incomplete appointment data", appointment);
+        }
     };
 
     const handleConfirmCancellation = (appointment) => {
@@ -46,26 +61,27 @@ const ConsultasEst = () => {
         setOptionsModalOpen(true);
     };
 
+
     return (
         <motion.div variants={fadeIn('left', 0.2)} initial='hidden' whileInView={'show'}
             className="my-0 md:px-14 px-4 max-w-screen-2xl mx-auto">
             <div className="flex flex-col lg:flex-row justify-center items-center gap-10">
                 <div className="container mx-auto mt-10">
                     <div className="text-center">
-                        <h2 className="md:text-5xl text-3xl font-extrabold text-primary mb-2">Tus Tratamientos</h2>
-                        <p className="text-tartiary md:w-1/3 mx-auto px-4">Aquí puedes ver todos tus tratamientos segun una consulta.</p>
+                        <h2 className="md:text-5xl text-3xl font-extrabold text-primary mb-2">Tus consultas</h2>
+                        <p className="text-tartiary md:w-1/3 mx-auto px-4">Aquí puedes ver todas tus citas programadas.</p>
                     </div>
 
                     <div className="bg-white rounded-lg p-6">
-                        {treatments.length > 0 ? (
+                        {quotes.length > 0 ? (
                             <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center md:gap-12 gap-8 justify-items-center'>    
                                 {currentAppointments.map((appointment, index) => (
                                     <AppointmentCard 
-                                        key={index}
-                                        appointment={appointment}
-                                        onOpenDetailModal={openDetailModal}
-                                        onOpenOptionsModal={openOptionsModal} 
-                                    />
+                                    key={index}
+                                    appointment={appointment}
+                                    onOpenDetailModal={openDetailModal}
+                                    onOpenOptionsModal={openOptionsModal} 
+                                />
                                 ))}
                             </div>
                         ) : (
@@ -73,7 +89,7 @@ const ConsultasEst = () => {
                                 <p className="text-lg text-gray-500">No tienes citas agendadas.</p>
                             </div>
                         )}
-                        {treatments.length > 0 && (
+                        {quotes.length > 0 && (
                             <div className="flex justify-center mt-8">
                                 <div className="flex space-x-2">
                                     {pageNumbers.map((number) => (
@@ -115,10 +131,13 @@ const AppointmentCard = ({ appointment, onOpenDetailModal, onOpenOptionsModal })
         <div className="bg-white shadow rounded-lg p-4 flex flex-col mb-4 relative">
             <img src={appointment.photo || therapist1} alt={appointment.name} className="w-10 h-10 self-start" />
             <div className="text-left ml-12">
-                <h3 className="text-lg font-semibold">{appointment.startDate}</h3>
+                {/* Uso del encadenamiento opcional para asegurar que no accedamos a propiedades de objetos indefinidos */}
+                <h3>{appointment.availability?.weekday}: {appointment.availability?.startTime}</h3>
                 <p>{appointment.name}</p>
-                <p className="text-sm">Consulta a cargo de: {appointment.userPsychiatristId}</p>
-                <p className="text-sm font-semibold">Estado: {appointment.status}</p>
+                <p className="text-sm">
+                    Consulta a cargo de: {appointment.availability?.user?.people?.name} {appointment.availability?.user?.people?.firstLastname}
+                </p>
+                <p className="text-sm font-semibold">Estado: {appointment.availability?.status ? 'Activo' : 'Inactivo'}</p>
             </div>
             <button 
                 className="absolute top-0 right-0 text-xl p-2" 

@@ -2,14 +2,21 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants.js';
 import useAvailabilityStore from "../../store/useAvailabilityStore.js";
-import { deleteAvailability, updateAvailability, updateAvailabilityStatus } from "../../service/availabilityService.js";
+import {
+    deleteAvailability,
+    getAllAvailabilities,
+    getAvailabilitiesByUserId,
+    updateAvailability,
+} from "../../service/availabilityService.js";
 
 const HorarioDocente = () => {
     const [isYearly, setIsYearly] = useState(false);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
     const [selectedAvailability, setSelectedAvailability] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [setUserAvailabilities] = useState([]);
     const { availabilities, fetchAvailabilitiesByUserId, createAvailability } = useAvailabilityStore();
+    const [occupiedAvailabilities, setOccupiedAvailabilities] = useState([]);
 
     const openEditModal = (availability) => {
         setSelectedAvailability(availability);
@@ -57,6 +64,16 @@ const HorarioDocente = () => {
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         fetchAvailabilitiesByUserId(userId);
+
+        getAvailabilitiesByUserId(userId, localStorage.getItem('token'))
+            .then(availabilities => setUserAvailabilities(availabilities))
+            .catch(error => console.error("Error al obtener los horarios del docente", error));
+
+        getAllAvailabilities(localStorage.getItem('token'))
+            .then(availabilities => {
+                setOccupiedAvailabilities(availabilities.filter(availability => availability.status));
+            })
+            .catch(error => console.error("Error al obtener las disponibilidades activas", error));
     }, [fetchAvailabilitiesByUserId]);
 
     const tableStyle = {
@@ -84,6 +101,8 @@ const HorarioDocente = () => {
 
     const activeAvailabilities = availabilities.filter(availability => availability.status);
     const inactiveAvailabilities = availabilities.filter(availability => !availability.status);
+
+
 
     return (
         <motion.div
@@ -151,123 +170,135 @@ const HorarioDocente = () => {
             </div>
 
             {/* Tabla de horarios inactivos */}
-            <div className="text-left" id='horariodocente'>
-                <h2 className="md:text-3xl text-3xl font-extrabold text-primary mb-2">Horarios Inactivos</h2>
-            </div>
-            <table style={tableStyle}>
-                <thead>
-                <tr>
-                    <th style={headerCellStyle}>Fecha</th>
-                    <th style={headerCellStyle}>Hora inicio</th>
-                    <th style={headerCellStyle}>Hora fin</th>
-                    <th style={headerCellStyle}>Estado</th>
-                    <th style={headerCellStyle}>Operaciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                {inactiveAvailabilities.map((availability, index) => (
-                    <tr key={index}>
-                        <td style={cellStyle}>{availability.weekday}</td>
-                        <td style={cellStyle}>{availability.startTime}</td>
-                        <td style={cellStyle}>{availability.endTime}</td>
-                        <td style={cellStyle}>Inactivo</td>
-                        <td style={cellStyle}>
-                            <button
-                                className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"
-                                onClick={() => openEditModal(availability)}
-                            >
-                                Editar
-                            </button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            {/*<div className="text-left" id='horariodocente'>*/}
+            {/*    <h2 className="md:text-3xl text-3xl font-extrabold text-primary mb-2">Horarios Inactivos</h2>*/}
+            {/*</div>*/}
+            {/*<table style={tableStyle}>*/}
+            {/*    <thead>*/}
+            {/*    <tr>*/}
+            {/*        <th style={headerCellStyle}>Fecha</th>*/}
+            {/*        <th style={headerCellStyle}>Hora inicio</th>*/}
+            {/*        <th style={headerCellStyle}>Hora fin</th>*/}
+            {/*        <th style={headerCellStyle}>Estado</th>*/}
+            {/*        <th style={headerCellStyle}>Operaciones</th>*/}
+            {/*    </tr>*/}
+            {/*    </thead>*/}
+            {/*    <tbody>*/}
+            {/*    {inactiveAvailabilities.map((availability, index) => (*/}
+            {/*        <tr key={index}>*/}
+            {/*            <td style={cellStyle}>{availability.weekday}</td>*/}
+            {/*            <td style={cellStyle}>{availability.startTime}</td>*/}
+            {/*            <td style={cellStyle}>{availability.endTime}</td>*/}
+            {/*            <td style={cellStyle}>Inactivo</td>*/}
+            {/*            <td style={cellStyle}>*/}
+            {/*                <button*/}
+            {/*                    className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"*/}
+            {/*                    onClick={() => openEditModal(availability)}*/}
+            {/*                >*/}
+            {/*                    Editar*/}
+            {/*                </button>*/}
+            {/*            </td>*/}
+            {/*        </tr>*/}
+            {/*    ))}*/}
+            {/*    </tbody>*/}
+            {/*</table>*/}
 
 
             {isYearly && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white rounded p-6 w-3/4 h-3/4 overflow-auto">
-                        <table style={tableStyle}>
-                            <thead>
-                            <tr>
-                                <th style={cellStyle}>Hora</th>
-                                <th style={cellStyle}>Lunes</th>
-                                <th style={cellStyle}>Martes</th>
-                                <th style={cellStyle}>Miércoles</th>
-                                <th style={cellStyle}>Jueves</th>
-                                <th style={cellStyle}>Viernes</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {timeSlots.map((timeSlot, index) => (
-                                <tr key={index}>
-                                    <td style={cellStyle}>{timeSlot}</td>
-                                    {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map((day, i) => {
-                                        const isOccupied = availabilities.some(availability => availability.weekday === day && availability.startTime === timeSlot.split(' - ')[0]);
-                                        return (
-                                            <td
-                                                key={i}
-                                                style={{
-                                                    ...cellStyle,
-                                                    cursor: 'pointer',
-                                                    backgroundColor: selectedTimeSlot === `${day}-${timeSlot}` ? '#add8e6' : (isOccupied ? '#FFC0CB' : 'transparent')
-                                                }}
-                                                onClick={() => setSelectedTimeSlot(`${day}-${timeSlot}`)}
-                                            />
-                                        );
-                                    })}
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white rounded-lg p-8 w-full max-w-6xl mx-4 md:mx-auto mt-20 md:mt-32 flex flex-col">
+                        <div className="flex flex-col md:flex-row">
+                            <table style={tableStyle} className="mb-6">
+                                <thead>
+                                <tr>
+                                    <th style={headerCellStyle}>Hora</th>
+                                    <th style={headerCellStyle}>Lunes</th>
+                                    <th style={headerCellStyle}>Martes</th>
+                                    <th style={headerCellStyle}>Miércoles</th>
+                                    <th style={headerCellStyle}>Jueves</th>
+                                    <th style={headerCellStyle}>Viernes</th>
                                 </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                        <div className="flex justify-center mt-6">
-                            <button
-                                className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"
-                                onClick={() => {
-                                    const [day, time] = selectedTimeSlot.split('-');
+                                </thead>
+                                <tbody>
+                                {timeSlots.map((timeSlot, index) => (
+                                    <tr key={index}>
+                                        <td style={cellStyle}>{timeSlot}</td>
+                                        {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map((day, i) => {
+                                            const isOccupied = occupiedAvailabilities.some(availability => (
+                                                availability.weekday === day &&
+                                                new Date(`2000-01-01T${availability.startTime}`).getTime() === new Date(`2000-01-01T${timeSlot.split(' - ')[0]}`).getTime() &&
+                                                new Date(`2000-01-01T${availability.endTime}`).getTime() === new Date(`2000-01-01T${timeSlot.split(' - ')[1]}`).getTime() &&
+                                                availability.status
+                                            ));
+                                            const isSelected = selectedTimeSlot === `${day}-${timeSlot}`;
+                                            return (
+                                                <td
+                                                    key={i}
+                                                    style={{
+                                                        ...cellStyle,
+                                                        cursor: 'pointer',
+                                                        backgroundColor: isSelected ? 'lightblue' : isOccupied ? 'red' : 'inherit',
+                                                        color: isOccupied ? 'red' : 'inherit'
+                                                    }}
+                                                    onClick={() => setSelectedTimeSlot(isSelected ? null : `${day}-${timeSlot}`)}
+                                                >
+                                                    {isOccupied ? "Ocupado" : ""}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
 
-                                    let startTime = '';
-                                    let endTime = '';
+                            <div className="flex justify-center mt-6">
+                                <button
+                                    className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"
+                                    onClick={() => {
+                                        const [day, time] = selectedTimeSlot.split('-');
 
-                                    if (time.includes(' - ')) {
-                                        [startTime, endTime] = time.split(' - ');
-                                    } else {
+                                        let startTime = '';
+                                        let endTime = '';
 
-                                        startTime = time.trim();
+                                        if (time.includes(' - ')) {
+                                            [startTime, endTime] = time.split(' - ');
+                                        } else {
 
-                                        const [startHour, startMinute] = startTime.split(':').map(Number);
-                                        let endHour = startHour + 1;
+                                            startTime = time.trim();
 
-                                        // Asegurar que no supere las 24 horas
-                                        if (endHour >= 24) {
-                                            endHour -= 24;
+                                            const [startHour, startMinute] = startTime.split(':').map(Number);
+                                            let endHour = startHour + 1;
+
+                                            // Asegurar que no supere las 24 horas
+                                            if (endHour >= 24) {
+                                                endHour -= 24;
+                                            }
+
+                                            endTime = `${String(endHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}:00`;
                                         }
 
-                                        endTime = `${String(endHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}:00`;
-                                    }
+                                        const userId = localStorage.getItem('userId');
+                                        //Crear codigo disponibilidad aleatorio
+                                        const codeAvailability = Math.floor(Math.random() * 1000000);
 
-                                    const userId = localStorage.getItem('userId');
-                                    //Crear codigo disponibilidad aleatorio
-                                    const codeAvailability = Math.floor(Math.random() * 1000000);
+                                        createAvailability({
+                                            user:{
+                                                userId: userId,
+                                            },
+                                            codeAvailability: codeAvailability,
+                                            weekday: day,  // Usamos weekday en lugar de day
+                                            startTime: `${startTime}:00`,
+                                            endTime: endTime,
+                                            status: true
+                                        });
+                                        setIsYearly(false);
 
-                                    createAvailability({
-                                        user:{
-                                            userId: userId,
-                                        },
-                                        codeAvailability: codeAvailability,
-                                        weekday: day,  // Usamos weekday en lugar de day
-                                        startTime: `${startTime}:00`,
-                                        endTime: endTime,
-                                        status: true
-                                    });
-                                    setIsYearly(false);
-
-                                }}
-                            >
-                                Confirmar
-                            </button>
-                            <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600" onClick={() => setIsYearly(false)}>Cancelar</button>
+                                    }}
+                                >
+                                    Confirmar
+                                </button>
+                                <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600" onClick={() => setIsYearly(false)}>Cancelar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -282,17 +313,17 @@ const HorarioDocente = () => {
                             <h2 className="text-2xl font-semibold mb-4">Editar Disponibilidad</h2>
                             <div className="flex flex-col space-y-2">
                                 <label htmlFor="weekday" className="text-sm font-semibold">Día de la Semana:</label>
-                                <select
-                                    id="weekday"
-                                    name="weekday"
-                                    value={selectedAvailability.weekday}
-                                    onChange={(e) => setSelectedAvailability({ ...selectedAvailability, weekday: e.target.value })}
-                                    className="border border-gray-300 rounded px-3 py-2"
-                                >
+                                <div className="flex space-x-2">
                                     {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map(day => (
-                                        <option key={day} value={day}>{day}</option>
+                                        <button
+                                            key={day}
+                                            className={`px-4 py-2 rounded ${selectedAvailability.weekday === day ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                            onClick={() => setSelectedAvailability({ ...selectedAvailability, weekday: day })}
+                                        >
+                                            {day}
+                                        </button>
                                     ))}
-                                </select>
+                                </div>
                             </div>
                             <div className="flex flex-col space-y-2">
                                 <label htmlFor="startTime" className="text-sm font-semibold">Hora de Inicio:</label>
@@ -318,16 +349,20 @@ const HorarioDocente = () => {
                             </div>
                             <div className="flex flex-col space-y-2">
                                 <label htmlFor="status" className="text-sm font-semibold">Estado:</label>
-                                <select
-                                    id="status"
-                                    name="status"
-                                    value={selectedAvailability.status}
-                                    onChange={(e) => setSelectedAvailability({ ...selectedAvailability, status: e.target.value })}
-                                    className="border border-gray-300 rounded px-3 py-2"
-                                >
-                                    <option value={true}>Activo</option>
-                                    <option value={false}>Inactivo</option>
-                                </select>
+                                <div className="flex space-x-2">
+                                    <button
+                                        className={`px-4 py-2 rounded ${selectedAvailability.status ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                        onClick={() => setSelectedAvailability({ ...selectedAvailability, status: true })}
+                                    >
+                                        Activo
+                                    </button>
+                                    <button
+                                        className={`px-4 py-2 rounded ${!selectedAvailability.status ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                        onClick={() => setSelectedAvailability({ ...selectedAvailability, status: false })}
+                                    >
+                                        Inactivo
+                                    </button>
+                                </div>
                             </div>
                             <div className="flex justify-end">
                                 <button onClick={() => handleEditConfirmation(selectedAvailability)} className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">Guardar Cambios</button>
