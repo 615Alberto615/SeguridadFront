@@ -83,3 +83,33 @@ export const updateUser = async (userData, token) => {
 };
 
 
+export const changeUserRole = async (userId, newRoleId, token) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/changeRole/${userId}`, {
+            rolId: newRoleId
+        }, {
+            headers: { Authorization: token },
+        });
+        console.log("Change role response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error changing user role: ', error);
+        throw error;
+    }
+};
+
+// Función para cambiar el estado de un usuario
+export const changeUserStatus = async (userId, newStatus, token) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/changeStatus/${userId}`, {
+            status: newStatus
+        }, {
+            headers: { Authorization: token },
+        });
+        console.log("Change status response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error changing user status: ', error);
+        throw error;
+    }
+};
