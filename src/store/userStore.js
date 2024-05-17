@@ -1,8 +1,14 @@
+//userStore
 import { create } from 'zustand';
-import {fetchPeopleByRole, fetchUserById, fetchAllUsers, updateUser  } from '../service/userService';
+import { fetchPeopleByRole, fetchUserById, fetchAllUsers, changeUserRole,changeUserStatus } from '../service/userService';
+
 
 const usePeopleStore = create((set, get) => ({
     people: [],
+    page: 0,
+    size: 3,
+    totalPages: 0,
+    currentUser: null,
     fetchUsers: async (roleId, token) => {
         try {
             // Aquí realizas la lógica para obtener los usuarios del backend
@@ -17,9 +23,7 @@ const usePeopleStore = create((set, get) => ({
             console.error('Error fetching users: ', error);
         }
     },
-    page: 0,
-    size: 3,
-    totalPages: 0,
+    
     fetchPeople: async (roleId, token) => {
         const data = await fetchPeopleByRole(roleId, token, get().page, get().size);
         set({
@@ -40,18 +44,29 @@ const usePeopleStore = create((set, get) => ({
             console.error('Error fetching all users: ', error);
         }
     },
-    //Modificar el usuario por el Admin
-    updateUser: async (userData, token) => {
+    
+    setPage: (page) => set({ page }),
+
+    changeRole: async (userId, newRoleId, token) => {
         try {
-            await updateUser(userData, token);
-            console.log('Usuario actualizado exitosamente');
-            // Realizar cualquier otra acción necesaria después de la actualización
+            const result = await changeUserRole(userId, newRoleId, token);
+            console.log('Role change result:', result);
+            get().fetchAllUsers(token);  
         } catch (error) {
-            console.error('Error al actualizar usuario: ', error);
-            // Manejar el error de manera adecuada en tu aplicación
+            console.error('Error changing user role: ', error);
         }
     },
-    setPage: (page) => set({ page }),
+
+    // Método para cambiar el estado de un usuario
+    changeStatus: async (userId, newStatus, token) => {
+        try {
+            const result = await changeUserStatus(userId, newStatus, token);
+            console.log('Status change result:', result);
+            get().fetchAllUsers(token);  // Recargar todos los usuarios para reflejar cambios
+        } catch (error) {
+            console.error('Error changing user status: ', error);
+        }
+    },
     
 }));
 
