@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useRef  } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
 import TherapistDetailModal from '../../components/logeado/InfoConsulta';
@@ -15,6 +15,7 @@ const ConsultasEst = () => {
     const { quotes, fetchQuoteById } = useQuoteStore();
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+    const confirmationRef = useRef();
 
     useEffect(() => {
         if (userId && token) {
@@ -51,11 +52,23 @@ const ConsultasEst = () => {
         }
     };
 
-    const handleConfirmCancellation = (appointment) => {
-        console.log('Cita cancelada:', appointment);
-        setOptionsModalOpen(false);
+    const handleConfirmCancellation = async (appointment, confirmation) => {
+        if (confirmation.toLowerCase() === "confirmar") {
+            try {
+                await deleteQuoteById(appointment.id, token);
+                console.log('Cita cancelada:', appointment);
+                setOptionsModalOpen(false);
+                // Actualiza el estado de las citas después de la eliminación si es necesario
+            } catch (error) {
+                console.error('Error canceling appointment:', error);
+                // Manejo de errores si es necesario
+            }
+        } else {
+            console.log('Palabra de confirmación incorrecta');
+            // Puedes mostrar un mensaje al usuario indicando que la palabra de confirmación es incorrecta
+        }
     };
-
+    
     const openOptionsModal = (appointment) => {
         setCurrentAppointment(appointment);
         setOptionsModalOpen(true);
@@ -173,7 +186,11 @@ const AppointmentOptionsModal = ({ isOpen, onClose, onConfirmCancellation, appoi
             <div className="bg-white rounded-lg p-6 w-1/3 mx-auto relative text-center">
                 <h3 className="text-lg font-bold mb-4">¿Estás seguro de que quieres cancelar esta consulta?</h3>
                 <p>Si cancelas la cita tendrás que programar una completamente nueva.</p>
+                
                 <div className="mt-4 flex justify-around">
+                <input type="text" placeholder="Escribe 'confirmar'" ref={confirmationRef} className="border rounded-md px-2 py-1 mb-2" />
+                <button onClick={() => onConfirmCancellation(appointment, confirmationRef.current.value)}>Sí, cancelar</button>
+
                     <button onClick={onClose} className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-300">
                         No, mantener
                     </button>

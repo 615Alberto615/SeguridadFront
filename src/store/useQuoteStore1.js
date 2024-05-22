@@ -28,6 +28,16 @@ const useQuoteStore = create((set) => ({
             set(state => ({ ...state, error: error.message }));
         }
     },
+    deleteQuoteById: async (quotesId, token) => {
+        try {
+            const response = await deleteQuoteById(quotesId, token);
+            console.log('API Response:', response);
+            set(state => ({ ...state, selectedQuote: response.data, error: null }));
+        } catch (error) {
+            console.error('Error fetching quote:', error);
+            set(state => ({ ...state, error: error.message }));
+        }
+    },
 }));
 
 export default useQuoteStore;
