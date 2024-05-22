@@ -4,9 +4,9 @@ import { fadeIn } from '../../variants.js';
 import useAvailabilityStore from "../../store/useAvailabilityStore.js";
 import {
     deleteAvailability,
-    getAllAvailabilities,
     getAvailabilitiesByUserId,
     updateAvailability,
+    getActiveAvailabilities
 } from "../../service/availabilityService.js";
 
 const HorarioDocente = () => {
@@ -14,7 +14,7 @@ const HorarioDocente = () => {
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
     const [selectedAvailability, setSelectedAvailability] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [setUserAvailabilities] = useState([]);
+    const [userAvailabilities, setUserAvailabilities] = useState([]);
     const { availabilities, fetchAvailabilitiesByUserId, createAvailability } = useAvailabilityStore();
     const [occupiedAvailabilities, setOccupiedAvailabilities] = useState([]);
 
@@ -29,9 +29,10 @@ const HorarioDocente = () => {
             if (confirmDelete) {
                 await deleteAvailability(availabilityId, localStorage.getItem('token'));
                 fetchAvailabilitiesByUserId(localStorage.getItem('userId'));
+                await loadOccupiedAvailabilities();
             }
         } catch (error) {
-            alert("Error al eliminar el horario")
+            alert("Error al eliminar el horario");
         }
     };
 
@@ -56,8 +57,18 @@ const HorarioDocente = () => {
             fetchAvailabilitiesByUserId(localStorage.getItem('userId'));
             alert("Editado correctamente");
             setIsEditing(false);
+            await loadOccupiedAvailabilities();
         } catch (error) {
-            alert("Error al editar el horario")
+            alert("Error al editar el horario");
+        }
+    };
+
+    const loadOccupiedAvailabilities = async () => {
+        try {
+            const availabilities = await getActiveAvailabilities(localStorage.getItem('token'));
+            setOccupiedAvailabilities(availabilities);
+        } catch (error) {
+            console.error("Error al obtener las disponibilidades activas", error);
         }
     };
 
@@ -69,11 +80,7 @@ const HorarioDocente = () => {
             .then(availabilities => setUserAvailabilities(availabilities))
             .catch(error => console.error("Error al obtener los horarios del docente", error));
 
-        getAllAvailabilities(localStorage.getItem('token'))
-            .then(availabilities => {
-                setOccupiedAvailabilities(availabilities.filter(availability => availability.status));
-            })
-            .catch(error => console.error("Error al obtener las disponibilidades activas", error));
+        loadOccupiedAvailabilities();
     }, [fetchAvailabilitiesByUserId]);
 
     const tableStyle = {
@@ -102,7 +109,15 @@ const HorarioDocente = () => {
     const activeAvailabilities = availabilities.filter(availability => availability.status);
     const inactiveAvailabilities = availabilities.filter(availability => !availability.status);
 
-
+    const isOccupied = (day, timeSlot) => {
+        const [startTime, endTime] = timeSlot.split(' - ');
+        return occupiedAvailabilities.some(availability =>
+            availability.weekday === day &&
+            availability.startTime.substring(0, 5) === startTime &&
+            availability.endTime.substring(0, 5) === endTime &&
+            availability.status
+        );
+    };
 
     return (
         <motion.div
@@ -120,7 +135,6 @@ const HorarioDocente = () => {
             </div>
 
             {/* Tabla de horarios activos */}
-
             <div className="text-left" id='horariodocente'>
                 <h2 className="md:text-3xl text-3xl font-extrabold text-primary mb-2">Horarios Activos</h2>
             </div>
@@ -150,7 +164,7 @@ const HorarioDocente = () => {
                             </button>
                             <button
                                 className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600"
-                                onClick={() => handleDelete(availability.availabilityId, localStorage.getItem('token'))}
+                                onClick={() => handleDelete(availability.availabilityId)}
                             >
                                 Eliminar
                             </button>
@@ -169,44 +183,9 @@ const HorarioDocente = () => {
                 </button>
             </div>
 
-            {/* Tabla de horarios inactivos */}
-            {/*<div className="text-left" id='horariodocente'>*/}
-            {/*    <h2 className="md:text-3xl text-3xl font-extrabold text-primary mb-2">Horarios Inactivos</h2>*/}
-            {/*</div>*/}
-            {/*<table style={tableStyle}>*/}
-            {/*    <thead>*/}
-            {/*    <tr>*/}
-            {/*        <th style={headerCellStyle}>Fecha</th>*/}
-            {/*        <th style={headerCellStyle}>Hora inicio</th>*/}
-            {/*        <th style={headerCellStyle}>Hora fin</th>*/}
-            {/*        <th style={headerCellStyle}>Estado</th>*/}
-            {/*        <th style={headerCellStyle}>Operaciones</th>*/}
-            {/*    </tr>*/}
-            {/*    </thead>*/}
-            {/*    <tbody>*/}
-            {/*    {inactiveAvailabilities.map((availability, index) => (*/}
-            {/*        <tr key={index}>*/}
-            {/*            <td style={cellStyle}>{availability.weekday}</td>*/}
-            {/*            <td style={cellStyle}>{availability.startTime}</td>*/}
-            {/*            <td style={cellStyle}>{availability.endTime}</td>*/}
-            {/*            <td style={cellStyle}>Inactivo</td>*/}
-            {/*            <td style={cellStyle}>*/}
-            {/*                <button*/}
-            {/*                    className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"*/}
-            {/*                    onClick={() => openEditModal(availability)}*/}
-            {/*                >*/}
-            {/*                    Editar*/}
-            {/*                </button>*/}
-            {/*            </td>*/}
-            {/*        </tr>*/}
-            {/*    ))}*/}
-            {/*    </tbody>*/}
-            {/*</table>*/}
-
-
             {isYearly && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white rounded-lg p-8 w-full max-w-6xl mx-4 md:mx-auto mt-20 md:mt-32 flex flex-col">
+                    <div className="bg-white rounded-lg p-8 w-full max-w-6xl mx-4 md:mx-auto mt-20 md:mt-32 flex flex-col space-y-6">
                         <div className="flex flex-col md:flex-row">
                             <table style={tableStyle} className="mb-6">
                                 <thead>
@@ -224,12 +203,7 @@ const HorarioDocente = () => {
                                     <tr key={index}>
                                         <td style={cellStyle}>{timeSlot}</td>
                                         {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map((day, i) => {
-                                            const isOccupied = occupiedAvailabilities.some(availability => (
-                                                availability.weekday === day &&
-                                                new Date(`2000-01-01T${availability.startTime}`).getTime() === new Date(`2000-01-01T${timeSlot.split(' - ')[0]}`).getTime() &&
-                                                new Date(`2000-01-01T${availability.endTime}`).getTime() === new Date(`2000-01-01T${timeSlot.split(' - ')[1]}`).getTime() &&
-                                                availability.status
-                                            ));
+                                            const isSlotOccupied = isOccupied(day, timeSlot);
                                             const isSelected = selectedTimeSlot === `${day}-${timeSlot}`;
                                             return (
                                                 <td
@@ -237,12 +211,12 @@ const HorarioDocente = () => {
                                                     style={{
                                                         ...cellStyle,
                                                         cursor: 'pointer',
-                                                        backgroundColor: isSelected ? 'lightblue' : isOccupied ? 'red' : 'inherit',
-                                                        color: isOccupied ? 'red' : 'inherit'
+                                                        backgroundColor: isSelected ? 'lightblue' : isSlotOccupied ? 'red' : 'inherit',
+                                                        color: isSlotOccupied ? 'white' : 'inherit'
                                                     }}
-                                                    onClick={() => setSelectedTimeSlot(isSelected ? null : `${day}-${timeSlot}`)}
+                                                    onClick={() => !isSlotOccupied && setSelectedTimeSlot(isSelected ? null : `${day}-${timeSlot}`)}
                                                 >
-                                                    {isOccupied ? "Ocupado" : ""}
+                                                    {isSlotOccupied ? "Ocupado" : ""}
                                                 </td>
                                             );
                                         })}
@@ -251,10 +225,10 @@ const HorarioDocente = () => {
                                 </tbody>
                             </table>
 
-                            <div className="flex justify-center mt-6">
+                            <div className="flex flex-col justify-center space-y-4 ml-4">
                                 <button
-                                    className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"
-                                    onClick={() => {
+                                    className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 h-12"
+                                    onClick={async () => {
                                         const [day, time] = selectedTimeSlot.split('-');
 
                                         let startTime = '';
@@ -263,13 +237,10 @@ const HorarioDocente = () => {
                                         if (time.includes(' - ')) {
                                             [startTime, endTime] = time.split(' - ');
                                         } else {
-
                                             startTime = time.trim();
-
                                             const [startHour, startMinute] = startTime.split(':').map(Number);
                                             let endHour = startHour + 1;
 
-                                            // Asegurar que no supere las 24 horas
                                             if (endHour >= 24) {
                                                 endHour -= 24;
                                             }
@@ -278,34 +249,36 @@ const HorarioDocente = () => {
                                         }
 
                                         const userId = localStorage.getItem('userId');
-                                        //Crear codigo disponibilidad aleatorio
                                         const codeAvailability = Math.floor(Math.random() * 1000000);
 
-                                        createAvailability({
-                                            user:{
+                                        await createAvailability({
+                                            user: {
                                                 userId: userId,
                                             },
                                             codeAvailability: codeAvailability,
-                                            weekday: day,  // Usamos weekday en lugar de day
+                                            weekday: day,
                                             startTime: `${startTime}:00`,
                                             endTime: endTime,
                                             status: true
                                         });
                                         setIsYearly(false);
-
+                                        await loadOccupiedAvailabilities();
                                     }}
                                 >
                                     Confirmar
                                 </button>
-                                <button className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600" onClick={() => setIsYearly(false)}>Cancelar</button>
+                                <button
+                                    className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 h-12"
+                                    onClick={() => setIsYearly(false)}
+                                >
+                                    Cancelar
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
 
-
-            {/* Modal de edición */}
             {isEditing && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white rounded p-6 w-3/4 h-3/4 overflow-auto">
@@ -372,8 +345,6 @@ const HorarioDocente = () => {
                     </div>
                 </div>
             )}
-
-
         </motion.div>
     );
 };

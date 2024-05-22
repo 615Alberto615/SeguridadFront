@@ -101,3 +101,16 @@ export const deleteAvailability = async (availabilityId, token) => {
         throw error.response ? error.response.data : error.message;
     }
 };
+
+export const getActiveAvailabilities = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/active`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        return response.data.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error.message;
+    }
+};

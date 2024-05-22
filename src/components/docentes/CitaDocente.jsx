@@ -1,52 +1,68 @@
-
-import  { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants.js';
+import { fetchQuotesByTherapist } from '../../service/quoteService.js'; // Asegúrate de que la ruta sea correcta
 
 const CitaDocente = () => {
+    const [citas, setCitas] = useState([]);
     const [selectedCita, setSelectedCita] = useState(null);
+
+    useEffect(() => {
+        const therapistId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
+
+        fetchQuotesByTherapist(therapistId, token)
+            .then(response => {
+                if (response && response.data) {
+                    setCitas(response.data);
+                } else {
+                    setCitas([]); // Asegúrate de que citas siempre sea un arreglo
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching quotes:", error);
+                setCitas([]); // Asegúrate de que citas siempre sea un arreglo
+            });
+    }, []);
 
     const tableStyle = {
         width: '80%',
         borderCollapse: 'collapse',
         marginTop: '50px',
         margin: 'auto',
-        backgroundColor: '#f8f9fa', // Color de fondo de la tabla
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' // Sombra alrededor de la tabla
+        backgroundColor: '#f8f9fa',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
     };
 
     const cellStyle = {
-        border: '1px solid #dee2e6', // Color del borde de las celdas
+        border: '1px solid #dee2e6',
         padding: '15px',
         textAlign: 'center'
     };
 
-    const citas = [
-        // Aquí van tus citas...
-        { fecha: 'Lunes', horaInicio: '9:00', horaFin: '10:00', paciente: 'Juan', oficina: 'Oficina 1', motivo: 'Consulta' },
-        { fecha: 'Martes', horaInicio: '11:00', horaFin: '12:00', paciente: 'Ana', oficina: 'Oficina 2', motivo: 'Revisión' },
-        { fecha: 'Miércoles', horaInicio: '14:00', horaFin: '15:00', paciente: 'Pedro', oficina: 'Oficina 3', motivo: 'Consulta' },
-        { fecha: 'Jueves', horaInicio: '9:00', horaFin: '10:00', paciente: 'Luis', oficina: 'Oficina 5', motivo: 'Consulta' },
-        // Agrega más citas de ejemplo aquí...
-    ];
-
     // Crear un objeto que tenga como claves las horas y como valores las citas para esas horas
     const citasPorHora = citas.reduce((acc, cita) => {
-        acc[cita.horaInicio] = cita;
+        const startTime = new Date(cita.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const day = new Date(cita.startTime).toLocaleDateString('es-ES', { weekday: 'long' });
+
+        if (!acc[startTime]) {
+            acc[startTime] = {};
+        }
+        acc[startTime][day] = cita;
         return acc;
     }, {});
 
     return (
         <motion.div
-            variants={fadeIn('up',0.2)}
+            variants={fadeIn('up', 0.2)}
             initial='hidden'
             whileInView={'show'}
-            viewport={{once:false,amount:0.5}}
+            viewport={{ once: false, amount: 0.5 }}
             className="md:px-14 p-4 max-w-s mx-auto py-10"
             id='horarios'
             style={{ marginTop: '150px' }}
         >
-            <div className="text-center" id={'citas'}>
+            <div className="text-center" id='citas'>
                 <h2 className="md:text-5xl text-3xl font-extrabold text-primary mb-2">Tus citas</h2>
                 <p className="text-tartiary md:w-1/3 mx-auto px-4">Aquí puedes ver tus citas.</p>
             </div>
@@ -66,11 +82,15 @@ const CitaDocente = () => {
                 {Object.keys(citasPorHora).map((hora, index) => (
                     <tr key={index}>
                         <td style={cellStyle}>{hora}</td>
-                        <td style={cellStyle} onClick={() => setSelectedCita(citasPorHora[hora].fecha === 'Lunes' ? citasPorHora[hora] : null)}>{citasPorHora[hora].fecha === 'Lunes' ? 'CITA' : ''}</td>
-                        <td style={cellStyle} onClick={() => setSelectedCita(citasPorHora[hora].fecha === 'Martes' ? citasPorHora[hora] : null)}>{citasPorHora[hora].fecha === 'Martes' ? 'CITA' : ''}</td>
-                        <td style={cellStyle} onClick={() => setSelectedCita(citasPorHora[hora].fecha === 'Miércoles' ? citasPorHora[hora] : null)}>{citasPorHora[hora].fecha === 'Miércoles' ? 'CITA' : ''}</td>
-                        <td style={cellStyle} onClick={() => setSelectedCita(citasPorHora[hora].fecha === 'Jueves' ? citasPorHora[hora] : null)}>{citasPorHora[hora].fecha === 'Jueves' ? 'CITA' : ''}</td>
-                        <td style={cellStyle} onClick={() => setSelectedCita(citasPorHora[hora].fecha === 'Viernes' ? citasPorHora[hora] : null)}>{citasPorHora[hora].fecha === 'Viernes' ? 'CITA' : ''}</td>
+                        {['lunes', 'martes', 'miércoles', 'jueves', 'viernes'].map((day, i) => (
+                            <td
+                                key={i}
+                                style={cellStyle}
+                                onClick={() => setSelectedCita(citasPorHora[hora][day])}
+                            >
+                                {citasPorHora[hora][day] ? 'CITA' : ''}
+                            </td>
+                        ))}
                     </tr>
                 ))}
                 </tbody>
@@ -83,23 +103,23 @@ const CitaDocente = () => {
                         <div className="flex flex-col items-center justify-center bg-gray-100 p-4 rounded shadow-lg">
                             <div className="flex justify-between w-full mb-2">
                                 <span className="font-bold text-lg">Paciente:</span>
-                                <span className="text-lg">{selectedCita.paciente}</span>
+                                <span className="text-lg">{selectedCita.user.people.name}</span>
                             </div>
                             <div className="flex justify-between w-full mb-2">
                                 <span className="font-bold text-lg">Oficina:</span>
-                                <span className="text-lg">{selectedCita.oficina}</span>
+                                <span className="text-lg">{selectedCita.availability.codeAvailability}</span>
                             </div>
                             <div className="flex justify-between w-full mb-2">
                                 <span className="font-bold text-lg">Día:</span>
-                                <span className="text-lg">{selectedCita.fecha}</span>
+                                <span className="text-lg">{new Date(selectedCita.startTime).toLocaleDateString('es-ES', { weekday: 'long' })}</span>
                             </div>
                             <div className="flex justify-between w-full mb-2">
                                 <span className="font-bold text-lg">Hora:</span>
-                                <span className="text-lg">{selectedCita.horaInicio} - {selectedCita.horaFin}</span>
+                                <span className="text-lg">{new Date(selectedCita.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(selectedCita.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                             </div>
                             <div className="flex justify-between w-full mb-2">
                                 <span className="font-bold text-lg">Motivo:</span>
-                                <span className="text-lg">{selectedCita.motivo}</span>
+                                <span className="text-lg">{selectedCita.reason}</span>
                             </div>
                         </div>
                         <div className="flex justify-center mt-6">
