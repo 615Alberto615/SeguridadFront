@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bar, Pie, Line, Scatter, PolarArea, Doughnut } from 'react-chartjs-2';
+import { Bar, Pie, Line, Radar } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, ArcElement, BarElement, LineElement, PointElement, RadialLinearScale, Tooltip, Legend } from 'chart.js';
 import { motion } from 'framer-motion';
 import { fetchPatientsByRole2 } from '../../service/userService';
@@ -11,30 +11,6 @@ const genderMap = {
     1: 'Masculino',
     2: 'Femenino',
     3: 'Otro género'
-};
-
-const occupationMap = {
-    4: 'Ninguna ocupación',
-    5: 'Estudiante de Medicina',
-    6: 'Estudiante de Ingeniería',
-    7: 'Estudiante de Derecho',
-    8: 'Estudiante de Administración'
-};
-
-const semesterMap = {
-    9: 'Ningún semestre',
-    10: 'Primer semestre',
-    11: 'Segundo semestre',
-    12: 'Tercer semestre',
-    13: 'Cuarto semestre',
-    14: 'Quinto semestre',
-    15: 'Sexto semestre',
-    16: 'Séptimo semestre',
-    17: 'Octavo semestre',
-    18: 'Noveno semestre',
-    19: 'Décimo semestre',
-    20: 'Décimo primer semestre',
-    21: 'Décimo segundo semestre'
 };
 
 const Datos = () => {
@@ -79,29 +55,10 @@ const Datos = () => {
         return <div className="text-center text-primary">Datos inválidos recibidos.</div>;
     }
 
-    // Filtrar pacientes por edad si se proporciona un filtro de edad
-    const filteredPatients = filtroEdad ? patients.filter(patient => {
-        const birthYear = new Date(patient.age).getFullYear();
-        const age = new Date().getFullYear() - birthYear;
-        return age.toString().includes(filtroEdad);
-    }) : patients;
-
     // Procesar los datos para los gráficos
-    const genderCounts = filteredPatients.reduce((acc, curr) => {
+    const genderCounts = patients.reduce((acc, curr) => {
         const gender = genderMap[curr.genderId] || 'Desconocido';
         acc[gender] = (acc[gender] || 0) + 1;
-        return acc;
-    }, {});
-
-    const occupationCounts = filteredPatients.reduce((acc, curr) => {
-        const occupation = occupationMap[curr.occupationId] || 'Desconocido';
-        acc[occupation] = (acc[occupation] || 0) + 1;
-        return acc;
-    }, {});
-
-    const semesterCounts = filteredPatients.reduce((acc, curr) => {
-        const semester = semesterMap[curr.semesterId] || 'Desconocido';
-        acc[semester] = (acc[semester] || 0) + 1;
         return acc;
     }, {});
 
@@ -113,7 +70,7 @@ const Datos = () => {
         '56+': 0
     };
 
-    filteredPatients.forEach(patient => {
+    patients.forEach(patient => {
         const birthYear = new Date(patient.age).getFullYear();
         const age = new Date().getFullYear() - birthYear;
         if (age >= 18 && age <= 25) ageGroups['18-25']++;
@@ -130,10 +87,6 @@ const Datos = () => {
     const genderData = Object.values(genderCounts);
     const ageLabels = Object.keys(ageGroups);
     const ageData = Object.values(ageGroups);
-    const occupationLabels = Object.keys(occupationCounts);
-    const occupationData = Object.values(occupationCounts);
-    const semesterLabels = Object.keys(semesterCounts);
-    const semesterData = Object.values(semesterCounts);
 
     // Datos para los gráficos adicionales
     const dataLineAge = {
@@ -149,37 +102,14 @@ const Datos = () => {
         }]
     };
 
-    const dataScatterGenderAge = {
+    const dataRadarGenderAge = {
+        labels: genderLabels,
         datasets: [{
-            label: 'Género vs Edad',
-            data: filteredPatients.map(patient => ({
-                x: genderMap[patient.genderId] || 'Desconocido',
-                y: new Date().getFullYear() - new Date(patient.age).getFullYear()
-            })),
-            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            label: 'Distribución por Género y Edad',
+            data: genderData.map((count, index) => ageData[index] || 0),
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-            pointRadius: 5
-        }]
-    };
-
-    const dataPolarOccupation = {
-        labels: occupationLabels,
-        datasets: [{
-            data: occupationData,
-            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)'],
-            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
-            borderWidth: 1
-        }]
-    };
-
-    const dataDoughnutSemester = {
-        labels: semesterLabels,
-        datasets: [{
-            data: semesterData,
-            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)'],
-            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'],
-            borderWidth: 1
+            borderWidth: 2
         }]
     };
 
@@ -201,17 +131,6 @@ const Datos = () => {
             backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(153, 102, 255, 0.6)'],
             borderColor: ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(255, 99, 132, 1)', 'rgba(153, 102, 255, 1)'],
             borderWidth: 1
-        }]
-    };
-
-    const dataBarOccupation = {
-        labels: occupationLabels,
-        datasets: [{
-            label: 'Distribución por Ocupación',
-            data: occupationData,
-            backgroundColor: 'rgba(255, 159, 64, 0.6)',
-            borderColor: 'rgba(255, 159, 64, 1)',
-            borderWidth: 2
         }]
     };
 
@@ -250,7 +169,7 @@ const Datos = () => {
                 >
                     <h3 className="text-4xl text-primary font-bold mb-4">📊 Gráficos</h3>
                     <p className="text-lg text-tartiary mb-6">Visualiza de forma gráfica y dinámica la información de todos los usuarios registrados.</p>
-                    <p className="text-lg font-bold">Total de {filtroRol}: {filteredPatients.length}</p>
+                    <p className="text-lg text-tartiary mb-6">Total de {filtroRol}: {patients.length}</p>
                 </motion.div>
                 <div className="mb-4">
                     <select className="border rounded-md p-2 mb-2" onChange={(e) => setFiltroRol(e.target.value)}>
@@ -287,20 +206,8 @@ const Datos = () => {
                         <Line data={dataLineAge} options={chartOptions} />
                     </div>
                     <div style={chartStyles}>
-                        <h2 className="text-lg font-semibold mb-4">Género vs Edad (Dispersión)</h2>
-                        <Scatter data={dataScatterGenderAge} options={chartOptions} />
-                    </div>
-                    <div style={chartStyles}>
-                        <h2 className="text-lg font-semibold mb-4">Distribución por Ocupación (Polar)</h2>
-                        <PolarArea data={dataPolarOccupation} options={chartOptions} />
-                    </div>
-                    <div style={chartStyles}>
-                        <h2 className="text-lg font-semibold mb-4">Distribución por Semestre (Doughnut)</h2>
-                        <Doughnut data={dataDoughnutSemester} options={chartOptions} />
-                    </div>
-                    <div style={chartStyles}>
-                        <h2 className="text-lg font-semibold mb-4">Distribución por Ocupación</h2>
-                        <Bar data={dataBarOccupation} options={chartOptions} />
+                        <h2 className="text-lg font-semibold mb-4">Distribución por Género y Edad (Radar)</h2>
+                        <Radar data={dataRadarGenderAge} options={chartOptions} />
                     </div>
                 </div>
             </div>

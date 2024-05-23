@@ -47,12 +47,24 @@ export const fetchPatientsByRole = async (roleId, token, page = 0, size = 10) =>
             headers: { Authorization: token },
             params: { page, size }
         });
-        return response.data.data; // Accede a la propiedad data del ResponseDTO
+        return response.data; // Devolvemos directamente response.data
     } catch (error) {
         console.error('Error fetching patients by role: ', error);
         throw error;
     }
 };
+export const fetchPatientsByRole2 = async (roleId, token) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/peopleByRole/${roleId}`, {
+            headers: { Authorization: token }
+        });
+        return response.data; // Devolvemos directamente response.data
+    } catch (error) {
+        console.error('Error fetching patients by role: ', error);
+        throw error;
+    }
+};
+
 
 // Mostrar todos los usuarios para el admin
 export const fetchAllUsers = async (token) => {
