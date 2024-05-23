@@ -1,6 +1,6 @@
 // store/useQuoteStore.js
 import { create } from 'zustand';
-import { getAllQuotes, getQuoteById, deleteQuoteById } from '../service/quoteService1';  
+import { getAllQuotes, getQuoteById, deleteQuoteById, isAvailable,addQuote } from '../service/quoteService1';  
 
 const useQuoteStore = create((set) => ({
     quotes: [],
@@ -39,6 +39,24 @@ const useQuoteStore = create((set) => ({
         } catch (error) {
             console.error('Error deleting quote:', error);
             set(state => ({ ...state, error: error.message }));
+        }
+    },
+    checkAvailability: async (data, token) => {
+        try {
+            const response = await isAvailable(data, token);
+            return response;
+        } catch (error) {
+            console.error('Error checking availability:', error);
+            throw error;
+        }
+    },
+    addQuote: async (data, token) => {
+        try {
+            const response = await addQuote(data, token);
+            return response;
+        } catch (error) {
+            console.error('Error adding quote:', error);
+            throw error;
         }
     },
 }));

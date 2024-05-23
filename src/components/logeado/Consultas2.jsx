@@ -149,7 +149,7 @@ const AppointmentCard = ({ appointment, onOpenDetailModal, onOpenOptionsModal })
             <div className="text-left ml-12">
                 <h3>{appointment.availability?.weekday}: {appointment.availability?.startTime}</h3>
                 <p>{appointment.name}</p>
-                <p>xd{appointment.quotesId}</p>
+              
                 <p className="text-sm">
                     Consulta a cargo de: {appointment.availability?.user?.people?.name} {appointment.availability?.user?.people?.firstLastname}
                 </p>

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
-import useQuoteStore from '../../store/useQuoteStore';  // Importa el store correctamente
+import useQuoteStore from '../../store/useQuoteStore1';  // Importa el store correctamente
 
-const ConsultaForm = () => {
+const ConsultaForm = ({ availabilityId, appointmentRequest }) => {
     const [motivo, setMotivo] = useState('');
     const [inforel, setInforel] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -12,35 +12,33 @@ const ConsultaForm = () => {
     const { addQuote } = useQuoteStore();
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
-    const appointmentRequest=localStorage.getItem('appointmentRequest');
-    const availabilityId=localStorage.getItem('availabilityId');
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
 
         const formData = {
-            quotesId: null,
+            quotesId: null,  // Asegúrate de que esto se maneja en el backend si es necesario
             reason: motivo,
             typeQuotes: "Initial",
             status: 1,
-            appointmentRequest: appointmentRequest,  
+            appointmentRequest: appointmentRequest,
             appointmentStatusId: 1,
-            availabilityId: availabilityId,  
-            userId: userId
+            availability: { availabilityId: availabilityId },  // Enviar el objeto availability
+            startTime: appointmentRequest,  // Formato "YYYY-MM-DD"
+            user: { userId: userId }  // Enviar el objeto user
         };
-
+        console.log('Form data:', formData);
         try {
             const result = await addQuote(formData, token);
             if (result && result.code === 200) {
                 setShowSuccessMessage(true);
                 setError('');
                 setTimeout(() => {
-                  setShowSuccessMessage(false);
-                  setMotivo(''); // Resetea el campo motivo
-                  setInforel(''); // Resetea el campo inforel
-                  window.location.href = '/consultas';
-              }, 3000);
-               
+                    setShowSuccessMessage(false);
+                    setMotivo(''); // Resetea el campo motivo
+                    setInforel(''); // Resetea el campo inforel
+                    window.location.href = '/consultas';
+                }, 3000);
             } else {
                 setError(`Error al registrar la solicitud: ${result.message}`);
             }
@@ -55,7 +53,7 @@ const ConsultaForm = () => {
             variants={fadeIn('up', 0.3)}
             initial='hidden'
             whileInView='show'
-            className="container mx-auto mt-48"
+            className="container mx-auto mt-18"
         >
             <div className="bg-white shadow-xl rounded-lg p-6 max-w-md mx-auto ">
                 <h2 className="text-center text-3xl font-extrabold mb-4 text-primary">Registro solicitud de reserva</h2>
