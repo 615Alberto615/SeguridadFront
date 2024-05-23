@@ -44,7 +44,7 @@ const Docentes = () => {
     
 
     return (
-        <div className="my-24 md:px-14 px-4 max-w-screen-2xl mx-auto" id='docentes'>
+        <div className="my-24 md:px-14 px-4 max-w-screen-2xl mx-auto mt-40" id='docentes'>
             <div className="flex flex-col lg:flex-row justify-between items-center gap-10">
                 <motion.div
                     variants={fadeIn('right', 0.2)}

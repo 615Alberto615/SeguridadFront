@@ -36,6 +36,8 @@
   
   import Consultas2 from './components/logeado/Consultas2.jsx'
 
+  import PerfilEstudiante from "./components/logeado/perfilest.jsx";
+
   import {  useEffect } from 'react'; 
 
 
@@ -115,6 +117,7 @@
             <Route path="/perfilAdmin" element={<PerfilAdmin />} />
             <Route path="/register" element={<Register />} />
             <Route path="/logout" element={<><Navbar /><Home/><Informacion/><About/><Newsletter/><Fotter /></>} />
+            <Route path="/perfil" element={<PerfilEstudiante />} />
             <Route path="*" element={<div>404</div>} />
             </Routes>
             

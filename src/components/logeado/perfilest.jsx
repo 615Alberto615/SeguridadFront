@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { fetchPeopleById } from '../../service/userService';
 
-const PerfilDocente = () => {
+const PerfilEstudiante = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showCard, setShowCard] = useState(false);
 
-    
     // Mapeo de género
     {/*const genderMap = {
         1: 'Masculino',
@@ -89,4 +88,4 @@ const PerfilDocente = () => {
     );
 };
 
-export default PerfilDocente;
+export default PerfilEstudiante;

@@ -55,6 +55,7 @@ const Navbar = () => {
             {isProfileMenuOpen && (
               <div className='absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20'>
                 <a href="/historial" className='block px-4 py-2 text-sm text-primary hover:bg-gray-100'>Historial</a>
+                <a href="/perfil" className='block px-4 py-2 text-sm text-primary hover:bg-gray-100'>Perfil</a>
                 <button onClick={handleLogout} className='block px-4 py-2 text-sm text-primary hover:bg-gray-100 w-full text-left'>Cerrar sesión</button>
               </div>
             )}
@@ -81,6 +82,7 @@ const Navbar = () => {
         ))}
         <div className=''>
           <a href="/historial" className='text-primary hover:bg-gray-100 display-block'>Historial</a>
+          <a href="/perfil" className='block px-4 py-2 text-sm text-primary hover:bg-gray-100'>Perfil</a>
           <button onClick={handleLogout} className='text-primary hover:bg-gray-100 display-block w-full text-left mt-2'>Cerrar sesión</button>
         </div>
       </div>

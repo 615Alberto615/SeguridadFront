@@ -137,7 +137,7 @@ const Pacientes = () => {
                                 { key: 'age', label: 'Edad' },
                                 { key: 'cellphone', label: 'Celular' },
                                 { key: 'ci', label: 'CI' },
-                                { key: 'gender', label: 'Género' },
+                                
                             ].map(({ key, label }) => (
                                 <div className="flex flex-col items-center space-y-2" key={key}>
                                     <strong className="text-lg font-semibold text-primary">{label}:</strong>

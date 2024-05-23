@@ -1,6 +1,6 @@
 // store/useQuoteStore.js
 import { create } from 'zustand';
-import { getAllQuotes, getQuoteById, deleteQuoteById, isAvailable,addQuote } from '../service/quoteService1';  
+import { getAllQuotes, getQuoteById, deleteQuoteById, isAvailable,addQuote, getUserQuotesToday} from '../service/quoteService1';  
 
 const useQuoteStore = create((set) => ({
     quotes: [],
@@ -57,6 +57,16 @@ const useQuoteStore = create((set) => ({
         } catch (error) {
             console.error('Error adding quote:', error);
             throw error;
+        }
+    },
+    fetchUserQuotesToday: async (userId, token) => {
+        try {
+            const response = await getUserQuotesToday(userId, token);
+            console.log('API Response:', response);
+            set(state => ({ ...state, quotes: response.data, error: null }));
+        } catch (error) {
+            console.error('Error fetching user quotes today:', error);
+            set(state => ({ ...state, error: error.message }));
         }
     },
 }));

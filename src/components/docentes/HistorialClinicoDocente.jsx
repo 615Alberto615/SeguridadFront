@@ -43,7 +43,7 @@ const HistorialClinicoDocente = () => {
     const numeroPaginas = Math.ceil(filtrarPacientes().length / pacientesPorPagina);
 
     return (
-        <div className="container mx-auto mt-20">
+        <div className="container mx-auto mt-36 mb-10">
             <div className="bg-white shadow-xl rounded-lg p-6">
                 <div className="mb-4">
                     <input

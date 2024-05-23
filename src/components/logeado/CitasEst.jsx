@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
 import useQuoteStore from '../../store/useQuoteStore1';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, addDays } from 'date-fns';
 import therapist1 from '../../assets/profile3.png';
 
 const CitasEst = () => {
@@ -12,7 +12,9 @@ const CitasEst = () => {
     const token = localStorage.getItem('token');
 
     const formatDate = (dateString) => {
-        return format(parseISO(dateString), 'dd/MM/yyyy');
+        const date = parseISO(dateString);
+        const newDate = addDays(date, 1);
+        return format(newDate, 'dd/MM/yyyy');
     };
 
     const handleBackdropClick = () => {
@@ -117,7 +119,7 @@ const CitasEst = () => {
                                     <img src={therapist1} className="w-12 h-12 bg-gray-300 flex justify-center items-center rounded-full" />
                                     <div className="text-right">
                                         <h2 className="text-xl font-semibold mr-16">Fecha:</h2>
-                                        <p className="text-lg mr-4">{formatDate(selectedCita?.appointmentRequest)}</p>
+                                        <p className="text-lg mr-4">{formatDate(selectedCita?.startTime)}</p>
                                     </div>
                                 </div>
                                 <h3 className="text-2xl font-bold my-4">Motivo de la consulta:</h3>

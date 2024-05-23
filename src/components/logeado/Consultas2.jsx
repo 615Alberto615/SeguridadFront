@@ -4,6 +4,7 @@ import { fadeIn } from '../../variants';
 import TherapistDetailModal from '../../components/logeado/InfoConsulta';
 import useQuoteStore from '../../store/useQuoteStore1';
 import therapist1 from '../../assets/profile3.png';
+import { format, parseISO, addDays } from 'date-fns';
 
 const ConsultasEst = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -75,6 +76,7 @@ const ConsultasEst = () => {
         setOptionsModalOpen(true);
     };
 
+   
     return (
         <motion.div variants={fadeIn('left', 0.2)} initial='hidden' whileInView={'show'}
             className="my-0 md:px-14 px-4 max-w-screen-2xl mx-auto">
@@ -143,17 +145,25 @@ const ConsultasEst = () => {
 const AppointmentCard = ({ appointment, onOpenDetailModal, onOpenOptionsModal }) => {
     const [optionsOpen, setOptionsOpen] = useState(false);
 
+    // Función para formatear la fecha añadiendo un día
+    const formatDate = (dateString) => {
+        const date = parseISO(dateString);
+        const newDate = addDays(date, 1);
+        return format(newDate, 'dd/MM/yyyy');
+    };
+
     return (
         <div className="bg-white shadow rounded-lg p-4 flex flex-col mb-4 relative">
             <img src={appointment.photo || therapist1} alt={appointment.name} className="w-10 h-10 self-start" />
+            
             <div className="text-left ml-12">
                 <h3>{appointment.availability?.weekday}: {appointment.availability?.startTime}</h3>
                 <p>{appointment.name}</p>
-              
                 <p className="text-sm">
                     Consulta a cargo de: {appointment.availability?.user?.people?.name} {appointment.availability?.user?.people?.firstLastname}
                 </p>
                 <p className="text-sm font-semibold">Estado: {appointment.availability?.status ? 'Activo' : 'Inactivo'}</p>
+                <p className="text-sm font-semibold">Fecha: {formatDate(appointment.startTime)}</p> {/* Muestra la fecha corregida */}
             </div>
             <button 
                 className="absolute top-0 right-0 text-xl p-2" 

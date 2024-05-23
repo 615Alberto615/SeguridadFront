@@ -69,4 +69,16 @@ export const addQuote = async (data, token) => {
         throw error.response ? error.response.data : error.message;
     }
 };
+export const getUserQuotesToday = async (userId, token) => {
+    try {
+        const response = await axios.get(`${API_URL}/user/${userId}/today`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error.message;
+    }
+};
 // Añade aquí más funciones según necesites operaciones CRUD

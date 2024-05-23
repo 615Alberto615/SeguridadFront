@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+
 import { fadeIn } from '../../variants';
 import useQuoteStore from '../../store/useQuoteStore1';  // Importa el store correctamente
 
@@ -16,18 +17,23 @@ const ConsultaForm = ({ availabilityId, appointmentRequest }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Convertir la fecha a ISO string en UTC
+        const formattedStartTime = new Date(`${appointmentRequest}T00:00:00Z`).toISOString();
+
         const formData = {
             quotesId: null,  // Asegúrate de que esto se maneja en el backend si es necesario
             reason: motivo,
             typeQuotes: "Initial",
             status: 1,
-            appointmentRequest: appointmentRequest,
+            appointmentRequest: formattedStartTime,  // Fecha en formato ISO UTC
             appointmentStatusId: 1,
             availability: { availabilityId: availabilityId },  // Enviar el objeto availability
-            startTime: appointmentRequest,  // Formato "YYYY-MM-DD"
+            startTime: formattedStartTime,  // Fecha en formato ISO UTC
             user: { userId: userId }  // Enviar el objeto user
         };
+
         console.log('Form data:', formData);
+
         try {
             const result = await addQuote(formData, token);
             if (result && result.code === 200) {
@@ -38,13 +44,13 @@ const ConsultaForm = ({ availabilityId, appointmentRequest }) => {
                     setMotivo(''); // Resetea el campo motivo
                     setInforel(''); // Resetea el campo inforel
                     window.location.href = '/consultas';
-                }, 3000);
+                }, 2000);
             } else {
                 setError(`Error al registrar la solicitud: ${result.message}`);
             }
         } catch (error) {
             console.error('Error al hacer la solicitud:', error);
-            setError('Ocurrió un error al registrar la solicitud.');
+            setError(`Ocurrió un error al registrar la solicitud. Detalles: ${error.message}`);
         }
     };
 
