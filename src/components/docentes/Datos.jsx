@@ -7,36 +7,6 @@ import { fadeIn } from '../../variants';
 
 Chart.register(CategoryScale, LinearScale, ArcElement, BarElement, LineElement, PointElement, RadialLinearScale, Tooltip, Legend);
 
-const genderMap = {
-    1: 'Masculino',
-    2: 'Femenino',
-    3: 'Otro género'
-};
-
-const occupationMap = {
-    4: 'Ninguna ocupación',
-    5: 'Estudiante de Medicina',
-    6: 'Estudiante de Ingeniería',
-    7: 'Estudiante de Derecho',
-    8: 'Estudiante de Administración'
-};
-
-const semesterMap = {
-    9: 'Ningún semestre',
-    10: 'Primer semestre',
-    11: 'Segundo semestre',
-    12: 'Tercer semestre',
-    13: 'Cuarto semestre',
-    14: 'Quinto semestre',
-    15: 'Sexto semestre',
-    16: 'Séptimo semestre',
-    17: 'Octavo semestre',
-    18: 'Noveno semestre',
-    19: 'Décimo semestre',
-    20: 'Décimo primer semestre',
-    21: 'Décimo segundo semestre'
-};
-
 const Datos = () => {
     const [patients, setPatients] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -88,19 +58,19 @@ const Datos = () => {
 
     // Procesar los datos para los gráficos
     const genderCounts = filteredPatients.reduce((acc, curr) => {
-        const gender = genderMap[curr.genderId] || 'Desconocido';
+        const gender = curr.genderId?.name || 'Desconocido';
         acc[gender] = (acc[gender] || 0) + 1;
         return acc;
     }, {});
 
     const occupationCounts = filteredPatients.reduce((acc, curr) => {
-        const occupation = occupationMap[curr.occupationId] || 'Desconocido';
+        const occupation = curr.occupationId?.name || 'Desconocido';
         acc[occupation] = (acc[occupation] || 0) + 1;
         return acc;
     }, {});
 
     const semesterCounts = filteredPatients.reduce((acc, curr) => {
-        const semester = semesterMap[curr.semesterId] || 'Desconocido';
+        const semester = curr.semesterId?.description || 'Desconocido';
         acc[semester] = (acc[semester] || 0) + 1;
         return acc;
     }, {});
@@ -153,7 +123,7 @@ const Datos = () => {
         datasets: [{
             label: 'Género vs Edad',
             data: filteredPatients.map(patient => ({
-                x: genderMap[patient.genderId] || 'Desconocido',
+                x: patient.genderId?.name || 'Desconocido',
                 y: new Date().getFullYear() - new Date(patient.age).getFullYear()
             })),
             backgroundColor: 'rgba(255, 99, 132, 0.6)',
@@ -212,6 +182,17 @@ const Datos = () => {
             backgroundColor: 'rgba(255, 159, 64, 0.6)',
             borderColor: 'rgba(255, 159, 64, 1)',
             borderWidth: 2
+        }]
+    };
+
+    // Nuevo gráfico de Polar Area para la distribución de género
+    const dataPolarGender = {
+        labels: genderLabels,
+        datasets: [{
+            data: genderData,
+            backgroundColor: ['rgba(128, 0, 128, 0.6)', 'rgba(186, 85, 211, 0.6)', 'rgba(74, 144, 226, 0.6)'],
+            borderColor: ['rgba(128, 0, 128, 1)', 'rgba(186, 85, 211, 1)', 'rgba(74, 144, 226, 1)'],
+            borderWidth: 1
         }]
     };
 
@@ -301,6 +282,10 @@ const Datos = () => {
                     <div style={chartStyles}>
                         <h2 className="text-lg font-semibold mb-4">Distribución por Ocupación</h2>
                         <Bar data={dataBarOccupation} options={chartOptions} />
+                    </div>
+                    <div style={chartStyles}>
+                        <h2 className="text-lg font-semibold mb-4">Distribución por Género (Polar)</h2>
+                        <PolarArea data={dataPolarGender} options={chartOptions} />
                     </div>
                 </div>
             </div>
