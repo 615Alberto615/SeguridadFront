@@ -50,7 +50,7 @@ const Docentes = () => {
                     variants={fadeIn('right', 0.2)}
                     initial='hidden'
                     whileInView={'show'}
-                    viewport={{ once: false, amount: 0.7 }}
+                    
                     className="lg:w-1/4">
                     <h3 className="text-3xl text-primary font-bold lg:w-1/2 mb-3">Nuestro Equipo Docente</h3>
                     <p className="text-base text-tartiary">
@@ -61,7 +61,7 @@ const Docentes = () => {
                     variants={fadeIn('up', 0.3)}
                     initial='hidden'
                     whileInView={'show'}
-                    viewport={{ once: false, amount: 0.7 }}
+                    
                     className="w-full lg:w-3/4">
                     <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-start md:gap-12 gap-8'>
                     {displayedDocentes.map((docente) => (

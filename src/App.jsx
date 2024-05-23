@@ -38,6 +38,8 @@
 
   import PerfilEstudiante from "./components/logeado/perfilest.jsx";
 
+  import HorariosDocente from './components/docentes/AgenderCitaDocente.jsx';
+  import CitasAgenDocente from './components/docentes/CitasAgendadasDocente.jsx'
   import {  useEffect } from 'react'; 
 
 
@@ -98,6 +100,7 @@
             <Route path="/" element={<><Home/><Informacion/><About/><Newsletter/><Fotter /></>} />        
             <Route path="/login" element={<LogIn />} />
             <Route path="/horarios" element={<Horarios />} />
+            <Route path="/horariosDoc" element={<><CitasAgenDocente/><HorariosDocente /></>} />
             <Route path="/formConsulta" element={<ConsultaForm />} />
             <Route path="/homedocente" element={<><HomeDocente/><CitaDocente/><Docentes/><Help/></>} />
             <Route path="/horariodocente" element={<HorarioDocente />} />

@@ -20,12 +20,8 @@ const Fotter = () => {
                     <div className="space-y-4 mt-5">
                     </div>
                     <div className="space-y-4 mt-5">
-                    <h4 className="text-xl">Aplicación</h4>
-                        <ul className="space-y-3">
-                            <a href="/" className="block hover:text-gray-300">Home</a>
-                            <a href="/" className="block hover:text-gray-300">Servicios</a>
-                            <a href="/" className="block hover:text-gray-300">Informacion</a>
-                        </ul>
+                    
+                        
                     </div>
                     <div className="space-y-4 mt-5">
                         <h4 className="text-xl">Contacto</h4>
