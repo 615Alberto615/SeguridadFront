@@ -1,28 +1,30 @@
-import { useState, useEffect,useRef  } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
 import TherapistDetailModal from '../../components/logeado/InfoConsulta';
 import useQuoteStore from '../../store/useQuoteStore1';
 import therapist1 from '../../assets/profile3.png';
+
 const ConsultasEst = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [detailModalOpen, setDetailModalOpen] = useState(false);
     const [selectedTreatment, setSelectedTreatment] = useState(null);
     const [optionsModalOpen, setOptionsModalOpen] = useState(false);
     const [currentAppointment, setCurrentAppointment] = useState(null);
+    const [confirmationText, setConfirmationText] = useState('');
+    const [localError, setLocalError] = useState('');
     const itemsPerPage = 3;
 
-    const { quotes, fetchQuoteById } = useQuoteStore();
+    const { quotes, fetchQuoteById, deleteQuoteById,  } = useQuoteStore();
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
-    const confirmationRef = useRef();
 
     useEffect(() => {
         if (userId && token) {
             fetchQuoteById(userId, token);
         }
     }, [fetchQuoteById, userId, token]);
-    
+
     useEffect(() => {
         if (selectedTreatment) {
             console.log("Opening modal with:", selectedTreatment);
@@ -52,28 +54,26 @@ const ConsultasEst = () => {
         }
     };
 
-    const handleConfirmCancellation = async (appointment, confirmation) => {
-        if (confirmation.toLowerCase() === "confirmar") {
+    const handleConfirmCancellation = async (appointment) => {
+        setLocalError('');
+        if (confirmationText.toLowerCase() === 'confirmar') {
             try {
-                await deleteQuoteById(appointment.id, token);
-                console.log('Cita cancelada:', appointment);
+                await deleteQuoteById(appointment.quotesId, token);
                 setOptionsModalOpen(false);
-                // Actualiza el estado de las citas después de la eliminación si es necesario
-            } catch (error) {
-                console.error('Error canceling appointment:', error);
-                // Manejo de errores si es necesario
+                setConfirmationText('');
+            } catch (err) {
+                console.error("Error deleting appointment:", err);
+                setLocalError(err.message || "Error desconocido");
             }
         } else {
-            console.log('Palabra de confirmación incorrecta');
-            // Puedes mostrar un mensaje al usuario indicando que la palabra de confirmación es incorrecta
+            setLocalError('Por favor, ingresa la palabra "confirmar" para eliminar la cita.');
         }
     };
-    
+
     const openOptionsModal = (appointment) => {
         setCurrentAppointment(appointment);
         setOptionsModalOpen(true);
     };
-
 
     return (
         <motion.div variants={fadeIn('left', 0.2)} initial='hidden' whileInView={'show'}
@@ -131,6 +131,9 @@ const ConsultasEst = () => {
                     onClose={() => setOptionsModalOpen(false)}
                     onConfirmCancellation={handleConfirmCancellation}
                     appointment={currentAppointment}
+                    confirmationText={confirmationText}
+                    setConfirmationText={setConfirmationText}
+                    localError={localError}
                 />
             )}
         </motion.div>
@@ -144,9 +147,9 @@ const AppointmentCard = ({ appointment, onOpenDetailModal, onOpenOptionsModal })
         <div className="bg-white shadow rounded-lg p-4 flex flex-col mb-4 relative">
             <img src={appointment.photo || therapist1} alt={appointment.name} className="w-10 h-10 self-start" />
             <div className="text-left ml-12">
-                {/* Uso del encadenamiento opcional para asegurar que no accedamos a propiedades de objetos indefinidos */}
                 <h3>{appointment.availability?.weekday}: {appointment.availability?.startTime}</h3>
                 <p>{appointment.name}</p>
+                <p>xd{appointment.quotesId}</p>
                 <p className="text-sm">
                     Consulta a cargo de: {appointment.availability?.user?.people?.name} {appointment.availability?.user?.people?.firstLastname}
                 </p>
@@ -178,7 +181,7 @@ const AppointmentCard = ({ appointment, onOpenDetailModal, onOpenOptionsModal })
     );
 };
 
-const AppointmentOptionsModal = ({ isOpen, onClose, onConfirmCancellation, appointment }) => {
+const AppointmentOptionsModal = ({ isOpen, onClose, onConfirmCancellation, appointment, confirmationText, setConfirmationText, localError }) => {
     if (!isOpen) return null;
 
     return (
@@ -186,11 +189,19 @@ const AppointmentOptionsModal = ({ isOpen, onClose, onConfirmCancellation, appoi
             <div className="bg-white rounded-lg p-6 w-1/3 mx-auto relative text-center">
                 <h3 className="text-lg font-bold mb-4">¿Estás seguro de que quieres cancelar esta consulta?</h3>
                 <p>Si cancelas la cita tendrás que programar una completamente nueva.</p>
-                
+                <p>Por favor, ingresa la palabra <strong>confirmar</strong> para proceder:</p>
+                <input 
+                    type="text"
+                    value={confirmationText}
+                    onChange={(e) => setConfirmationText(e.target.value)}
+                    className="mt-2 border border-gray-300 rounded px-4 py-2"
+                />
+                {localError && (
+                    <div className="text-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg mt-6" role="alert">
+                        {localError}
+                    </div>
+                )}
                 <div className="mt-4 flex justify-around">
-                <input type="text" placeholder="Escribe 'confirmar'" ref={confirmationRef} className="border rounded-md px-2 py-1 mb-2" />
-                <button onClick={() => onConfirmCancellation(appointment, confirmationRef.current.value)}>Sí, cancelar</button>
-
                     <button onClick={onClose} className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-300">
                         No, mantener
                     </button>

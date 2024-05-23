@@ -26,21 +26,20 @@ export const getQuoteById = async (quotesId, token) => {
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : error.message;
-    };
+    }
 };
 export const deleteQuoteById = async (quotesId, token) => {
     try {
-        const response = await axios.delete(`${API_URL}/user/${quotesId}`, {
+        const response = await axios.delete(`${API_URL}/${quotesId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
         });
         return response.data;
-    }
-    catch (error) {
+    } catch (error) {
         throw error.response ? error.response.data : error.message;
     }
-}
+};
 
 
 // Añade aquí más funciones según necesites operaciones CRUD

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants';
 import useQuoteStore from '../../store/useQuoteStore1';
+import { format, parseISO } from 'date-fns';
+import therapist1 from '../../assets/profile3.png';
 
 const CitasEst = () => {
     const [selectedCita, setSelectedCita] = useState(null);
@@ -9,23 +11,33 @@ const CitasEst = () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
 
+    const formatDate = (dateString) => {
+        return format(parseISO(dateString), 'dd/MM/yyyy');
+    };
+
+    const handleBackdropClick = () => {
+        setSelectedCita(null);
+    };
+
+    const onClose = () => {
+        setSelectedCita(null);
+    };
+
     useEffect(() => {
         if (userId && token) {
             fetchQuoteById(userId, token);
         }
     }, [fetchQuoteById, userId, token]);
 
-    // Spanish days of the week including weekends
-    const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    const daysOfWeek = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
 
-    // Use a standardized map for days to avoid localization issues
     const dayMap = {
         'lunes': 'Lunes',
         'martes': 'Martes',
-        'miércoles': 'Miércoles',
+        'miercoles': 'Miercoles',
         'jueves': 'Jueves',
         'viernes': 'Viernes',
-        'sábado': 'Sábado',
+        'sabado': 'Sabado',
         'domingo': 'Domingo'
     };
 
@@ -64,72 +76,74 @@ const CitasEst = () => {
                     <p className="text-tartiary md:w-1/3 mx-auto px-4">Consultas terapéuticas activas/próximas.</p>
                 </div>
 
-                <table className="w-full mx-auto border-collapse bg-white shadow-lg mt-5">
-                    <thead>
-                        <tr>
-                            <th className="border px-4 py-2">Hora</th>
-                            {daysOfWeek.map(day => (
-                                <th key={day} className="border px-4 py-2">{day}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Object.entries(scheduleByDayAndHour).map(([time, days]) => (
-                            <tr key={time}>
-                                <td className="border px-4 py-2">{time}</td>
+                <div className="overflow-x-auto">
+                    <table className="w-full mx-auto border-collapse bg-white shadow-lg mt-5">
+                        <thead>
+                            <tr>
+                                <th className="border px-4 py-2">Hora</th>
                                 {daysOfWeek.map(day => (
-                                    <td key={day} className="border px-4 py-2 cursor-pointer" onClick={() => setSelectedCita(days[day][0])}>
-                                        {days[day].length > 0 ? 'CITA' : ''}
-                                    </td>
+                                    <th key={day} className="border px-4 py-2">{day}</th>
                                 ))}
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {Object.entries(scheduleByDayAndHour).map(([time, days]) => (
+                                <tr key={time}>
+                                    <td className="border px-4 py-2">{time}</td>
+                                    {daysOfWeek.map(day => (
+                                        <td key={day} className="border px-4 py-2 cursor-pointer" onClick={() => setSelectedCita(days[day][0])}>
+                                            {days[day].length > 0 ? 'CITA' : ''}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
                 {selectedCita && (
-                    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center">
-                        <div className="bg-white mb-5 mt-5 p-6 rounded shadow-lg h-18 w-20">
-                            <h2>Datos de la Cita</h2>
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={handleBackdropClick}>
+                        <motion.div
+                            variants={fadeIn('up', 0.2)}
+                            initial='hidden'
+                            animate='show'
+                            exit='hidden'
+                            className="bg-white rounded-lg p-6 w-3/4 md:max-w-2xl mx-auto relative"
+                            onClick={(e) => e.stopPropagation()} // Evita que el clic en el contenido propague al fondo
+                        >
+                            <button className="absolute top-0 right-0 mt-4 mr-4 text-2xl font-bold" onClick={onClose}>&times;</button>
                             <div className="flex flex-col">
-          <div className="flex justify-between items-start">
-            {/* Placeholder for icon */}
-            <img src={therapist1} className="w-12 h-12 bg-gray-300 flex justify-center items-center rounded-full" />
-            <div className="text-right">
-              <h2 className="text-xl font-semibold mr-16">Fecha:</h2>
-              <p className="text-lg mr-4">{formatDate(therapist?.appointmentRequest)}</p>
-            </div>
-          </div>
-
-          <h3 className="text-2xl font-bold my-4">Motivo de la consulta:</h3>
-            <div className="flex">
-                {/* Schedule information */}
-                <div className="flex-1">
-                <h4 className="text-lg font-bold">Horario de reserva</h4>
-                <p className="text-md">{therapist?.availability?.weekday} a las: {therapist?.availability?.startTime}</p>
-                </div>
-                
-                {/* Therapist's details */}
-                <div className="flex-1">
-                <h4 className="text-lg font-bold">Consulta a cargo de:</h4>
-                <p className="text-md">{therapist?.availability?.user?.people?.name} {therapist?.availability?.user?.people?.firstLastname} {therapist?.availability?.user?.people?.secondLastname}</p>
-                </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row justify-between mt-4">
-                <div className="flex-1">
-                <h4 className="text-lg font-bold">Observaciones:</h4>
-                <p className="text-sm">{therapist?.typeQuotes}</p>
-                </div>
-                
-                <div className="flex-1 md:mt-4">
-                <h4 className="text-lg font-bold">Prescripción terapéutica:</h4>
-                <p className="text-sm">{therapist?.typeQuotes}</p>
-                </div>
-            </div>
-            </div>
-                            <button onClick={() => setSelectedCita(null)}>Cerrar</button>
-                        </div>
+                                <div className="flex justify-between items-start">
+                                    <img src={therapist1} className="w-12 h-12 bg-gray-300 flex justify-center items-center rounded-full" />
+                                    <div className="text-right">
+                                        <h2 className="text-xl font-semibold mr-16">Fecha:</h2>
+                                        <p className="text-lg mr-4">{formatDate(selectedCita?.appointmentRequest)}</p>
+                                    </div>
+                                </div>
+                                <h3 className="text-2xl font-bold my-4">Motivo de la consulta:</h3>
+                                <p className="text-sm mb-4">{selectedCita?.reason}</p>
+                                <div className="flex">
+                                    <div className="flex-1">
+                                        <h4 className="text-lg font-bold">Horario de reserva</h4>
+                                        <p className="text-md">{selectedCita?.availability?.weekday} a las: {selectedCita?.availability?.startTime}</p>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="text-lg font-bold">Consulta a cargo de:</h4>
+                                        <p className="text-md">{selectedCita?.availability?.user?.people?.name} {selectedCita?.availability?.user?.people?.firstLastname} {selectedCita?.availability?.user?.people?.secondLastname}</p>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col md:flex-row justify-between mt-4">
+                                    <div className="flex-1">
+                                        <h4 className="text-lg font-bold">Observaciones:</h4>
+                                        <p className="text-sm">{selectedCita?.typeQuotes}</p>
+                                    </div>
+                                    <div className="flex-1 md:mt-4">
+                                        <h4 className="text-lg font-bold">Prescripción terapéutica:</h4>
+                                        <p className="text-sm">{selectedCita?.typeQuotes}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
                     </div>
                 )}
             </motion.div>
