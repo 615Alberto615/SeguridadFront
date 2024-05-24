@@ -41,18 +41,18 @@ export const fetchPeopleById = async (userId, token) => {
     }
 };
 
-export const fetchPatientsByRole = async (roleId, token, page = 0, size = 10) => {
+export const fetchPatientsByRole = async (roleId, token) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/peopleByRole/${roleId}`, {
-            headers: { Authorization: token },
-            params: { page, size }
+            headers: { Authorization: token }
         });
-        return response.data; // Devolvemos directamente response.data
+        return response.data.data || []; // Asegurarnos de que siempre devuelve un array
     } catch (error) {
         console.error('Error fetching patients by role: ', error);
         throw error;
     }
 };
+
 export const fetchPatientsByRole2 = async (roleId, token) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/peopleByRole/${roleId}`, {

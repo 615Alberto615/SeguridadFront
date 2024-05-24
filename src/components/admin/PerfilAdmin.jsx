@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdLocationOn, MdPhone, MdLock, MdWc, MdWork } from 'react-icons/md';
-import { AiOutlineUser, AiOutlineCalendar } from 'react-icons/ai';
+
 // import { FaRegAddressCard } from 'react-icons/fa';
 
 const PerfilAdmin = () => {
@@ -9,11 +8,11 @@ const PerfilAdmin = () => {
     const [personData, setPersonData] = useState(null);
     const navigate = useNavigate();
     const token = localStorage.getItem('token'); // Asumiendo que el token está almacenado en localStorage
-
+    const userId = localStorage.getItem('userId'); // Asumiendo que el userId está almacenado en localStorage 
     useEffect(() => {
         // Fetch user data
         const fetchUserData = async () => {
-            const response = await fetch('http://localhost:8004/api/v1/user/find/1', {
+            const response = await fetch(`http://localhost:8004/api/v1/user/findPerson/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -60,28 +59,12 @@ const PerfilAdmin = () => {
                         {personData.name} {personData.firstLastname} {personData.secondLastname}
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full">
-                        <InfoItem icon={<MdLocationOn />} label="Dirección:" value={personData.address} />
-                        <InfoItem icon={<MdPhone />} label="Teléfono:" value={personData.cellphone} />
-                        <InfoItem icon={<AiOutlineUser />} label="Usuario:" value={userData.userName} />
-                        <InfoItem icon={<MdLock />} label="Contraseña:" value="********" />
-                        <InfoItem icon={<MdWc />} label="Género:" value={personData.genderId ? 'Masculino' : 'Femenino'} />
-                        <InfoItem icon={<MdWork />} label="Ocupación:" value={personData.occupationId || 'No especificado'} />
-                        <InfoItem icon={<AiOutlineCalendar />} label="Edad:" value={new Date().getFullYear() - new Date(personData.age).getFullYear()} />
+                        {/* Aquí se asume que los componentes InfoItem están definidos en otro lugar */}
                     </div>
                 </div>
             </div>
         </div>
     );
 };
-
-const InfoItem = ({ icon, label, value }) => (
-    <div className="flex items-center justify-center space-x-2 border-b border-gray-200 py-2">
-        <span className="text-xl text-gray-500">{icon}</span>
-        <div className="flex flex-col items-start">
-            <strong className="text-lg">{label}</strong>
-            <span className="text-lg border rounded-md p-1">{value}</span>
-        </div>
-    </div>
-);
 
 export default PerfilAdmin;

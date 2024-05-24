@@ -41,7 +41,7 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
         return weekDaysOrder[date.getDay()];  // Correctly get the day name
     };
 
-    const handleRequest = async (availabilityId, startTime, day) => {
+    const handleRequest = async (day) => {
         if (!selectedDate) {
             setAlertMessage('Por favor, ingrese una fecha.');
             setAlertColor('red');
@@ -55,12 +55,18 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
             return;
         }
 
+        const availability = availabilities.find(a => a.weekday.toLowerCase() === day.toLowerCase());
+        if (!availability) {
+            setAlertMessage('No se encontró disponibilidad para el día seleccionado.');
+            setAlertColor('red');
+            return;
+        }
+
         // Validar que la hora actual esté dentro del horario disponible del terapeuta si la fecha seleccionada es hoy
         const currentDate = new Date();
         const selectedDateTime = new Date(selectedDate);
         if (currentDate.toDateString() === selectedDateTime.toDateString()) {
             const currentTime = new Date();
-            const availability = availabilities.find(a => a.weekday === day.toLowerCase());
             const [startHour, startMinute] = availability.startTime.split(':');
             const [endHour, endMinute] = availability.endTime.split(':');
 
@@ -80,14 +86,14 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
 
         try {
             const formattedDate = selectedDate; // No need to change since it's already in YYYY-MM-DD format
-            console.log('Sending request to check availability:', { availabilityId, startTime: formattedDate });
-            const response = await checkAvailability({ availabilityId, startTime: formattedDate }, token);
+            console.log('Sending request to check availability:', { availabilityId: availability.availabilityId, startTime: formattedDate });
+            const response = await checkAvailability({ availabilityId: availability.availabilityId, startTime: formattedDate }, token);
             console.log('Response from availability check:', response);
             if (response.data) {
                 setAlertMessage('Horario disponible.');
                 setAlertColor('green');
                 localStorage.setItem('appointmentRequest', formattedDate);
-                localStorage.setItem('availabilityId', availabilityId);
+                localStorage.setItem('availabilityId', availability.availabilityId);
                 setShowForm(true);
             } else {
                 setAlertMessage('El horario solicitado ya no tiene cupos o no se encuentra disponible. Solicite en otra fecha u horario.');
@@ -121,7 +127,9 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
                             <div className="text-center mb-4">
                                 <p>Nombre: {people?.name} {people?.firstLastname} {people?.secondLastname}</p>
                                 <p>Email: {people?.email}</p>
-                                <label htmlFor="datePicker" className=" mt-6 block text-sm font-bold text-gray-700">Seleccione una fecha:</label>
+                                <p>Género: {people?.genderId?.name}</p>
+                                <p>Semestre: {people?.semesterId?.name}</p>
+                                <label htmlFor="datePicker" className="mt-6 block text-sm font-bold text-gray-700">Seleccione una fecha:</label>
                                 <input
                                     type="date"
                                     id="datePicker"
@@ -150,7 +158,7 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
                                                     {weeklySchedule[day] !== "No disponible" && (
                                                         <button
                                                             className="w-full px-4 py-2 bg-secondary hover:bg-primary text-white font-bold rounded"
-                                                            onClick={() => handleRequest(availabilities.find(a => a.weekday === day.toLowerCase()).availabilityId, selectedDate, day)}
+                                                            onClick={() => handleRequest(day)}
                                                             disabled={isRequesting}
                                                         >
                                                             {isRequesting ? 'Solicitando...' : 'Solicitar'}

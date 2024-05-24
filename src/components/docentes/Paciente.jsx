@@ -36,8 +36,8 @@ const Pacientes = () => {
         const fetchPatientsData = async () => {
             try {
                 const patientsData = await fetchPatientsByRole('2', token);
-                setPatients(patientsData);
-                setNumeroPaginas(Math.ceil(patientsData.length / 10));
+                setPatients(patientsData || []); // Asegurar que siempre es un array
+                setNumeroPaginas(Math.ceil((patientsData || []).length / 10));
                 setIsLoading(false);
             } catch (err) {
                 setError(err);
@@ -123,7 +123,7 @@ const Pacientes = () => {
                     <div className="bg-white rounded-lg p-8 max-w-xl overflow-y-auto z-50 relative">
                         <button className="absolute top-2 right-2 text-gray-700" onClick={cerrarModal}>
                             <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M5.293 5.293a1 1 0 011.414 0L10 8.586l3.293-3.293a1 1 0 111.414 1.414L11.414 10l3.293 3.293a1 1 0 01-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 10 5.293 6.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                <path fillRule="evenodd" d="M5.293 5.293a1 1 0 011.414 0L10 8.586l3.293-3.293a1 1 011.414 1.414L11.414 10l3.293 3.293a1 1 01-1.414 1.414L10 11.414l-3.293 3.293a1 1 01-1.414-1.414L8.586 10 5.293 6.707a1 1 0 010-1.414z" clipRule="evenodd" />
                             </svg>
                         </button>
                         <h2 className="text-3xl font-semibold mb-4 text-primary">Información del Paciente</h2>
@@ -137,11 +137,14 @@ const Pacientes = () => {
                                 { key: 'age', label: 'Edad' },
                                 { key: 'cellphone', label: 'Celular' },
                                 { key: 'ci', label: 'CI' },
-                                
-                            ].map(({ key, label }) => (
+                                { key: 'genderId', label: 'Género', subKey: 'description' },
+                                { key: 'semesterId', label: 'Semestre', subKey: 'description' }
+                            ].map(({ key, label, subKey }) => (
                                 <div className="flex flex-col items-center space-y-2" key={key}>
                                     <strong className="text-lg font-semibold text-primary">{label}:</strong>
-                                    <span className="text-lg break-words">{selectedPatient[key]}</span>
+                                    <span className="text-lg break-words">
+                                        {subKey ? selectedPatient[key]?.[subKey] : selectedPatient[key]}
+                                    </span>
                                 </div>
                             ))}
                         </div>
