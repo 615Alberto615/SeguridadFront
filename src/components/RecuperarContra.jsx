@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import ucb from '../assets/ucb.png';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../variants';
@@ -6,12 +7,17 @@ import { Link } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
 
 const ResetPassword = () => {
-  const { resetPassword, error } = useAuthStore();
+  const { resetPassword } = useAuthStore();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [localError, setLocalError] = useState('');
+  const location = useLocation(); // Obtener el objeto location
+
+  // Extraer token de la URL
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get('token'); // Obtener el token de la URL
 
   const handleResetPassword = async () => {
     setLocalError('');
@@ -19,23 +25,30 @@ const ResetPassword = () => {
       setLocalError('Por favor, completa todos los campos para cambiar la contraseña.');
       return;
     }
-
+  
     if (newPassword !== confirmPassword) {
       setLocalError('Las contraseñas no coinciden.');
       return;
     }
-
+  
+    console.log("Attempting to reset password with token:", token, "and newPassword:", newPassword);
+  
     try {
-      const result = await resetPassword({ newPassword });
-      if (result && result.code === 200) {
+      const result = await resetPassword(token, newPassword);
+      console.log("Server response:", result); // Log server response
+      if (result.success) {
         alert('Contraseña cambiada exitosamente');
-        window.location.href = '/';
+        window.location.href = '/login'; // Redirige al login
+      } else {
+        setLocalError(result.message || 'No se pudo cambiar la contraseña');
       }
     } catch (err) {
       console.error("Error al cambiar la contraseña:", err);
       setLocalError(err.response?.data?.message || "Error desconocido");
     }
   };
+  
+  
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -68,11 +81,6 @@ const ResetPassword = () => {
             {localError && (
               <div className="text-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
                 {localError}
-              </div>
-            )}
-            {error && (
-              <div className="text-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
-                Error al cambiar la contraseña: {error}
               </div>
             )}
             <div className="relative">

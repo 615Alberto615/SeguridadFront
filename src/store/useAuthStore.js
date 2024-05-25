@@ -1,6 +1,6 @@
 // En store/useAuthStore.js
 import { create } from 'zustand';
-import { loginUser, registerUser,resetPassword } from '../service/authService';
+import { loginUser, registerUser,resetPassword,forgotPassword } from '../service/authService';
 import axios from 'axios';
 const useAuthStore = create((set) => ({
   user: null,
@@ -13,7 +13,8 @@ const useAuthStore = create((set) => ({
   login: async (userData) => {
     try {
       const response = await loginUser(userData);
-      if (response.code === 200) {
+      console.log("API Response:", response); // Log the full response from the API
+      if (response && response.code === 200) {
         set({
           token: response.data.token,
           userId: response.data.id,
@@ -25,13 +26,17 @@ const useAuthStore = create((set) => ({
         localStorage.setItem('userId', response.data.id);
         localStorage.setItem('userRol', response.data.rol);
         localStorage.setItem('isLoggedIn', true);
+        console.log("Login successful, user data stored.");
       } else {
-        set({ error: response.message });
+        console.error("Login failed with response:", response); // Detailed log when login fails
+        set({ error: response.message || "Login failed without error message." });
       }
     } catch (error) {
-      set({ error: error.message || 'Error en inicio de sesión' });
+      console.error("Error during login:", error.response ? error.response.data : "No response data available.");
+      set({ error: error.response ? error.response.data.message : "Error in login request." });
     }
   },
+  
 
   logout: () => {
     set({ user: null, token: null, userId: null, userRol: null, isLoggedIn: false, error: null });
@@ -69,21 +74,28 @@ const useAuthStore = create((set) => ({
       console.error('Error fetching user details', error);
     }
   },
-  resetPassword: async (passwordData) => {
+  forgotPassword: async (email) => {
     try {
-      const response = await resetPassword(passwordData);
-      if (response.code === 200) {
-        set({ error: null });
-        return response;
-      } else {
-        set({ error: response.message });
-        return { error: response.message };
+      const response = await forgotPassword(email);
+      if (response.success) {
+        alert('Si el correo electrónico está registrado, recibirás un enlace para restablecer tu contraseña.');
       }
+      return response;
     } catch (error) {
-      set({ error: error.message || 'Error al cambiar la contraseña' });
-      return { error: error.message || 'Error al cambiar la contraseña' };
+      console.error('Forgot password error:', error);
+      throw error;  // Throwing an error to handle it in the UI components.
     }
-  }
+  },
+  
+  resetPassword: async (token, newPassword) => {
+    try {
+      const response = await resetPassword(token, newPassword);
+      return response;
+    } catch (error) {
+      console.error('Reset password error:', error);
+      throw error;  
+    }
+  },
 
  
 }));
