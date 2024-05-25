@@ -18,10 +18,12 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
     const { user, availabilities } = therapist;
     const { people } = user || {};
 
-    const weekDaysOrder = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo', ];
+    const weekDaysOrder = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     const initialSchedule = weekDaysOrder.reduce((acc, day) => ({ ...acc, [day]: "No disponible" }), {});
 
-    const weeklySchedule = availabilities.reduce((acc, current) => {
+    const validAvailabilities = availabilities.filter(a => a.status === true);
+
+    const weeklySchedule = validAvailabilities.reduce((acc, current) => {
         const day = current.weekday.charAt(0).toUpperCase() + current.weekday.slice(1);
         const formattedTime = `${current.startTime.slice(0, 5)} a ${current.endTime.slice(0, 5)}`;
         acc[day] = formattedTime;
@@ -55,7 +57,7 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
             return;
         }
 
-        const availability = availabilities.find(a => a.weekday.toLowerCase() === day.toLowerCase());
+        const availability = validAvailabilities.find(a => a.weekday.toLowerCase() === day.toLowerCase());
         if (!availability) {
             setAlertMessage('No se encontró disponibilidad para el día seleccionado.');
             setAlertColor('red');

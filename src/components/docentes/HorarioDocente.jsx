@@ -8,6 +8,7 @@ import {
     updateAvailability,
     getActiveAvailabilities
 } from "../../service/availabilityService.js";
+import ConfirmationDialog from './confirm.jsx';
 
 const HorarioDocente = () => {
     const [isYearly, setIsYearly] = useState(false);
@@ -17,22 +18,25 @@ const HorarioDocente = () => {
     const [userAvailabilities, setUserAvailabilities] = useState([]);
     const { availabilities, fetchAvailabilitiesByUserId, createAvailability } = useAvailabilityStore();
     const [occupiedAvailabilities, setOccupiedAvailabilities] = useState([]);
+    const [localError, setLocalError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [availabilityToDelete, setAvailabilityToDelete] = useState(null);
 
     const openEditModal = (availability) => {
         setSelectedAvailability(availability);
         setIsEditing(true);
     };
 
-    const handleDelete = async (availabilityId) => {
+    const handleDelete = async () => {
         try {
-            const confirmDelete = window.confirm("¿Estás seguro de que quieres eliminar este horario?");
-            if (confirmDelete) {
-                await deleteAvailability(availabilityId, localStorage.getItem('token'));
-                fetchAvailabilitiesByUserId(localStorage.getItem('userId'));
-                await loadOccupiedAvailabilities();
-            }
+            await deleteAvailability(availabilityToDelete, localStorage.getItem('token'));
+            fetchAvailabilitiesByUserId(localStorage.getItem('userId'));
+            await loadOccupiedAvailabilities();
+            setSuccessMessage("Horario eliminado correctamente");
+            setShowConfirmation(false);
         } catch (error) {
-            alert("Error al eliminar el horario");
+            setLocalError("Error al eliminar el horario");
         }
     };
 
@@ -55,11 +59,11 @@ const HorarioDocente = () => {
 
             await updateAvailability(availabilityData.availabilityId, updatedAvailabilityData, localStorage.getItem('token'));
             fetchAvailabilitiesByUserId(localStorage.getItem('userId'));
-            alert("Editado correctamente");
+            setSuccessMessage("Horario editado correctamente");
             setIsEditing(false);
             await loadOccupiedAvailabilities();
         } catch (error) {
-            alert("Error al editar el horario");
+            setLocalError("Error al editar el horario");
         }
     };
 
@@ -78,10 +82,23 @@ const HorarioDocente = () => {
 
         getAvailabilitiesByUserId(userId, localStorage.getItem('token'))
             .then(availabilities => setUserAvailabilities(availabilities))
-            .catch(error => console.error("Error al obtener los horarios del docente", error));
+            .catch(error => {
+                console.error("Error al obtener los horarios del docente", error);
+                setLocalError("Error al obtener los horarios del docente");
+            });
 
         loadOccupiedAvailabilities();
     }, [fetchAvailabilitiesByUserId]);
+
+    useEffect(() => {
+        if (successMessage || localError) {
+            const timer = setTimeout(() => {
+                setSuccessMessage('');
+                setLocalError('');
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [successMessage, localError]);
 
     const tableStyle = {
         width: '80%',
@@ -121,10 +138,10 @@ const HorarioDocente = () => {
 
     return (
         <motion.div
-            variants={fadeIn('up',0.2)}
+            variants={fadeIn('up', 0.2)}
             initial='hidden'
             whileInView={'show'}
-            viewport={{once:false,amount:0.5}}
+            viewport={{ once: false, amount: 0.5 }}
             className="md:px-14 p-4 max-w-s mx-auto py-10"
             id='horarios'
             style={{ marginTop: '150px' }}
@@ -134,43 +151,60 @@ const HorarioDocente = () => {
                 <p className="text-tartiary md:w-1/3 mx-auto px-4">Aquí puedes editar tus horarios de atención.</p>
             </div>
 
+            {/* Mostrar alerta de error si existe */}
+            {localError && (
+                <div className="text-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                    {localError}
+                </div>
+            )}
+
+            {/* Mostrar mensaje de éxito si existe */}
+            {successMessage && (
+                <div className="text-center p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+                    {successMessage}
+                </div>
+            )}
+
             {/* Tabla de horarios activos */}
             <div className="text-left" id='horariodocente'>
                 <h2 className="md:text-3xl text-3xl font-extrabold text-primary mb-2">Horarios Activos</h2>
             </div>
             <table style={tableStyle}>
                 <thead>
-                <tr>
-                    <th style={headerCellStyle}>Fecha</th>
-                    <th style={headerCellStyle}>Hora inicio</th>
-                    <th style={headerCellStyle}>Hora fin</th>
-                    <th style={headerCellStyle}>Estado</th>
-                    <th style={headerCellStyle}>Operaciones</th>
-                </tr>
+                    <tr>
+                        <th style={headerCellStyle}>Fecha</th>
+                        <th style={headerCellStyle}>Hora inicio</th>
+                        <th style={headerCellStyle}>Hora fin</th>
+                        <th style={headerCellStyle}>Estado</th>
+                        <th style={headerCellStyle}>Operaciones</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {activeAvailabilities.map((availability, index) => (
-                    <tr key={index}>
-                        <td style={cellStyle}>{availability.weekday}</td>
-                        <td style={cellStyle}>{availability.startTime}</td>
-                        <td style={cellStyle}>{availability.endTime}</td>
-                        <td style={cellStyle}>Activo</td>
-                        <td style={cellStyle}>
-                            <button
-                                className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"
-                                onClick={() => openEditModal(availability)}
-                            >
-                                Editar
-                            </button>
-                            <button
-                                className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600"
-                                onClick={() => handleDelete(availability.availabilityId)}
-                            >
-                                Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                ))}
+                    {activeAvailabilities.map((availability, index) => (
+                        <tr key={index}>
+                            <td style={cellStyle}>{availability.weekday}</td>
+                            <td style={cellStyle}>{availability.startTime}</td>
+                            <td style={cellStyle}>{availability.endTime}</td>
+                            <td style={cellStyle}>Activo</td>
+                            <td style={cellStyle}>
+                                <button
+                                    className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600 mr-2"
+                                    onClick={() => {
+                                        setAvailabilityToDelete(availability.availabilityId);
+                                        setShowConfirmation(true);
+                                    }}
+                                >
+                                    Eliminar
+                                </button>
+                                <button
+                                    className="bg-secondary py-2 px-4 transition-all duration-300 rounded hover:text-white hover:bg-indigo-600"
+                                    onClick={() => openEditModal(availability)}
+                                >
+                                    Editar
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
@@ -189,39 +223,39 @@ const HorarioDocente = () => {
                         <div className="flex flex-col md:flex-row">
                             <table style={tableStyle} className="mb-6">
                                 <thead>
-                                <tr>
-                                    <th style={headerCellStyle}>Hora</th>
-                                    <th style={headerCellStyle}>Lunes</th>
-                                    <th style={headerCellStyle}>Martes</th>
-                                    <th style={headerCellStyle}>Miércoles</th>
-                                    <th style={headerCellStyle}>Jueves</th>
-                                    <th style={headerCellStyle}>Viernes</th>
-                                </tr>
+                                    <tr>
+                                        <th style={headerCellStyle}>Hora</th>
+                                        <th style={headerCellStyle}>Lunes</th>
+                                        <th style={headerCellStyle}>Martes</th>
+                                        <th style={headerCellStyle}>Miércoles</th>
+                                        <th style={headerCellStyle}>Jueves</th>
+                                        <th style={headerCellStyle}>Viernes</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {timeSlots.map((timeSlot, index) => (
-                                    <tr key={index}>
-                                        <td style={cellStyle}>{timeSlot}</td>
-                                        {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map((day, i) => {
-                                            const isSlotOccupied = isOccupied(day, timeSlot);
-                                            const isSelected = selectedTimeSlot === `${day}-${timeSlot}`;
-                                            return (
-                                                <td
-                                                    key={i}
-                                                    style={{
-                                                        ...cellStyle,
-                                                        cursor: 'pointer',
-                                                        backgroundColor: isSelected ? 'lightblue' : isSlotOccupied ? 'red' : 'inherit',
-                                                        color: isSlotOccupied ? 'white' : 'inherit'
-                                                    }}
-                                                    onClick={() => !isSlotOccupied && setSelectedTimeSlot(isSelected ? null : `${day}-${timeSlot}`)}
-                                                >
-                                                    {isSlotOccupied ? "Ocupado" : ""}
-                                                </td>
-                                            );
-                                        })}
-                                    </tr>
-                                ))}
+                                    {timeSlots.map((timeSlot, index) => (
+                                        <tr key={index}>
+                                            <td style={cellStyle}>{timeSlot}</td>
+                                            {['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'].map((day, i) => {
+                                                const isSlotOccupied = isOccupied(day, timeSlot);
+                                                const isSelected = selectedTimeSlot === `${day}-${timeSlot}`;
+                                                return (
+                                                    <td
+                                                        key={i}
+                                                        style={{
+                                                            ...cellStyle,
+                                                            cursor: 'pointer',
+                                                            backgroundColor: isSelected ? 'lightblue' : isSlotOccupied ? 'red' : 'inherit',
+                                                            color: isSlotOccupied ? 'white' : 'inherit'
+                                                        }}
+                                                        onClick={() => !isSlotOccupied && setSelectedTimeSlot(isSelected ? null : `${day}-${timeSlot}`)}
+                                                    >
+                                                        {isSlotOccupied ? "Ocupado" : ""}
+                                                    </td>
+                                                );
+                                            })}
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
 
@@ -344,6 +378,14 @@ const HorarioDocente = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {showConfirmation && (
+                <ConfirmationDialog
+                    message="¿Estás seguro de que quieres eliminar este horario?"
+                    onConfirm={handleDelete}
+                    onCancel={() => setShowConfirmation(false)}
+                />
             )}
         </motion.div>
     );

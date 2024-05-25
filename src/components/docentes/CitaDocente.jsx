@@ -122,7 +122,7 @@ const CitaDocente = () => {
                     transition={{ duration: 0.3 }}
                     className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
                 >
-                    <div className="bg-white rounded p-6 w-1/2 h-1/2 overflow-auto shadow-lg relative">
+                    <div className="bg-white rounded p-6 w-1/2 h-auto overflow-auto shadow-lg relative">
                         <button
                             className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
                             onClick={() => setSelectedCita(null)}

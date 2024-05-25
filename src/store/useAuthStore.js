@@ -1,6 +1,6 @@
 // En store/useAuthStore.js
 import { create } from 'zustand';
-import { loginUser, registerUser } from '../service/authService';
+import { loginUser, registerUser,resetPassword } from '../service/authService';
 import axios from 'axios';
 const useAuthStore = create((set) => ({
   user: null,
@@ -69,6 +69,21 @@ const useAuthStore = create((set) => ({
       console.error('Error fetching user details', error);
     }
   },
+  resetPassword: async (passwordData) => {
+    try {
+      const response = await resetPassword(passwordData);
+      if (response.code === 200) {
+        set({ error: null });
+        return response;
+      } else {
+        set({ error: response.message });
+        return { error: response.message };
+      }
+    } catch (error) {
+      set({ error: error.message || 'Error al cambiar la contraseña' });
+      return { error: error.message || 'Error al cambiar la contraseña' };
+    }
+  }
 
  
 }));
