@@ -1,0 +1,1060 @@
+Admin
+Admin
+
+
+Docenteabc
+Docenteabc
+
+
+Alberto 
+123
+
+
+{
+    "code": 200,
+    "data": [
+        {
+            "user": {
+                "userId": 1,
+                "userName": "psiquiatra2",
+                "password": "$2a$10$ua6upnwJUn9uKOPlTIowbeNFoSNXDFP6IlFJXFT0r6jhv3hie3t0u",
+                "status": true,
+                "people": {
+                    "peopleId": 1,
+                    "photo": null,
+                    "name": "Jorge",
+                    "firstLastname": "Flores",
+                    "secondLastname": "Zurita",
+                    "email": "Jorge@ucb.edu.bo",
+                    "age": "1989-12-31",
+                    "cellphone": "1234567890",
+                    "address": "123 Main Street",
+                    "ci": "123456789",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 3
+            },
+            "availabilities": [
+                {
+                    "availabilityId": 10,
+                    "weekday": "martes",
+                    "startTime": "09:00:00",
+                    "endTime": "17:00:00",
+                    "codeAvailability": 1,
+                    "status": true,
+                    "user": {
+                        "userId": 1,
+                        "userName": "psiquiatra2",
+                        "password": "$2a$10$ua6upnwJUn9uKOPlTIowbeNFoSNXDFP6IlFJXFT0r6jhv3hie3t0u",
+                        "status": true,
+                        "people": {
+                            "peopleId": 1,
+                            "photo": null,
+                            "name": "Jorge",
+                            "firstLastname": "Flores",
+                            "secondLastname": "Zurita",
+                            "email": "Jorge@ucb.edu.bo",
+                            "age": "1989-12-31",
+                            "cellphone": "1234567890",
+                            "address": "123 Main Street",
+                            "ci": "123456789",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 3
+                    }
+                },
+                {
+                    "availabilityId": 36,
+                    "weekday": "jueves",
+                    "startTime": "09:00:00",
+                    "endTime": "17:00:00",
+                    "codeAvailability": 2,
+                    "status": true,
+                    "user": {
+                        "userId": 1,
+                        "userName": "psiquiatra2",
+                        "password": "$2a$10$ua6upnwJUn9uKOPlTIowbeNFoSNXDFP6IlFJXFT0r6jhv3hie3t0u",
+                        "status": true,
+                        "people": {
+                            "peopleId": 1,
+                            "photo": null,
+                            "name": "Jorge",
+                            "firstLastname": "Flores",
+                            "secondLastname": "Zurita",
+                            "email": "Jorge@ucb.edu.bo",
+                            "age": "1989-12-31",
+                            "cellphone": "1234567890",
+                            "address": "123 Main Street",
+                            "ci": "123456789",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 3
+                    }
+                }
+            ]
+        },
+        {
+            "user": {
+                "userId": 3,
+                "userName": "Alberto123",
+                "password": "$2a$10$fxVRIu/C9zTiXHnHdgT7SuccR/Wg3hLKPpRUWXmrHocfSDKl/5Oke",
+                "status": true,
+                "people": {
+                    "peopleId": 3,
+                    "photo": null,
+                    "name": "Mac",
+                    "firstLastname": "Miller",
+                    "secondLastname": ".\n",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": [
+                {
+                    "availabilityId": 33,
+                    "weekday": "lunes",
+                    "startTime": "10:00:00",
+                    "endTime": "18:00:00",
+                    "codeAvailability": 1,
+                    "status": true,
+                    "user": {
+                        "userId": 3,
+                        "userName": "Alberto123",
+                        "password": "$2a$10$fxVRIu/C9zTiXHnHdgT7SuccR/Wg3hLKPpRUWXmrHocfSDKl/5Oke",
+                        "status": true,
+                        "people": {
+                            "peopleId": 3,
+                            "photo": null,
+                            "name": "Mac",
+                            "firstLastname": "Miller",
+                            "secondLastname": ".\n",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 1
+                    }
+                },
+                {
+                    "availabilityId": 38,
+                    "weekday": "viernes",
+                    "startTime": "10:00:00",
+                    "endTime": "18:00:00",
+                    "codeAvailability": 2,
+                    "status": true,
+                    "user": {
+                        "userId": 3,
+                        "userName": "Alberto123",
+                        "password": "$2a$10$fxVRIu/C9zTiXHnHdgT7SuccR/Wg3hLKPpRUWXmrHocfSDKl/5Oke",
+                        "status": true,
+                        "people": {
+                            "peopleId": 3,
+                            "photo": null,
+                            "name": "Mac",
+                            "firstLastname": "Miller",
+                            "secondLastname": ".\n",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 1
+                    }
+                }
+            ]
+        },
+        {
+            "user": {
+                "userId": 4,
+                "userName": "Alberto1234\n",
+                "password": "$2a$10$D38BUefAl3Wm1rR4spU0y.TtbxPC3zNnS/eZp4GiKwKi.Z9iXUYsa",
+                "status": true,
+                "people": {
+                    "peopleId": 4,
+                    "photo": null,
+                    "name": "Juan",
+                    "firstLastname": "Porro",
+                    "secondLastname": "Garcia\n",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": [
+                {
+                    "availabilityId": 34,
+                    "weekday": "sabado",
+                    "startTime": "09:30:00",
+                    "endTime": "17:30:00",
+                    "codeAvailability": 2,
+                    "status": true,
+                    "user": {
+                        "userId": 4,
+                        "userName": "Alberto1234\n",
+                        "password": "$2a$10$D38BUefAl3Wm1rR4spU0y.TtbxPC3zNnS/eZp4GiKwKi.Z9iXUYsa",
+                        "status": true,
+                        "people": {
+                            "peopleId": 4,
+                            "photo": null,
+                            "name": "Juan",
+                            "firstLastname": "Porro",
+                            "secondLastname": "Garcia\n",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 1
+                    }
+                },
+                {
+                    "availabilityId": 39,
+                    "weekday": "lunes",
+                    "startTime": "09:30:00",
+                    "endTime": "17:30:00",
+                    "codeAvailability": 1,
+                    "status": true,
+                    "user": {
+                        "userId": 4,
+                        "userName": "Alberto1234\n",
+                        "password": "$2a$10$D38BUefAl3Wm1rR4spU0y.TtbxPC3zNnS/eZp4GiKwKi.Z9iXUYsa",
+                        "status": true,
+                        "people": {
+                            "peopleId": 4,
+                            "photo": null,
+                            "name": "Juan",
+                            "firstLastname": "Porro",
+                            "secondLastname": "Garcia\n",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 1
+                    }
+                }
+            ]
+        },
+        {
+            "user": {
+                "userId": 5,
+                "userName": "Alberto333",
+                "password": "$2a$10$iIlhm4eAW7f9nv6nzGRYfOUIDzuBDldskuW1VJm1eACApA1zNrLDK",
+                "status": true,
+                "people": {
+                    "peopleId": 5,
+                    "photo": null,
+                    "name": "Mauricio",
+                    "firstLastname": "Zambrana",
+                    "secondLastname": "Gomez",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": [
+                {
+                    "availabilityId": 35,
+                    "weekday": "martes",
+                    "startTime": "08:00:00",
+                    "endTime": "16:00:00",
+                    "codeAvailability": 1,
+                    "status": false,
+                    "user": {
+                        "userId": 5,
+                        "userName": "Alberto333",
+                        "password": "$2a$10$iIlhm4eAW7f9nv6nzGRYfOUIDzuBDldskuW1VJm1eACApA1zNrLDK",
+                        "status": true,
+                        "people": {
+                            "peopleId": 5,
+                            "photo": null,
+                            "name": "Mauricio",
+                            "firstLastname": "Zambrana",
+                            "secondLastname": "Gomez",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 1
+                    }
+                },
+                {
+                    "availabilityId": 40,
+                    "weekday": "viernes",
+                    "startTime": "08:00:00",
+                    "endTime": "16:00:00",
+                    "codeAvailability": 2,
+                    "status": false,
+                    "user": {
+                        "userId": 5,
+                        "userName": "Alberto333",
+                        "password": "$2a$10$iIlhm4eAW7f9nv6nzGRYfOUIDzuBDldskuW1VJm1eACApA1zNrLDK",
+                        "status": true,
+                        "people": {
+                            "peopleId": 5,
+                            "photo": null,
+                            "name": "Mauricio",
+                            "firstLastname": "Zambrana",
+                            "secondLastname": "Gomez",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 1
+                    }
+                }
+            ]
+        },
+        {
+            "user": {
+                "userId": 6,
+                "userName": "xd",
+                "password": "$2a$10$v9u0I5R/32n/DiGP9hLwnOHbzn.wgbbIohSyTzdbty0KIEWlmIpo6",
+                "status": true,
+                "people": {
+                    "peopleId": 6,
+                    "photo": null,
+                    "name": "Carlos",
+                    "firstLastname": "Porro",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": [
+                {
+                    "availabilityId": 37,
+                    "weekday": "miercoles",
+                    "startTime": "08:30:00",
+                    "endTime": "16:30:00",
+                    "codeAvailability": 1,
+                    "status": true,
+                    "user": {
+                        "userId": 6,
+                        "userName": "xd",
+                        "password": "$2a$10$v9u0I5R/32n/DiGP9hLwnOHbzn.wgbbIohSyTzdbty0KIEWlmIpo6",
+                        "status": true,
+                        "people": {
+                            "peopleId": 6,
+                            "photo": null,
+                            "name": "Carlos",
+                            "firstLastname": "Porro",
+                            "secondLastname": "Encinas",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 1
+                    }
+                }
+            ]
+        },
+        {
+            "user": {
+                "userId": 7,
+                "userName": "xd123",
+                "password": "$2a$10$2f0kAXK2fPozWrlCaglP1uJ77/yJk730WjIaloSNyD0YZbJTkRflO",
+                "status": true,
+                "people": {
+                    "peopleId": 7,
+                    "photo": null,
+                    "name": "Fabrisio",
+                    "firstLastname": "Condarco",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 8,
+                "userName": "est123",
+                "password": "$2a$10$zzbxhJRvIHJM7wbo0XfCf.OrQRAKr1nJdopSXX8lA3w2EEilTDq6O",
+                "status": true,
+                "people": {
+                    "peopleId": 8,
+                    "photo": null,
+                    "name": "Joaquin",
+                    "firstLastname": "Garcia",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 9,
+                "userName": "est1234",
+                "password": "$2a$10$uqz84NonobSctWgTJtbp.e56QUaFhBFtwvV7w0OAWNOwgh0KdxONu",
+                "status": true,
+                "people": {
+                    "peopleId": 9,
+                    "photo": null,
+                    "name": "afasf",
+                    "firstLastname": "xdd",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 10,
+                "userName": "psiquiatra2",
+                "password": "$2a$10$I1FtEyGI1EAIIS8Yw93ejejJKrBgxIdWNEeuV1h4NVc4pL3jUjs9i",
+                "status": true,
+                "people": {
+                    "peopleId": 10,
+                    "photo": null,
+                    "name": "Kevin",
+                    "firstLastname": "De",
+                    "secondLastname": "Bruyne",
+                    "email": "KDB@ucb.edu.bo",
+                    "age": "1989-12-31",
+                    "cellphone": "1234567890",
+                    "address": "123 Main Street",
+                    "ci": "123456789",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 3
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 11,
+                "userName": "est12345",
+                "password": "$2a$10$QP9fwcGaGNCaGEc01RC3TujLNt4q9zk6pGgV6VuQhIdsNwopcm8Iu",
+                "status": true,
+                "people": {
+                    "peopleId": 11,
+                    "photo": null,
+                    "name": "Valeria",
+                    "firstLastname": "Encinas",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 12,
+                "userName": "a",
+                "password": "$2a$10$l1wmspIL5vqBMtY6xggUBucseMc4Q81DEeOO6hHrOsZaxMQRopao2",
+                "status": true,
+                "people": {
+                    "peopleId": 12,
+                    "photo": null,
+                    "name": "Fernando",
+                    "firstLastname": "Loisiana",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 13,
+                "userName": "psiquiatra22",
+                "password": "$2a$10$X2.zLzsuHMU8qmGmMdO9N.CzJVOYfKvz10/p4Ue1GnP3Lf1MI9Z9G",
+                "status": true,
+                "people": {
+                    "peopleId": 13,
+                    "photo": null,
+                    "name": "Lionel",
+                    "firstLastname": "Messi\n",
+                    "secondLastname": "Cuccittini",
+                    "email": "Messi@ucb.edu.bo",
+                    "age": "1989-12-31",
+                    "cellphone": "1234567890",
+                    "address": "123 Main Street",
+                    "ci": "123456789",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 3
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 14,
+                "userName": "admin",
+                "password": "$2a$10$WeZqlscBwgT2bR55S3Ty0.qH9TmLGdVStLcovMhtUWKCYEXM66.7e",
+                "status": true,
+                "people": {
+                    "peopleId": 14,
+                    "photo": null,
+                    "name": "Alberto",
+                    "firstLastname": "Encinas",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 15,
+                "userName": "docente",
+                "password": "$2a$10$un8ra2NzBvpJSbDqw.qvyuP2HTmaxfJ5Pi6m3NQI/P.9/S2vOc4XS",
+                "status": true,
+                "people": {
+                    "peopleId": 15,
+                    "photo": null,
+                    "name": "Juan",
+                    "firstLastname": "Flores",
+                    "secondLastname": "Perez",
+                    "email": "docente@ucb.edu.bo",
+                    "age": "1989-12-31",
+                    "cellphone": "1234567890",
+                    "address": "123 Main Street",
+                    "ci": "123456789",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 3
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 16,
+                "userName": "docente123",
+                "password": "$2a$10$L1GFgKM4POjYe8/eshLvzuPPDYm7YUuGGNnIngY3ccTTBzgB4fgfy",
+                "status": true,
+                "people": {
+                    "peopleId": 16,
+                    "photo": null,
+                    "name": "Luka",
+                    "firstLastname": "Modric",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 18,
+                "userName": "Alberto6",
+                "password": "$2a$10$2/iF54A6L8bI0HmGAV.5cecXp/Qod3gJkLBokfKEl8zq3yl9TeYZe",
+                "status": true,
+                "people": {
+                    "peopleId": 18,
+                    "photo": null,
+                    "name": "Pele",
+                    "firstLastname": "Pele",
+                    "secondLastname": "Montano",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "74894984",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 2
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 17,
+                "userName": "Alberto123",
+                "password": "$2a$10$93YsFHi8hQLTVRXpCcLVFOpYCZkMrgwjijLpqSu2MzT.wjj/kSSH6",
+                "status": true,
+                "people": {
+                    "peopleId": 17,
+                    "photo": null,
+                    "name": "Carlos",
+                    "firstLastname": "Alberto",
+                    "secondLastname": "Montano",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "74894984",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 3
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 19,
+                "userName": "as",
+                "password": "$2a$10$.8nev0UE.000ykIhWjjfDePtoE3T7rydYla0DvplI.GzYD2tLJ2eG",
+                "status": true,
+                "people": {
+                    "peopleId": 19,
+                    "photo": null,
+                    "name": "Pedro",
+                    "firstLastname": "Porro",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71276448",
+                    "address": "37 de cota cota",
+                    "ci": "12312312",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 2
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 2,
+                "userName": "Alberto",
+                "password": "$2a$10$sKvb0.ZYjLXEhkeOuz/IGOP.tpoLRhgCvfofX7zCuLtm8zZJAPUfu",
+                "status": true,
+                "people": {
+                    "peopleId": 2,
+                    "photo": null,
+                    "name": "Alberto",
+                    "firstLastname": "Encinas",
+                    "secondLastname": "Montaño",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 2
+            },
+            "availabilities": [
+                {
+                    "availabilityId": 32,
+                    "weekday": "jueves",
+                    "startTime": "08:30:00",
+                    "endTime": "16:30:00",
+                    "codeAvailability": 2,
+                    "status": true,
+                    "user": {
+                        "userId": 2,
+                        "userName": "Alberto",
+                        "password": "$2a$10$sKvb0.ZYjLXEhkeOuz/IGOP.tpoLRhgCvfofX7zCuLtm8zZJAPUfu",
+                        "status": true,
+                        "people": {
+                            "peopleId": 2,
+                            "photo": null,
+                            "name": "Alberto",
+                            "firstLastname": "Encinas",
+                            "secondLastname": "Montaño",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 2
+                    }
+                },
+                {
+                    "availabilityId": 41,
+                    "weekday": "martes",
+                    "startTime": "10:00:00",
+                    "endTime": "11:00:00",
+                    "codeAvailability": 0,
+                    "status": false,
+                    "user": {
+                        "userId": 2,
+                        "userName": "Alberto",
+                        "password": "$2a$10$sKvb0.ZYjLXEhkeOuz/IGOP.tpoLRhgCvfofX7zCuLtm8zZJAPUfu",
+                        "status": true,
+                        "people": {
+                            "peopleId": 2,
+                            "photo": null,
+                            "name": "Alberto",
+                            "firstLastname": "Encinas",
+                            "secondLastname": "Montaño",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 2
+                    }
+                }
+            ]
+        },
+        {
+            "user": {
+                "userId": 20,
+                "userName": "xd123",
+                "password": "$2a$10$dYwlI9PEG6JlyM8MxEMMYOE.RG8dhr7869NtpA1Xhi9fif8bgTgoy",
+                "status": true,
+                "people": {
+                    "peopleId": 20,
+                    "photo": null,
+                    "name": "Sylas",
+                    "firstLastname": "Waman",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 21,
+                "userName": "AlbertoDocente",
+                "password": "$2a$10$Ajet0sdFBq17sgzJEBcc.u2g63F0xNTHTSJuZmm8nVERHGKaH0.li",
+                "status": true,
+                "people": {
+                    "peopleId": 21,
+                    "photo": null,
+                    "name": "Pedro",
+                    "firstLastname": "Juanes",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 3
+            },
+            "availabilities": []
+        },
+        {
+            "user": {
+                "userId": 22,
+                "userName": "Docenteabc",
+                "password": "$2a$10$jdYVG2N0JbPK6.Rgyh6a3uERmqRwt6dv7GxqLbGwt3E0yOfouYy0W",
+                "status": true,
+                "people": {
+                    "peopleId": 22,
+                    "photo": null,
+                    "name": "Docenteabc",
+                    "firstLastname": "Encinas",
+                    "secondLastname": "Encinas",
+                    "email": "alberto.encinas@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576448",
+                    "address": "37 de cota cota",
+                    "ci": "9096473",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 3
+            },
+            "availabilities": [
+                {
+                    "availabilityId": 42,
+                    "weekday": "Lunes",
+                    "startTime": "10:00:00",
+                    "endTime": "11:00:00",
+                    "codeAvailability": 199989,
+                    "status": true,
+                    "user": {
+                        "userId": 22,
+                        "userName": "Docenteabc",
+                        "password": "$2a$10$jdYVG2N0JbPK6.Rgyh6a3uERmqRwt6dv7GxqLbGwt3E0yOfouYy0W",
+                        "status": true,
+                        "people": {
+                            "peopleId": 22,
+                            "photo": null,
+                            "name": "Docenteabc",
+                            "firstLastname": "Encinas",
+                            "secondLastname": "Encinas",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 3
+                    }
+                },
+                {
+                    "availabilityId": 43,
+                    "weekday": "Martes",
+                    "startTime": "14:00:00",
+                    "endTime": "15:00:00",
+                    "codeAvailability": 777464,
+                    "status": true,
+                    "user": {
+                        "userId": 22,
+                        "userName": "Docenteabc",
+                        "password": "$2a$10$jdYVG2N0JbPK6.Rgyh6a3uERmqRwt6dv7GxqLbGwt3E0yOfouYy0W",
+                        "status": true,
+                        "people": {
+                            "peopleId": 22,
+                            "photo": null,
+                            "name": "Docenteabc",
+                            "firstLastname": "Encinas",
+                            "secondLastname": "Encinas",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 3
+                    }
+                },
+                {
+                    "availabilityId": 44,
+                    "weekday": "Jueves",
+                    "startTime": "11:00:00",
+                    "endTime": "12:00:00",
+                    "codeAvailability": 9739,
+                    "status": false,
+                    "user": {
+                        "userId": 22,
+                        "userName": "Docenteabc",
+                        "password": "$2a$10$jdYVG2N0JbPK6.Rgyh6a3uERmqRwt6dv7GxqLbGwt3E0yOfouYy0W",
+                        "status": true,
+                        "people": {
+                            "peopleId": 22,
+                            "photo": null,
+                            "name": "Docenteabc",
+                            "firstLastname": "Encinas",
+                            "secondLastname": "Encinas",
+                            "email": "alberto.encinas@ucb.edu.bo",
+                            "age": "1969-12-31",
+                            "cellphone": "71576448",
+                            "address": "37 de cota cota",
+                            "ci": "9096473",
+                            "status": true,
+                            "genderId": null,
+                            "occupationId": null,
+                            "semesterId": null
+                        },
+                        "rolId": 3
+                    }
+                }
+            ]
+        },
+        {
+            "user": {
+                "userId": 23,
+                "userName": "Admin",
+                "password": "$2a$10$AJgqj1FKBmAZXkB4VHNODudumZqFN5JBeL.8QuovVYaiyAq1beI4i",
+                "status": true,
+                "people": {
+                    "peopleId": 23,
+                    "photo": null,
+                    "name": "Admin",
+                    "firstLastname": "Admin",
+                    "secondLastname": "Admin",
+                    "email": "Admin@ucb.edu.bo",
+                    "age": "1969-12-31",
+                    "cellphone": "71576449",
+                    "address": "2 obrajes",
+                    "ci": "9096486",
+                    "status": true,
+                    "genderId": null,
+                    "occupationId": null,
+                    "semesterId": null
+                },
+                "rolId": 1
+            },
+            "availabilities": []
+        }
+    ],
+    "message": "Successfully fetched grouped availabilities by user."
+}
+
+
+no se puede programar un fedcha pasada

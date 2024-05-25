@@ -33,3 +33,22 @@ export const loginUser = async (userData) => {
   }
 };
 
+export const resetPassword = async (passwordData) => {
+  const userId = localStorage.getItem('userId');
+  const token = localStorage.getItem('token');
+  
+  try {
+    const response = await axios.post(`${API_URL}/reset-password`, {
+      userId,
+      newPassword: passwordData.newPassword
+    }, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
