@@ -1,9 +1,10 @@
 import { create } from 'zustand';
-import { fetchQuotesByTherapist, createQuote } from '../service/quoteService';
+import { fetchQuotesByTherapist, fetchHistorialByTherapist, createQuote } from '../service/quoteService';
 import { getUserIdFromToken } from '../components/utils/jwtUtils';  // Asegúrate de que la ruta de importación es correcta
 
-const useQuoteStore = create((set, ) => ({
+const useQuoteStore = create((set) => ({
   quotes: [],
+  historial: [],
   isLoading: false,
   error: null,
 
@@ -26,6 +27,28 @@ const useQuoteStore = create((set, ) => ({
       }
     } catch (error) {
       set({ isLoading: false, error: error.message || 'Error al obtener citas' });
+    }
+  },
+
+  // Función para obtener el historial clínico del terapeuta
+  fetchHistorial: async () => {
+    set({ isLoading: true });
+    const token = localStorage.getItem('token');
+    const userId = getUserIdFromToken();  // Obtener el ID del usuario desde el token
+    if (!token || !userId) {
+      set({ error: 'No autorizado o sesión expirada', isLoading: false });
+      return;
+    }
+
+    try {
+      const data = await fetchHistorialByTherapist(userId, token);
+      if (data.code === 200) {
+        set({ historial: data.data, isLoading: false });
+      } else {
+        set({ error: data.message, isLoading: false });
+      }
+    } catch (error) {
+      set({ isLoading: false, error: error.message || 'Error al obtener historial' });
     }
   },
 

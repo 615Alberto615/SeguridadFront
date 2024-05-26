@@ -15,13 +15,27 @@ export const createQuote = async (quoteData, token) => {
 };
 
 export const fetchQuotesByTherapist = async (therapistId, token) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/by-therapist/${therapistId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching quotes:", error);
-    throw error;
-  }
-}
+    try {
+        const response = await axios.get(`${API_BASE_URL}/by-therapist/${therapistId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching quotes:", error);
+        throw error;
+    }
+};
+
+
+// Conseguir el historial clínico del terapeuta con estado false
+export const fetchHistorialByTherapist = async (therapistId, token) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/therapist/historial/${therapistId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching patient history:", error);
+        throw error;
+    }
+};
