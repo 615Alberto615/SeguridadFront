@@ -41,6 +41,7 @@
   import HorariosDocente from './components/docentes/AgenderCitaDocente.jsx';
   import CitasAgenDocente from './components/docentes/CitasAgendadasDocente.jsx'
   import {  useEffect } from 'react'; 
+  import ChatBox from './components/ChatBox'; 
   import Recuperar from './components/RecuperarContra.jsx';
 
   function App() {
@@ -133,6 +134,7 @@
       <>
         {renderNavbar()}
         {renderRoutes()}
+        <ChatBox />
       </>
     );
   }
