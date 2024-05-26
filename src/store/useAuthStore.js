@@ -77,23 +77,20 @@ const useAuthStore = create((set) => ({
   forgotPassword: async (email) => {
     try {
       const response = await forgotPassword(email);
-      if (response.success) {
-        alert('Si el correo electrónico está registrado, recibirás un enlace para restablecer tu contraseña.');
-      }
       return response;
     } catch (error) {
       console.error('Forgot password error:', error);
-      throw error;  // Throwing an error to handle it in the UI components.
+      throw error;
     }
   },
-  
-  resetPassword: async (token, newPassword) => {
+
+  resetPassword: async ({ token, newPassword }) => {
     try {
       const response = await resetPassword(token, newPassword);
       return response;
     } catch (error) {
       console.error('Reset password error:', error);
-      throw error;  
+      throw error;
     }
   },
 

@@ -42,22 +42,15 @@ export const forgotPassword = async (email) => {
   }
 };
 
-
 export const resetPassword = async (token, newPassword) => {
-  console.log("Sending data to server:", { token, newPassword }); // Log data being sent
   try {
-    const response = await axios.post(`${API_URL}/reset-password`, JSON.stringify({ token, newPassword }), {
-      headers: {
-        'Content-Type': 'application/json' // Ensure headers are set for JSON
-      }
+    const response = await axios.post(`${API_URL}/reset-password`, {
+      token,
+      newPassword
     });
     return response.data;
   } catch (error) {
-    console.error("Error during password reset:", error.response ? error.response.data : "No response data");
     throw error.response.data;
   }
 };
-
-
-
 

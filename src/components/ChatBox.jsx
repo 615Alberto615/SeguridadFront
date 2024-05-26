@@ -7,6 +7,7 @@ const ChatBox = () => {
     const { messages, sendChatMessage, startSession, sessionId } = useChatStore();
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const statusLoggin = localStorage.getItem('isLoggedIn') === 'true';
 
     // Cargar sessionId desde localStorage cuando el componente se monta
     useEffect(() => {
@@ -14,7 +15,7 @@ const ChatBox = () => {
         if (savedSessionId) {
             startSession(savedSessionId);  // Inicia la sesión con la sessionId guardada
         }
-    }, []);
+    }, [startSession]);
 
     const toggleChatBox = () => {
         setIsOpen(!isOpen);
@@ -47,6 +48,10 @@ const ChatBox = () => {
         </div>
     );
 
+    if (!statusLoggin) {
+        return null; // No renderiza el componente si el usuario no está logeado
+    }
+
     return (
         <div className={`fixed bottom-4 right-4 ${isOpen ? 'w-96 h-96' : 'w-12 h-12'} bg-gradient-to-br from-indigo-600 to-blue-800 rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 ease-in-out`} onClick={!isOpen ? toggleChatBox : undefined}>
             {!isOpen ? (
@@ -57,7 +62,7 @@ const ChatBox = () => {
                         <FaTimes className="text-2xl" />
                     </button>
                     <div className="p-2 flex justify-between items-center">
-                        <span className="font-bold">En que te puedo ayudar</span>
+                        <span className="font-bold">En qué te puedo ayudar</span>
                     </div>
                     <ul className="flex-1 overflow-y-auto p-2 space-y-2">
                         {messages.map((msg, index) => (
@@ -76,7 +81,7 @@ const ChatBox = () => {
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            placeholder="Type your message here..."
+                            placeholder="Escribe tu consulta aqui..."
                         />
                         <button onClick={handleSendMessage} className="ml-2 bg-indigo-500 hover:bg-indigo-600 text-white p-2 rounded-lg">
                             Send
