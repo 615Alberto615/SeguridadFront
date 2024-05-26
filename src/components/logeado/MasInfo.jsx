@@ -18,7 +18,7 @@ const TherapistDetailModal = ({ isOpen, onClose, therapist }) => {
     const { user, availabilities } = therapist;
     const { people } = user || {};
 
-    const weekDaysOrder = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    const weekDaysOrder = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
     const initialSchedule = weekDaysOrder.reduce((acc, day) => ({ ...acc, [day]: "No disponible" }), {});
 
     const validAvailabilities = availabilities.filter(a => a.status === true);
