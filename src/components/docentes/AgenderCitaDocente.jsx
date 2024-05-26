@@ -13,12 +13,12 @@ const Información = () => {
     const [detailModalOpen, setDetailModalOpen] = useState(false);
     const [selectedTherapist, setSelectedTherapist] = useState(null);
     const [groupedAvailabilities, setGroupedAvailabilities] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');  // Estado para el término de búsqueda
+    const [searchTerm, setSearchTerm] = useState('');
     const itemsPerPage = 3;
 
     const { availabilities, fetchAllAvailabilities } = useAvailabilityStore();
     const token = localStorage.getItem('token');
-    const userId = parseInt(localStorage.getItem('userId'), 10); // Parsear el userId a entero
+    const userId = parseInt(localStorage.getItem('userId'), 10);
 
     useEffect(() => {
         fetchAllAvailabilities();
@@ -28,14 +28,12 @@ const Información = () => {
         const grouped = {};
         availabilities.forEach(item => {
             const therapistUserId = item.user.userId;
-            // Excluir el usuario actual
             if (therapistUserId !== userId) {
                 if (!grouped[therapistUserId]) {
                     grouped[therapistUserId] = { ...item, availabilities: [] };
                 }
-                // Verificar que item.availabilities sea un array antes de iterar sobre él
                 if (Array.isArray(item.availabilities)) {
-                    grouped[therapistUserId].availabilities.push(...item.availabilities);
+                    grouped[therapistUserId].availabilities.push(...item.availabilities.filter(a => a.status === true));
                 }
             }
         });
@@ -50,7 +48,7 @@ const Información = () => {
                 return nameMatch || lastNameMatch || seclastNameMatch;
             });
 
-            console.log("Filtered results:", filteredGrouped); // Ver los resultados del filtro
+            console.log("Filtered results:", filteredGrouped);
         }
 
         setGroupedAvailabilities(filteredGrouped);
@@ -145,7 +143,6 @@ const TherapistCard = ({ therapist, onOpenDetailModal }) => {
     const { user, availabilities } = therapist;
     const { people } = user || {};
 
-    // Días de la semana en el orden deseado
     const weekDaysOrder = {
         lunes: 1,
         martes: 2,
@@ -156,13 +153,12 @@ const TherapistCard = ({ therapist, onOpenDetailModal }) => {
         domingo: 7
     };
 
-    // Extraer los días disponibles y ordenarlos
     const daysAvailable = availabilities
+        .filter(a => a.status === true)
         .map(a => a.weekday)
-        .filter((v, i, a) => a.indexOf(v) === i)  // Eliminar duplicados
-        .sort((a, b) => weekDaysOrder[a] - weekDaysOrder[b]);  // Ordenar según el objeto de orden
+        .filter((v, i, a) => a.indexOf(v) === i)
+        .sort((a, b) => weekDaysOrder[a] - weekDaysOrder[b]);
 
-    // Unir los días con guiones
     const daysString = daysAvailable.join(' - ');
 
     return (
