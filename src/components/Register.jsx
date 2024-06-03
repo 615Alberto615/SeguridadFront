@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import ucb from '../assets/ucb.png';
-import { motion } from 'framer-motion'; 
+import { motion } from 'framer-motion';
 import { fadeIn } from '../variants';
 import { Link } from 'react-router-dom';
-
 import useAuthStore from '../store/useAuthStore';
+import { ClipLoader } from 'react-spinners';
 
-
-
-
-const Login = () => {
+const Register = () => {
   const [occupationId, setOccupationId] = useState('');
   const [semesterId, setSemesterId] = useState('');
   const [username, setUsername] = useState('');
@@ -25,6 +22,7 @@ const Login = () => {
   const [address, setAddress] = useState('');
   const [ci, setCi] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Estado de carga
 
   const validateEmail = (email) => {
     return /\S+@ucb\.edu\.bo$/.test(email);
@@ -44,7 +42,6 @@ const Login = () => {
       setError("Por favor, ingresa un correo electrónico válido de la UCB.");
       return;
     }
-    
     if (!validatePhone(phone)) {
       setError("Por favor, ingresa un número de celular válido.");
       return;
@@ -61,7 +58,7 @@ const Login = () => {
       setError("Por favor, selecciona un semestre.");
       return;
     }
-   
+
     const userData = {
       userDto: {
         userName: username,
@@ -84,9 +81,13 @@ const Login = () => {
         semesterId: semesterId
       }
     };
-  
+
+    setLoading(true); // Mostrar spinner
+
     try {
       const result = await register(userData);
+      setLoading(false); // Ocultar spinner
+
       console.log("Resultado del registro:", result);
       if (result && result.code === 200) {
           window.location.href = `/login`;
@@ -94,41 +95,38 @@ const Login = () => {
           throw new Error(result.error || 'Registration was not successful');
       }
     } catch (error) {
+      setLoading(false); // Ocultar spinner
       setError("Hubo un problema con el registro. Inténtalo de nuevo.");
       console.error("Error en registro:", error);
     }
   };
-  
+
   const goToRegister = () => {
     window.location.href = `/`;
   };
 
   const register = useAuthStore((state) => state.register);
-  
-
 
   return (
     <div className="min-h-screen flex">
       <div className="flex flex-1 bg-gradient-to-r from-secondary to-pink text-white p-12 justify-center items-center">
-      <motion.div
-          variants={fadeIn('down',0.6)}
+        <motion.div
+          variants={fadeIn('down', 0.6)}
           initial='hidden'
           whileInView={'show'}
-          
           onClick={() => goToRegister()}  // Navegación al hacer clic
         >
           <img src={ucb} alt="" className='flex-auto justify-center h-30' style={{ cursor: 'pointer' }}/>
         </motion.div>
       </div>
       <motion.div 
-        variants={fadeIn('up',0.6)}
+        variants={fadeIn('up', 0.6)}
         initial='hidden'
         whileInView={'show'}
-        
-        className="flex-1 bg-white flex justify-center items-center p-10">
+        className="flex-1 bg-white flex justify-center items-center p-10"
+      >
         <div className="w-full max-w-md">
           <h2 className="text-primary text-3xl font-bold mb-5 flex justify-center">Regístrate</h2>
-          
           <div className="space-y-4">
             {error && (
               <div className="text-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
@@ -235,7 +233,6 @@ const Login = () => {
               <option value="7">Estudiante de Derecho</option>
               <option value="8">Estudiante de Administración</option>
             </select>
-
             <select
               className="w-full p-2 border border-gray-300 rounded-md"
               value={semesterId}
@@ -250,13 +247,13 @@ const Login = () => {
             </select>
             <button onClick={handleRegister}
               className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-secondary text-sm font-medium text-white hover:bg-primary">
-              Registrarse
+              {loading ? <ClipLoader size={20} color={"#fff"} /> : 'Registrarse'}
             </button>
             <div className="mt-4 text-center">
-            <span className="text-gray-700">¿Ya tienes una cuenta?</span>
-            {' '}
-            <Link to="/login" className="text-indigo-600 hover:text-indigo-500 font-medium">Incia Sesion</Link>
-          </div>
+              <span className="text-gray-700">¿Ya tienes una cuenta?</span>
+              {' '}
+              <Link to="/login" className="text-indigo-600 hover:text-indigo-500 font-medium">Inicia Sesión</Link>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -264,4 +261,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

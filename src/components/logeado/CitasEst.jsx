@@ -4,9 +4,11 @@ import { fadeIn } from '../../variants';
 import useQuoteStore from '../../store/useQuoteStore1';
 import { format, parseISO, addDays } from 'date-fns';
 import therapist1 from '../../assets/profile3.png';
+import { ClipLoader } from 'react-spinners';
 
 const CitasEst = () => {
     const [selectedCita, setSelectedCita] = useState(null);
+    const [loading, setLoading] = useState(true); // Estado de carga
     const { quotes, fetchQuoteById } = useQuoteStore();
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
@@ -26,9 +28,14 @@ const CitasEst = () => {
     };
 
     useEffect(() => {
-        if (userId && token) {
-            fetchQuoteById(userId, token);
-        }
+        const fetchData = async () => {
+            if (userId && token) {
+                await fetchQuoteById(userId, token);
+                setLoading(false); // Ocultar spinner
+            }
+        };
+
+        fetchData();
     }, [fetchQuoteById, userId, token]);
 
     const daysOfWeek = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
@@ -78,30 +85,36 @@ const CitasEst = () => {
                     <p className="text-tartiary md:w-1/3 mx-auto px-4">Consultas terapéuticas activas/próximas.</p>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full mx-auto border-collapse bg-white shadow-lg mt-5">
-                        <thead>
-                            <tr>
-                                <th className="border px-4 py-2">Hora</th>
-                                {daysOfWeek.map(day => (
-                                    <th key={day} className="border px-4 py-2">{day}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Object.entries(scheduleByDayAndHour).map(([time, days]) => (
-                                <tr key={time}>
-                                    <td className="border px-4 py-2">{time}</td>
+                {loading ? (
+                    <div className="flex justify-center items-center py-10">
+                        <ClipLoader size={50} color={"#4A90E2"} />
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full mx-auto border-collapse bg-white shadow-lg mt-5">
+                            <thead>
+                                <tr>
+                                    <th className="border px-4 py-2">Hora</th>
                                     {daysOfWeek.map(day => (
-                                        <td key={day} className="border px-4 py-2 cursor-pointer" onClick={() => setSelectedCita(days[day][0])}>
-                                            {days[day].length > 0 ? 'CITA' : ''}
-                                        </td>
+                                        <th key={day} className="border px-4 py-2">{day}</th>
                                     ))}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {Object.entries(scheduleByDayAndHour).map(([time, days]) => (
+                                    <tr key={time}>
+                                        <td className="border px-4 py-2">{time}</td>
+                                        {daysOfWeek.map(day => (
+                                            <td key={day} className="border px-4 py-2 cursor-pointer" onClick={() => setSelectedCita(days[day][0])}>
+                                                {days[day].length > 0 ? 'CITA' : ''}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
 
                 {selectedCita && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={handleBackdropClick}>

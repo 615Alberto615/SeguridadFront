@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ClipLoader } from 'react-spinners';
 import { fetchPatientsByRole } from "../../service/userService.js";
 
 const Pacientes = () => {
@@ -49,7 +50,11 @@ const Pacientes = () => {
     }, []);
 
     if (isLoading) {
-        return <div className="text-center text-primary">Cargando...</div>;
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <ClipLoader size={50} color={"#4A90E2"} />
+            </div>
+        );
     }
 
     if (error) {
@@ -76,23 +81,23 @@ const Pacientes = () => {
                 <table className="min-w-full bg-white border rounded-md">
                     {/* Cabecera de la tabla */}
                     <thead className="bg-primary text-white">
-                    <tr>
-                        <th className="border px-4 py-2">Nombre</th>
-                        <th className="border px-4 py-2">Apellido Paterno</th>
-                        <th className="border px-4 py-2">Apellido Materno</th>
-                        <th className="border px-4 py-2">Tratamiento</th>
-                    </tr>
+                        <tr>
+                            <th className="border px-4 py-2">Nombre</th>
+                            <th className="border px-4 py-2">Apellido Paterno</th>
+                            <th className="border px-4 py-2">Apellido Materno</th>
+                            <th className="border px-4 py-2">Tratamiento</th>
+                        </tr>
                     </thead>
                     {/* Cuerpo de la tabla */}
                     <tbody>
-                    {paginarPacientes().map((paciente) => (
-                        <tr key={paciente.peopleId} className="cursor-pointer hover:bg-gray-100 transition duration-300" onClick={() => mostrarInfoPaciente(paciente)}>
-                            <td className="border px-4 py-2">{paciente.name}</td>
-                            <td className="border px-4 py-2">{paciente.firstLastname}</td>
-                            <td className="border px-4 py-2">{paciente.secondLastname}</td>
-                            <td className="border px-4 py-2">{paciente.treatment ? 'Sí' : 'No'}</td>
-                        </tr>
-                    ))}
+                        {paginarPacientes().map((paciente) => (
+                            <tr key={paciente.peopleId} className="cursor-pointer hover:bg-gray-100 transition duration-300" onClick={() => mostrarInfoPaciente(paciente)}>
+                                <td className="border px-4 py-2">{paciente.name}</td>
+                                <td className="border px-4 py-2">{paciente.firstLastname}</td>
+                                <td className="border px-4 py-2">{paciente.secondLastname}</td>
+                                <td className="border px-4 py-2">{paciente.treatment ? 'Sí' : 'No'}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
                 {/* Paginación */}

@@ -3,10 +3,9 @@ import { motion } from 'framer-motion';
 import useAvailabilityStore from '../../store/useAvailabilityStore';
 import HorarioModal from '../../components/logeado/SeleccionarHor';
 import TherapistDetailModal from '../../components/logeado/MasInfo';
-
 import therapist1 from '../../assets/profile3.png';
-
 import { fadeIn } from '../../variants';
+import { ClipLoader } from 'react-spinners';
 
 const Información = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -15,13 +14,19 @@ const Información = () => {
     const [selectedTherapist, setSelectedTherapist] = useState(null);
     const [groupedAvailabilities, setGroupedAvailabilities] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');  // Estado para el término de búsqueda
+    const [loading, setLoading] = useState(true); // Estado de carga
     const itemsPerPage = 3;
 
     const { availabilities, fetchAllAvailabilities } = useAvailabilityStore();
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-        fetchAllAvailabilities();
+        const fetchData = async () => {
+            await fetchAllAvailabilities();
+            setLoading(false); // Ocultar spinner
+        };
+
+        fetchData();
     }, [fetchAllAvailabilities, token]);
 
     useEffect(() => {
@@ -90,41 +95,49 @@ const Información = () => {
                         </motion.div>
 
                         <div className="bg-white rounded-lg p-6">
-                            <motion.div
-                                variants={fadeIn('up', 0.3)}
-                                initial='hidden'
-                                whileInView='show'
-                                className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center md:gap-12 gap-8 justify-items-center'>
-                                {currentItems.map((therapist, index) => (
-                                    <TherapistCard
-                                        key={index}
-                                        therapist={therapist}
-                                        onOpenModal={() => openScheduleModal(therapist)} 
-                                        onOpenDetailModal={() => openDetailModal(therapist)}
-                                    />
-                                ))}
-                            </motion.div>
-
-                            <motion.div
-                                variants={fadeIn('right', 0.2)}
-                                initial='hidden'
-                                whileInView='show'
-                                className="flex justify-center mt-8">
-                                <div className="flex space-x-2">
-                                    {Array.from({ length: Math.ceil(groupedAvailabilities.length / itemsPerPage) }, (_, i) => (
-                                        <button
-                                            key={i + 1}
-                                            onClick={() => setCurrentPage(i + 1)}
-                                            className={`px-4 py-2 rounded-full ${currentPage === (i + 1) ? 'bg-secondary text-white' : 'bg-gray-200'}`}
-                                        >
-                                            {i + 1}
-                                        </button>
-                                    ))}
+                            {loading ? (
+                                <div className="flex justify-center items-center py-10">
+                                    <ClipLoader size={50} color={"#4A90E2"} />
                                 </div>
-                                {currentPage < groupedAvailabilities.length / itemsPerPage && (
-                                    <button onClick={nextPage} className="btn4 px-2">Siguiente</button>
-                                )}
-                            </motion.div>
+                            ) : (
+                                <>
+                                    <motion.div
+                                        variants={fadeIn('up', 0.3)}
+                                        initial='hidden'
+                                        whileInView='show'
+                                        className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center md:gap-12 gap-8 justify-items-center'>
+                                        {currentItems.map((therapist, index) => (
+                                            <TherapistCard
+                                                key={index}
+                                                therapist={therapist}
+                                                onOpenModal={() => openScheduleModal(therapist)} 
+                                                onOpenDetailModal={() => openDetailModal(therapist)}
+                                            />
+                                        ))}
+                                    </motion.div>
+
+                                    <motion.div
+                                        variants={fadeIn('right', 0.2)}
+                                        initial='hidden'
+                                        whileInView='show'
+                                        className="flex justify-center mt-8">
+                                        <div className="flex space-x-2">
+                                            {Array.from({ length: Math.ceil(groupedAvailabilities.length / itemsPerPage) }, (_, i) => (
+                                                <button
+                                                    key={i + 1}
+                                                    onClick={() => setCurrentPage(i + 1)}
+                                                    className={`px-4 py-2 rounded-full ${currentPage === (i + 1) ? 'bg-secondary text-white' : 'bg-gray-200'}`}
+                                                >
+                                                    {i + 1}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {currentPage < groupedAvailabilities.length / itemsPerPage && (
+                                            <button onClick={nextPage} className="btn4 px-2">Siguiente</button>
+                                        )}
+                                    </motion.div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

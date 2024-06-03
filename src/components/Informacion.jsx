@@ -14,7 +14,7 @@
                     variants={fadeIn('right',0.2)}
                     initial='hidden'
                     whileInView={'show'}
-                    viewport={{once:false,amount:0.7}}
+                    
                     
                     className="lg:w-1/4">
                         <h3 className="text-3xl text-primary font-bold lg:w-1/2 mb-3">Atención Personalizada</h3>

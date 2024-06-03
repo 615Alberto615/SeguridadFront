@@ -1,8 +1,7 @@
-import  { useState } from 'react';
-import logo from '../assets/logo.png'
+import { useState } from 'react';
+import logo from '../assets/logo.png';
 
-//iconos
-
+// iconos
 import { FaXmark } from "react-icons/fa6";
 import { FaBars } from "react-icons/fa";
 import { Link as ScrollLink } from 'react-scroll'; // Renombrado para evitar conflictos
@@ -20,14 +19,14 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { link: "Home", path: "home", type: "scroll" },
+    { link: "Inicio", path: "home", type: "scroll" },
     { link: "Servicios", path: "servicios", type: "scroll" },
     { link: "Información", path: "informacion", type: "scroll" },
   ];
 
   return (
     <>
-      <nav className='bg-white md:px-14 p-4 max-w-screen-2xl border-b mx-auto text-primary fixed top-0 right-0 left-0'>
+      <nav className='bg-white md:px-14 p-4 max-w-screen-2xl border-b mx-auto text-primary fixed top-0 right-0 left-0 z-50'>
         <div className='text-lg container mx-auto flex justify-between items-center font-medium'>
           <div className='flex space-x-14 items-center'>
             <a href="/" className='text-2xl font-semibold flex items-center space-x-3 text-primary'>
@@ -59,7 +58,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <div className={`space-y-4 px-4 pt-24 pb-5 bg-secondary text-xl ${isMenuOpen ? "block fixed top-0 right-0 left-0" : "hidden"}`}>
+      <div className={`space-y-4 px-4 pt-24 pb-5 bg-secondary text-xl fixed top-0 right-0 left-0 h-screen z-40 transition-transform transform ${isMenuOpen ? "translate-y-0" : "-translate-y-full"}`}>
         {navItems.map(({ link, path }) => (
           <ScrollLink
             activeClass='active' spy={true} smooth={true} offset={-80} key={link}

@@ -5,6 +5,7 @@ import TherapistDetailModal from '../../components/logeado/InfoConsulta';
 import useQuoteStore from '../../store/useQuoteStore1';
 import therapist1 from '../../assets/profile3.png';
 import { format, parseISO, addDays } from 'date-fns';
+import { ClipLoader } from 'react-spinners';
 
 const ConsultasEst = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -14,16 +15,22 @@ const ConsultasEst = () => {
     const [currentAppointment, setCurrentAppointment] = useState(null);
     const [confirmationText, setConfirmationText] = useState('');
     const [localError, setLocalError] = useState('');
+    const [loading, setLoading] = useState(true); // Estado de carga
     const itemsPerPage = 3;
 
-    const { quotes, fetchQuoteById, deleteQuoteById,  } = useQuoteStore();
+    const { quotes, fetchQuoteById, deleteQuoteById } = useQuoteStore();
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
     useEffect(() => {
-        if (userId && token) {
-            fetchQuoteById(userId, token);
-        }
+        const fetchData = async () => {
+            if (userId && token) {
+                await fetchQuoteById(userId, token);
+                setLoading(false); // Ocultar spinner
+            }
+        };
+
+        fetchData();
     }, [fetchQuoteById, userId, token]);
 
     useEffect(() => {
@@ -76,7 +83,6 @@ const ConsultasEst = () => {
         setOptionsModalOpen(true);
     };
 
-   
     return (
         <motion.div variants={fadeIn('left', 0.2)} initial='hidden' whileInView={'show'}
             className="my-0 md:px-14 px-4 max-w-screen-2xl mx-auto">
@@ -86,17 +92,20 @@ const ConsultasEst = () => {
                         <h2 className="md:text-5xl text-3xl font-extrabold text-primary mb-2">Tus consultas</h2>
                         <p className="text-tartiary md:w-1/3 mx-auto px-4">Aquí puedes ver todas tus citas programadas.</p>
                     </div>
-
                     <div className="bg-white rounded-lg p-6">
-                        {quotes.length > 0 ? (
-                            <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center md:gap-12 gap-8 justify-items-center'>    
+                        {loading ? (
+                            <div className="flex justify-center items-center py-10">
+                                <ClipLoader size={50} color={"#4A90E2"} />
+                            </div>
+                        ) : quotes.length > 0 ? (
+                            <div className='grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center md:gap-12 gap-8 justify-items-center'>
                                 {currentAppointments.map((appointment, index) => (
-                                    <AppointmentCard 
-                                    key={index}
-                                    appointment={appointment}
-                                    onOpenDetailModal={openDetailModal}
-                                    onOpenOptionsModal={openOptionsModal} 
-                                />
+                                    <AppointmentCard
+                                        key={index}
+                                        appointment={appointment}
+                                        onOpenDetailModal={openDetailModal}
+                                        onOpenOptionsModal={openOptionsModal}
+                                    />
                                 ))}
                             </div>
                         ) : (

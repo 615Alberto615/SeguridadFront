@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../variants.js';
 import { fetchQuotesByTherapist } from '../../service/quoteService.js';
-import { AiOutlineClose,  } from 'react-icons/ai';
+import { AiOutlineClose } from 'react-icons/ai';
 import useQuoteStore from '../../store/useQuoteStore1';
 import { FaUserAlt, FaRegClock, FaMapMarkerAlt, FaInfoCircle, FaClipboardList, FaBan } from 'react-icons/fa';
+import { ClipLoader } from 'react-spinners';
 
 const CitaDocente = () => {
     const [citas, setCitas] = useState([]);
@@ -12,6 +13,7 @@ const CitaDocente = () => {
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [confirmationText, setConfirmationText] = useState('');
     const [localError, setLocalError] = useState('');
+    const [loading, setLoading] = useState(true); // Estado de carga
 
     const { deleteQuoteById } = useQuoteStore();
 
@@ -26,10 +28,12 @@ const CitaDocente = () => {
                 } else {
                     setCitas([]);
                 }
+                setLoading(false); // Ocultar spinner después de cargar los datos
             })
             .catch(error => {
                 console.error("Error fetching quotes:", error);
                 setCitas([]);
+                setLoading(false); // Ocultar spinner en caso de error
             });
     }, []);
 
@@ -60,7 +64,6 @@ const CitaDocente = () => {
         setConfirmationText('');
         setLocalError('');
     };
-
 
     const tableStyle = {
         width: '80%',
@@ -116,39 +119,45 @@ const CitaDocente = () => {
                 <p className="text-secondary md:w-1/3 mx-auto px-4">Aquí puedes ver tus citas.</p>
             </div>
 
-            <table style={tableStyle}>
-                <thead>
-                <tr>
-                    <th style={headerStyle}>Hora</th>
-                    <th style={headerStyle}>Lunes</th>
-                    <th style={headerStyle}>Martes</th>
-                    <th style={headerStyle}>Miércoles</th>
-                    <th style={headerStyle}>Jueves</th>
-                    <th style={headerStyle}>Viernes</th>
-                </tr>
-                </thead>
-                <tbody>
-                {Object.keys(citasPorHora).map((hora, index) => (
-                    <tr key={index}>
-                        <td style={cellStyle}>{hora}</td>
-                        {['lunes', 'martes', 'miércoles', 'jueves', 'viernes'].map((day, i) => (
-                            <td
-                                key={i}
-                                style={{
-                                    ...cellStyle,
-                                    backgroundColor: citasPorHora[hora][day] ? '#e09be0' : '#fff', // Secondary color
-                                    cursor: citasPorHora[hora][day] ? 'pointer' : 'default'
-                                }}
-                                onClick={() => setSelectedCita(citasPorHora[hora][day])}
-                                className={citasPorHora[hora][day] ? "hover:bg-blue-200 transition-colors" : ""}
-                            >
-                                {citasPorHora[hora][day] ? 'CITA' : ''}
-                            </td>
-                        ))}
+            {loading ? (
+                <div className="flex justify-center items-center py-10">
+                    <ClipLoader size={50} color={"#4A90E2"} />
+                </div>
+            ) : (
+                <table style={tableStyle}>
+                    <thead>
+                    <tr>
+                        <th style={headerStyle}>Hora</th>
+                        <th style={headerStyle}>Lunes</th>
+                        <th style={headerStyle}>Martes</th>
+                        <th style={headerStyle}>Miércoles</th>
+                        <th style={headerStyle}>Jueves</th>
+                        <th style={headerStyle}>Viernes</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {Object.keys(citasPorHora).map((hora, index) => (
+                        <tr key={index}>
+                            <td style={cellStyle}>{hora}</td>
+                            {['lunes', 'martes', 'miércoles', 'jueves', 'viernes'].map((day, i) => (
+                                <td
+                                    key={i}
+                                    style={{
+                                        ...cellStyle,
+                                        backgroundColor: citasPorHora[hora][day] ? '#e09be0' : '#fff', // Secondary color
+                                        cursor: citasPorHora[hora][day] ? 'pointer' : 'default'
+                                    }}
+                                    onClick={() => setSelectedCita(citasPorHora[hora][day])}
+                                    className={citasPorHora[hora][day] ? "hover:bg-blue-200 transition-colors" : ""}
+                                >
+                                    {citasPorHora[hora][day] ? 'CITA' : ''}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            )}
 
             {selectedCita && (
                 <motion.div
@@ -215,11 +224,11 @@ const CitaDocente = () => {
                 </motion.div>
             )}
 
-{isCancelModalOpen && (
+            {isCancelModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white rounded-lg p-6 w-1/3 mx-auto relative text-center">
                         <h3 className="text-lg font-bold mb-4">¿Estás seguro de que quieres cancelar esta consulta?</h3>
-                        <p>Si cancelas la cita el usaurio que solicito la cita tendra que programar una completamente nueva.</p>
+                        <p>Si cancelas la cita el usuario que solicitó la cita tendrá que programar una completamente nueva.</p>
                         <p>Por favor, ingresa la palabra <strong>confirmar</strong> para proceder:</p>
                         <input 
                             type="text"

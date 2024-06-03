@@ -10,6 +10,14 @@ Alberto
 123
 
 
+
+manual
+
+inicio https://app.tango.us/app/workflow/How-to-Log-in-to-the-App-3a08d973b83e42588574e1b44a9b9055
+registro https://app.tango.us/app/workflow/Registro-en-Apoyo-Psicol-gico-UCB-d4cf3ca26d1242c785b842ad282e9364
+agend https://app.tango.us/app/workflow/Agenda-una-Cita-en-la-Aplicaci-n-e4a3492dd01446fe9fac5e9137e29bb9
+horar https://app.tango.us/app/workflow/Managing-Availability-on-UCB-Platform-7040772e1ae044a6af4d86f5e3827dd3
+https://app.tango.us/app/workflow/Cancelaci-n-de-una-Cita-en-Apoyo-Psicol-gico-de-la-UCBServices-da7010e1616e46c48b880820bbb18ee1
 {
     "code": 200,
     "data": [

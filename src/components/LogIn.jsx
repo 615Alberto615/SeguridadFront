@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { fadeIn } from '../variants';
 import { Link } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
+import { ClipLoader } from 'react-spinners';
 
 const Login = () => {
   const { login, error, isLoggedIn } = useAuthStore();
@@ -11,6 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState('');
+  const [loading, setLoading] = useState(false); // Estado de carga
 
   const handleLogin = async () => {
     setLocalError('');
@@ -19,8 +21,12 @@ const Login = () => {
       return;
     }
 
+    setLoading(true); // Mostrar spinner
+
     try {
       const result = await login({ userName: username, password: password });
+      setLoading(false); // Ocultar spinner
+
       if (result && result.code === 200) {
         localStorage.setItem('token', result.data.token);
         localStorage.setItem('userId', result.data.id);
@@ -28,10 +34,10 @@ const Login = () => {
         localStorage.setItem('isLoggedIn', true);
         console.log(result);
 
-        // Forzar la recarga de la página completa para reiniciar la aplicación
         window.location.href = '/';
       }
     } catch (err) {
+      setLoading(false); // Ocultar spinner
       console.error("Error al iniciar sesión:", err);
       if (err.response && err.response.data) {
         setLocalError(err.response.data.message || "Error desconocido");
@@ -112,7 +118,7 @@ const Login = () => {
             <button onClick={handleLogin}
               className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-secondary text-sm font-medium text-white hover:bg-primary"
             >
-              Iniciar Sesión
+              {loading ? <ClipLoader size={20} color={"#fff"} /> : 'Iniciar Sesión'}
             </button>
             <div className="mt-4 text-center">
               <span className="text-gray-700">¿Olvidaste tu contraseña?</span>
