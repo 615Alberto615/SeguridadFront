@@ -3,10 +3,19 @@ import fb from '../assets/fb.png'
 import ig from '../assets/ig.png'
 import tw from '../assets/tw.png'
 import lk from '../assets/lk.png'
+import { motion } from 'framer-motion';
+import { fadeIn } from '../variants';
 const Fotter = () => {
     return (
-        <div className="bg-[#010851] md:px-14 p-4 max-w-screen-2xl mx-auto text-white">
+        <div className="bg-[#010851] md:px-14 p-4 max-w-screen-2xl mx-auto text-white" id="contacto">
+            <motion.div 
+                    variants={fadeIn('right',0.2)}
+                    initial='hidden'
+                    whileInView={'show'}
+                    viewport={{once:false,amount:0.7}}
+                    >
             <div className="my-12 flex flex-col md:flex-row  gap-10">
+                
                 <div className="md:w-1/2 space-y-8">
                     <a href="/" className="text-2xl font-semibold flex items-center space-x-3 text-primary">
                         <img src={logo} alt="" className="w-10 inline-block items-center"/>
@@ -54,6 +63,7 @@ const Fotter = () => {
                 </a>
                 </div>
             </div>
+            </motion.div>
         </div>
     );
 }

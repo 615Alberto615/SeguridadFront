@@ -22,6 +22,7 @@ const Navbar = () => {
     { link: "Inicio", path: "home", type: "scroll" },
     { link: "Servicios", path: "servicios", type: "scroll" },
     { link: "Información", path: "informacion", type: "scroll" },
+    { link: "Contacto", path: "contacto", type: "scroll" },
   ];
 
   return (

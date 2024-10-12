@@ -36,6 +36,7 @@ const About = () => {
                     <span className="text-secondary"> tu Momento.</span></h2>
                     <p className="text-tariary text-lg mb-7">Explora la libertad de elegir tu camino hacia el bienestar. Con solo unos clics, selecciona el especialista y el momento perfecto para ti en la UCB.</p>
                     <button className="btnPrimary" onClick={handleAppointmentClick}>Agenda tu Cita</button>
+                    
                 </motion.div>
             </div>
         </div>
