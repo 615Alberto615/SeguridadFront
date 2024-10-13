@@ -28,8 +28,8 @@ export const loginUser = async (userData) => {
       throw new Error('Token or user ID not provided or invalid response');
     }
   } catch (error) {
-    console.error("Error during login:", error.response ? error.response.data : "No response data");
-    throw error.response.data;
+    const errorMessage = error.response?.data?.message || 'Error desconocido en la solicitud';
+    throw new Error(errorMessage);  // Lanzar el mensaje de error
   }
 };
 

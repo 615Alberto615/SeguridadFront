@@ -13,27 +13,31 @@ const useAuthStore = create((set) => ({
   login: async (userData) => {
     try {
       const response = await loginUser(userData);
-      console.log("API Response:", response); // Log the full response from the API
+
+      // Si el login es exitoso
       if (response && response.code === 200) {
         set({
           token: response.data.token,
           userId: response.data.id,
           userRol: response.data.rol,
           isLoggedIn: true,
-          error: null
+          error: null,  // Limpiar cualquier error anterior
         });
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userId', response.data.id);
         localStorage.setItem('userRol', response.data.rol);
         localStorage.setItem('isLoggedIn', true);
-        console.log("Login successful, user data stored.");
       } else {
-        console.error("Login failed with response:", response); // Detailed log when login fails
-        set({ error: response.message || "Login failed without error message." });
+        // En caso de que el servidor devuelva un código no exitoso (aunque normalmente los errores se capturan en el catch)
+        set({
+          error: response.message || 'Error en el inicio de sesión. Mensaje no disponible.',
+        });
       }
     } catch (error) {
-      console.error("Error during login:", error.response ? error.response.data : "No response data available.");
-      set({ error: error.response ? error.response.data.message : "Error in login request." });
+      // Aquí capturamos el mensaje de error lanzado desde el authService.js
+      set({
+        error: error.message,  // Guardamos el mensaje del error
+      });
     }
   },
   
