@@ -9,7 +9,6 @@ import { ClipLoader } from 'react-spinners';
 const Register = () => {
   const [occupationId, setOccupationId] = useState('');
   const [semesterId, setSemesterId] = useState('');
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -32,8 +31,20 @@ const Register = () => {
     return /^\d{8}$/.test(phone);
   };
 
+  const validatePassword = (password) => {
+    const hasMinLength = password.length >= 15;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasNumber = /[0-9]/.test(password); // Validación para número
+  
+    return hasMinLength && hasUpperCase && hasLowerCase && hasSpecialChar && hasNumber;
+  };
+
   const handleRegister = async () => {
     setError('');
+
+    // Validaciones de campos requeridos
     if (!firstName || !lastName || !motherLastName || !age || !phone || !address || !ci) {
       setError("Todos los campos son obligatorios.");
       return;
@@ -50,14 +61,23 @@ const Register = () => {
       setError("Por favor, selecciona un género.");
       return;
     }
-    if(!occupationId){
+    if (!occupationId) {
       setError("Por favor, selecciona una ocupación.");
       return;
     }
-    if(!semesterId){
+    if (!semesterId) {
       setError("Por favor, selecciona un semestre.");
       return;
     }
+    
+    // Validación de la contraseña
+    if (!validatePassword(password)) {
+      setError("La contraseña debe tener al menos 15 caracteres, incluir mayúsculas, minúsculas y un carácter especial.");
+      return;
+    }
+
+    // Extraer el nombre de usuario desde el email (sin el dominio)
+    const username = email.split('@')[0];
 
     const userData = {
       userDto: {
@@ -92,12 +112,13 @@ const Register = () => {
       if (result && result.code === 200) {
           window.location.href = `/login`;
       } else {
-          throw new Error(result.error || 'Registration was not successful');
+          throw new Error(result.error || 'Error en el registro, Intentalo nuevamente');
       }
     } catch (error) {
       setLoading(false); // Ocultar spinner
-      setError("Hubo un problema con el registro. Inténtalo de nuevo.");
-      console.error("Error en registro:", error);
+      const errorMessage = error.message || "Hubo un problema con el registro. Inténtalo de nuevo.";
+    setError(errorMessage);
+    console.error("Error en registro:", error);
     }
   };
 
@@ -133,13 +154,6 @@ const Register = () => {
                 {error}
               </div>
             )}
-            <input 
-              type="text"
-              placeholder="Username"
-              className="w-full p-2 border border-gray-300 rounded-md"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
             <div className="relative">
               <input 
                 type={showPassword ? "text" : "password"}
@@ -262,3 +276,4 @@ const Register = () => {
 };
 
 export default Register;
+//PepePicaPiedra15_
