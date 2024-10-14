@@ -52,10 +52,10 @@
     const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
 
     useEffect(() => {
-        console.log("Rol actual:", rol);
-        console.log("Token actual:", token);
-        console.log("User ID actual:", userIdState);
-        console.log("Is Logged In:", isLoggedIn);
+       // console.log("Rol actual:", rol);
+        //console.log("Token actual:", token);
+        //console.log("User ID actual:", userIdState);
+        //console.log("Is Logged In:", isLoggedIn);
     }, [rol, token, userIdState, isLoggedIn]);
 
     // Actualiza el estado si los valores en localStorage cambian, por ejemplo, en diferentes pestañas
