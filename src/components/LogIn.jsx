@@ -138,3 +138,22 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+
+{/*
+  
+  Usuarios:
+-Estudiante Juan.Perez@ucb.edu.bo
+User: juan.perez Pass: LS6sarMg0gqfRJ5LIo7h@
+
+-Terapeuta kevin.debruyne@ucb.edu.bo
+User: kevin.debruyne Pass: nmCtuX4Rl+A?gub
+
+-Admin:  administracion.psico@ucb.edu.bo
+User: administracion.psico Pass: fDc9k/Y'\0pGZ#t
+  
+  
+  
+  */}

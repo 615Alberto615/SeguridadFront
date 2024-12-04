@@ -4,7 +4,8 @@ import {
     FaArrowLeft,
     FaHome,
     FaSignOutAlt,
-    FaUsers
+    FaUsers,
+    FaBookMedical,
 } from "react-icons/fa";
 import { Link as RouterLink } from 'react-router-dom';
 import logo from '../../assets/logo.png';
@@ -29,6 +30,7 @@ const SidebarAdm = () => {
         { link: "Usuarios", path: "/usuarios", icon: <FaUsers /> },
         { link: "Graficos", path: "/graficos", icon: <FaGauge /> },
         { link: "Perfil", path: "/perfilAdmin", icon: <FaPerson /> },
+        { link: "Seguridad", path: "/seguridad", icon: <FaBookMedical /> },
         { link: "Cerrar sesión", path: "/", icon: <FaSignOutAlt />, action: handleLogout }
     ];
 

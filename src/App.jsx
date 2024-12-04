@@ -33,7 +33,9 @@
   import Graficos from "./components/admin/Graficos.jsx";
   import PerfilAdmin from "./components/admin/PerfilAdmin.jsx";
   import Register from "./components/Register.jsx";
-  
+  import Seguridad from "./components/admin/Seguridad.jsx";
+
+
   import Consultas2 from './components/logeado/Consultas2.jsx'
 
   import PerfilEstudiante from "./components/logeado/perfilest.jsx";
@@ -118,6 +120,7 @@
             <Route path="/consultas" element={<><CitasEst/><Consultas2 /> </>} />
             <Route path="/historial" element={<Historial/>} />
             <Route path="/usuarios" element={<Usuarios />} />
+            <Route path="/Seguridad" element={<Seguridad />} />
             <Route path="/graficos" element={<Graficos />} />
             <Route path="/perfilAdmin" element={<PerfilAdmin />} />
             <Route path="/register" element={<Register />} />
